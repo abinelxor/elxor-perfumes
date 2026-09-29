@@ -164,15 +164,15 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         position: "fixed",
         inset: 0,
         zIndex: 99999,
-        backgroundColor: "#030303",
+        backgroundColor: "#040404",
         backgroundImage:
-          "radial-gradient(ellipse 80% 65% at 50% 42%, #16110a 0%, #090704 50%, #030303 100%)",
+          "radial-gradient(ellipse 70% 50% at 50% 45%, #0a0805 0%, #040404 100%)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: "24px",
-        boxShadow: "inset 0 0 160px rgba(0, 0, 0, 0.95)",
+        boxShadow: "inset 0 0 160px rgba(0, 0, 0, 0.98)",
         opacity: isExiting ? 0 : 1,
         transform: isExiting ? "scale(1.02)" : "scale(1)",
         pointerEvents: isExiting ? "none" : "auto",
@@ -180,36 +180,19 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
       }}
     >
-      {/* Primary Golden Core Radiance */}
+      {/* Subtle Whisper-Soft Golden Aura (Subtle touch behind logo) */}
       <div
         style={{
           position: "absolute",
-          top: "calc(50% - 60px)",
+          top: "calc(50% - 75px)",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: "620px",
-          height: "620px",
+          width: "320px",
+          height: "320px",
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(236, 196, 128, 0.24) 0%, rgba(184, 134, 54, 0.09) 38%, rgba(3, 3, 3, 0) 70%)",
-          filter: "blur(70px)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Secondary Warm Diffuse Focus behind Logo */}
-      <div
-        style={{
-          position: "absolute",
-          top: "calc(50% - 60px)",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "380px",
-          height: "380px",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(245, 215, 153, 0.30) 0%, rgba(212, 175, 55, 0.10) 45%, transparent 72%)",
-          filter: "blur(40px)",
+            "radial-gradient(circle, rgba(212, 175, 55, 0.09) 0%, rgba(184, 134, 54, 0.03) 45%, transparent 70%)",
+          filter: "blur(50px)",
           pointerEvents: "none",
         }}
       />
@@ -233,7 +216,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             height: "clamp(190px, 25vw, 218px)",
             marginBottom: "26px",
             filter:
-              "drop-shadow(0 14px 35px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 25px rgba(212, 175, 55, 0.45)) drop-shadow(0 0 60px rgba(184, 134, 54, 0.18))",
+              "drop-shadow(0 12px 28px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 15px rgba(212, 175, 55, 0.22))",
             animation: "executiveLuminescence 4s ease-in-out infinite",
           }}
         >
@@ -340,11 +323,11 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         @keyframes executiveLuminescence {
           0%, 100% {
             transform: scale(1);
-            filter: drop-shadow(0 14px 35px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 22px rgba(212, 175, 55, 0.4)) drop-shadow(0 0 50px rgba(184, 134, 54, 0.15));
+            filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 12px rgba(212, 175, 55, 0.18));
           }
           50% {
-            transform: scale(1.02);
-            filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.98)) drop-shadow(0 0 32px rgba(236, 196, 128, 0.65)) drop-shadow(0 0 65px rgba(212, 175, 55, 0.25));
+            transform: scale(1.015);
+            filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.98)) drop-shadow(0 0 18px rgba(212, 175, 55, 0.28));
           }
         }
       `}</style>
