@@ -296,3 +296,15 @@ body {
   transform: scale(1.1);
   box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
 }
+
+/* Completely hide Next.js development indicator mark */
+nextjs-portal,
+[data-nextjs-dev-tools-button],
+div[data-nextjs-toast],
+div[data-nextjs-dev-tools-toast] {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
