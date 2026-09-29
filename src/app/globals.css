@@ -1,0 +1,298 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600;700&display=swap');
+
+:root {
+  --bg-primary: #050505;
+  --bg-secondary: #0a0907;
+  --bg-card: rgba(14, 12, 9, 0.7);
+  --bg-card-hover: rgba(22, 19, 14, 0.85);
+
+  --gold-primary: #d4af37;
+  --gold-light: #f5d799;
+  --gold-warm: #cca762;
+  --gold-dark: #997538;
+  --gold-deep: #6f5221;
+  --gold-border: rgba(204, 167, 98, 0.35);
+  --gold-border-bright: rgba(245, 215, 153, 0.75);
+  --gold-glow: rgba(212, 175, 55, 0.25);
+
+  --gold-gradient: linear-gradient(135deg, #f6dfaf 0%, #d8a253 45%, #b57d29 100%);
+  --gold-gradient-subtle: linear-gradient(180deg, #ecc480 0%, #b88636 100%);
+  --gold-btn-gradient: linear-gradient(90deg, #d3a75d 0%, #b38135 100%);
+  --gold-btn-hover: linear-gradient(90deg, #e3ba73 0%, #c59244 100%);
+
+  --text-primary: #f8f6f0;
+  --text-muted: #b8b1a5;
+  --text-dim: #787268;
+
+  --font-serif: var(--font-cinzel), 'Cinzel', 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-heading: var(--font-cormorant), 'Cormorant Garamond', 'Cinzel', Georgia, serif;
+  --font-sans: var(--font-montserrat), 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.2s ease;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  background-color: var(--bg-primary);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Custom Luxury Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2216;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #473820;
+}
+
+/* Typography Utilities */
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.gold-text-gradient {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.gold-text-solid {
+  color: var(--gold-warm);
+}
+
+/* Luxury Buttons with Spring Transitions & Glow */
+.btn-gold-solid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--gold-btn-gradient);
+  color: #120d04;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.btn-gold-solid::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-gold-solid:hover::before {
+  left: 100%;
+}
+
+.btn-gold-solid:hover {
+  background: var(--gold-btn-hover);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.45);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-gold-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: transparent;
+  color: var(--gold-warm);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 13px 26px;
+  border: 1px solid var(--gold-border);
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.btn-gold-outline:hover {
+  border-color: var(--gold-light);
+  color: var(--gold-light);
+  background: rgba(212, 175, 55, 0.1);
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-pill-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--gold-warm);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  border: 1px solid var(--gold-border);
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.btn-pill-outline:hover {
+  border-color: var(--gold-light);
+  color: #0c0803;
+  background: var(--gold-btn-gradient);
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Subtle Ambient Animations */
+@keyframes goldPulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes starGlint {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px rgba(212, 175, 55, 0.4));
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(245, 215, 153, 0.9));
+    transform: scale(1.15) rotate(4deg);
+  }
+}
+
+@keyframes cardShine {
+  0% {
+    transform: translateX(-150%) rotate(25deg);
+  }
+  100% {
+    transform: translateX(250%) rotate(25deg);
+  }
+}
+
+.animate-pulse-slow {
+  animation: goldPulse 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: subtleFloat 5s ease-in-out infinite;
+}
+
+.animate-star-glint {
+  animation: starGlint 4s ease-in-out infinite;
+}
+
+/* Luxury Interactive Card with Holographic Sheen */
+.luxury-card {
+  position: relative;
+  background: #090807;
+  border: 1px solid var(--gold-border);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.luxury-card::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 40%,
+    rgba(245, 215, 153, 0.12) 50%,
+    transparent 60%
+  );
+  transform: translateX(-150%) rotate(25deg);
+  pointer-events: none;
+  transition: transform 0.8s ease;
+}
+
+.luxury-card:hover::after {
+  transform: translateX(150%) rotate(25deg);
+}
+
+.luxury-card:hover {
+  border-color: var(--gold-border-bright);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.25);
+  transform: translateY(-8px);
+}
+
+/* Value Cards Circular Icon Glow Pulse */
+.value-card:hover .icon-circle {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
