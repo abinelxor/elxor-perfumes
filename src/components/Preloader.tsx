@@ -164,28 +164,52 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         position: "fixed",
         inset: 0,
         zIndex: 99999,
-        backgroundColor: "#050505",
+        backgroundColor: "#030303",
+        backgroundImage:
+          "radial-gradient(ellipse 80% 65% at 50% 42%, #16110a 0%, #090704 50%, #030303 100%)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: "24px",
+        boxShadow: "inset 0 0 160px rgba(0, 0, 0, 0.95)",
         opacity: isExiting ? 0 : 1,
         transform: isExiting ? "scale(1.02)" : "scale(1)",
         pointerEvents: isExiting ? "none" : "auto",
-        transition: "opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+        transition:
+          "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
       }}
     >
-      {/* Subtle Golden Aura Glow */}
+      {/* Primary Golden Core Radiance */}
       <div
         style={{
           position: "absolute",
-          width: "420px",
-          height: "420px",
+          top: "calc(50% - 60px)",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "620px",
+          height: "620px",
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(236, 196, 128, 0.16) 0%, rgba(184, 134, 54, 0.04) 50%, transparent 70%)",
-          filter: "blur(60px)",
+            "radial-gradient(circle, rgba(236, 196, 128, 0.24) 0%, rgba(184, 134, 54, 0.09) 38%, rgba(3, 3, 3, 0) 70%)",
+          filter: "blur(70px)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Secondary Warm Diffuse Focus behind Logo */}
+      <div
+        style={{
+          position: "absolute",
+          top: "calc(50% - 60px)",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "380px",
+          height: "380px",
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(245, 215, 153, 0.30) 0%, rgba(212, 175, 55, 0.10) 45%, transparent 72%)",
+          filter: "blur(40px)",
           pointerEvents: "none",
         }}
       />
@@ -196,20 +220,21 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          maxWidth: "420px",
+          maxWidth: "480px",
           width: "100%",
           textAlign: "center",
         }}
       >
-        {/* ELXOR 3D Logo with breathing glow */}
+        {/* ELXOR 3D Logo with executive breathing luminescence (increased size) */}
         <div
           style={{
             position: "relative",
-            width: "95px",
-            height: "95px",
-            marginBottom: "24px",
-            filter: "drop-shadow(0 4px 22px rgba(212, 175, 55, 0.45))",
-            animation: "pulseLogo 2.5s ease-in-out infinite",
+            width: "clamp(190px, 25vw, 218px)",
+            height: "clamp(190px, 25vw, 218px)",
+            marginBottom: "26px",
+            filter:
+              "drop-shadow(0 14px 35px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 25px rgba(212, 175, 55, 0.45)) drop-shadow(0 0 60px rgba(184, 134, 54, 0.18))",
+            animation: "executiveLuminescence 4s ease-in-out infinite",
           }}
         >
           <Image
@@ -218,49 +243,42 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             fill
             style={{ objectFit: "contain" }}
             priority
+            quality={100}
           />
         </div>
 
-        {/* Brand Overline */}
-        <span
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.72rem",
-            letterSpacing: "4px",
-            color: "#ECC480",
-            textTransform: "uppercase",
-            marginBottom: "10px",
-            fontWeight: 500,
-          }}
-        >
-          ELXOR HAUTE PARFUMERIE
-        </span>
-
-        {/* Headline */}
+        {/* Title: UNVEIL YOUR AURA */}
         <h2
           style={{
-            fontFamily: "var(--font-serif)",
-            fontSize: "clamp(1.3rem, 3.2vw, 1.7rem)",
+            fontFamily: "var(--font-cinzel), 'Cinzel', serif",
+            fontSize: "clamp(1.35rem, 3.2vw, 1.85rem)",
             fontWeight: 400,
-            letterSpacing: "1.5px",
-            color: "#f8f6f0",
+            letterSpacing: "clamp(4px, 1.2vw, 6px)",
             marginBottom: "28px",
+            background:
+              "linear-gradient(135deg, #FFF9EE 0%, #F5D799 26%, #D4AF37 54%, #B88636 82%, #7A5317 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            filter: "drop-shadow(0 2px 14px rgba(212, 175, 55, 0.35))",
+            textTransform: "uppercase",
+            whiteSpace: "nowrap",
           }}
         >
-          THE ESSENCE OF ELEGANCE
+          UNVEIL YOUR AURA
         </h2>
 
-        {/* Progress Bar Container */}
+        {/* Progress Bar Container - Executive Minimalist Hairline */}
         <div
           style={{
             position: "relative",
             width: "100%",
-            maxWidth: "300px",
+            maxWidth: "340px",
             height: "2px",
-            background: "rgba(255, 255, 255, 0.12)",
-            borderRadius: "4px",
-            overflow: "hidden",
-            marginBottom: "14px",
+            background: "rgba(255, 255, 255, 0.08)",
+            border: "1px solid rgba(216, 162, 83, 0.2)",
+            borderRadius: "2px",
+            overflow: "visible",
+            marginBottom: "18px",
           }}
         >
           <div
@@ -271,24 +289,47 @@ export default function Preloader({ onComplete }: PreloaderProps) {
               height: "100%",
               width: `${displayPct}%`,
               background:
-                "linear-gradient(90deg, #9e7025 0%, #d4a04d 50%, #ECC480 100%)",
-              boxShadow: "0 0 12px rgba(236, 196, 128, 0.9)",
+                "linear-gradient(90deg, #9e7025 0%, #d4a04d 55%, #fff7e6 100%)",
+              boxShadow:
+                "0 0 16px rgba(236, 196, 128, 0.95), 0 0 32px rgba(212, 175, 55, 0.4)",
               transition: "width 0.1s ease-out",
+              borderRadius: "2px",
             }}
-          />
+          >
+            {/* Executive Glowing Head Bead */}
+            {displayPct > 0 && displayPct < 100 && (
+              <div
+                style={{
+                  position: "absolute",
+                  right: "-2px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  width: "5px",
+                  height: "5px",
+                  borderRadius: "50%",
+                  backgroundColor: "#fffdf8",
+                  boxShadow:
+                    "0 0 8px #f5d799, 0 0 16px #d4af37, 0 0 25px rgba(236, 196, 128, 0.9)",
+                }}
+              />
+            )}
+          </div>
         </div>
 
-        {/* ONLY Percentage Display (No frames text) */}
+        {/* ONLY Percentage Display (Executive Stately Spacing) */}
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
-            fontSize: "0.82rem",
-            letterSpacing: "3px",
+            fontSize: "0.86rem",
+            letterSpacing: "1.5px",
+            fontFamily: "var(--font-sans), 'Montserrat', sans-serif",
+            fontVariantNumeric: "tabular-nums",
             color: "#ECC480",
-            fontWeight: 600,
+            fontWeight: 500,
+            textShadow: "0 0 14px rgba(236, 196, 128, 0.65)",
           }}
         >
           <span>{displayPct}%</span>
@@ -296,14 +337,14 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       </div>
 
       <style jsx>{`
-        @keyframes pulseLogo {
+        @keyframes executiveLuminescence {
           0%, 100% {
             transform: scale(1);
-            filter: drop-shadow(0 4px 22px rgba(212, 175, 55, 0.4));
+            filter: drop-shadow(0 14px 35px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 22px rgba(212, 175, 55, 0.4)) drop-shadow(0 0 50px rgba(184, 134, 54, 0.15));
           }
           50% {
-            transform: scale(1.04);
-            filter: drop-shadow(0 6px 30px rgba(236, 196, 128, 0.7));
+            transform: scale(1.02);
+            filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.98)) drop-shadow(0 0 32px rgba(236, 196, 128, 0.65)) drop-shadow(0 0 65px rgba(212, 175, 55, 0.25));
           }
         }
       `}</style>
