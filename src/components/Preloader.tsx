@@ -8,12 +8,14 @@ interface PreloaderProps {
   onComplete: () => void;
 }
 
+const MAX_DURATION_MS = 2500; // Ramp to 100% within 2.5s, exit by 3.0s max
+
 export default function Preloader({ onComplete }: PreloaderProps) {
-  const [loadedCount, setLoadedCount] = useState(0);
   const [displayPct, setDisplayPct] = useState(0);
-  const [isReady, setIsReady] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
-  const animationFrameRef = useRef<number | null>(null);
+  const hasFinishedRef = useRef(false);
+  const startTimeRef = useRef<number>(Date.now());
+  const rafRef = useRef<number | null>(null);
 
   // Disable body scroll while preloading
   useEffect(() => {
@@ -23,51 +25,36 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     };
   }, []);
 
-  // Smoothly interpolate display percentage toward real loaded percentage
-  useEffect(() => {
-    const targetPct = Math.round((loadedCount / TOTAL_FRAMES) * 100);
+  // Completion trigger: max 3 seconds total (including 500ms fade-out)
+  const triggerFinish = () => {
+    if (hasFinishedRef.current) return;
+    hasFinishedRef.current = true;
+    setDisplayPct(100);
 
-    const updateDisplay = () => {
-      setDisplayPct((prev) => {
-        if (prev < targetPct) {
-          const diff = targetPct - prev;
-          const step = Math.max(1, Math.ceil(diff * 0.2));
-          return Math.min(targetPct, prev + step);
-        }
-        return prev;
-      });
-      animationFrameRef.current = requestAnimationFrame(updateDisplay);
-    };
+    setTimeout(() => {
+      setIsExiting(true);
+      setTimeout(() => {
+        document.body.style.overflow = "unset";
+        onComplete();
+      }, 500);
+    }, 200);
+  };
 
-    animationFrameRef.current = requestAnimationFrame(updateDisplay);
-    return () => {
-      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
-    };
-  }, [loadedCount]);
-
-  // Load all 300 frames concurrently with controlled batches
+  // High-throughput parallel frame preloading in background
   useEffect(() => {
     let isCancelled = false;
 
-    // If already loaded in cache (e.g. on route change)
+    // If already loaded in cache
     if (frameCache.isFullyLoaded && frameCache.loadedCount >= TOTAL_FRAMES) {
-      setLoadedCount(TOTAL_FRAMES);
-      setDisplayPct(100);
-      setIsReady(true);
-      setTimeout(() => {
-        setIsExiting(true);
-        setTimeout(onComplete, 700);
-      }, 400);
+      triggerFinish();
       return;
     }
 
-    let loaded = 0;
+    let loaded = frameCache.loadedCount;
 
     const loadSingleFrame = (index: number): Promise<void> => {
       return new Promise((resolve) => {
         if (frameCache.images[index] && frameCache.images[index]!.complete) {
-          loaded++;
-          if (!isCancelled) setLoadedCount(loaded);
           resolve();
           return;
         }
@@ -80,13 +67,16 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             try {
               await img.decode();
             } catch {
-              // Ignore decode fallback
+              // Ignore fallback
             }
           }
           frameCache.images[index] = img;
           loaded++;
           frameCache.loadedCount = loaded;
-          if (!isCancelled) setLoadedCount(loaded);
+          if (loaded >= TOTAL_FRAMES) {
+            frameCache.isFullyLoaded = true;
+            if (!isCancelled) triggerFinish();
+          }
           resolve();
         };
 
@@ -94,15 +84,18 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         img.onerror = () => {
           loaded++;
           frameCache.loadedCount = loaded;
-          if (!isCancelled) setLoadedCount(loaded);
+          if (loaded >= TOTAL_FRAMES) {
+            frameCache.isFullyLoaded = true;
+            if (!isCancelled) triggerFinish();
+          }
           resolve();
         };
       });
     };
 
-    // Load with a high-throughput concurrency queue (25 parallel streams)
+    // 30 parallel streams for fast loading
     const loadAll = async () => {
-      const concurrency = 25;
+      const concurrency = 30;
       let currentIndex = 1;
 
       const worker = async () => {
@@ -115,23 +108,6 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
       const workers = Array.from({ length: concurrency }, () => worker());
       await Promise.all(workers);
-
-      if (isCancelled) return;
-
-      frameCache.isFullyLoaded = true;
-      setIsReady(true);
-
-      // Brief pause at 100% to let the user appreciate the completed state, then dissolve
-      setTimeout(() => {
-        if (isCancelled) return;
-        setIsExiting(true);
-        setTimeout(() => {
-          if (!isCancelled) {
-            document.body.style.overflow = "unset";
-            onComplete();
-          }
-        }, 750);
-      }, 500);
     };
 
     loadAll();
@@ -139,7 +115,48 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     return () => {
       isCancelled = true;
     };
-  }, [onComplete]);
+  }, []);
+
+  // Smooth timer-driven & load-driven percentage loop (strictly caps duration to max 3s)
+  useEffect(() => {
+    const updateProgress = () => {
+      if (hasFinishedRef.current) return;
+
+      const elapsed = Date.now() - startTimeRef.current;
+      const timeRatio = Math.min(1, elapsed / MAX_DURATION_MS);
+      const realRatio = Math.min(1, frameCache.loadedCount / TOTAL_FRAMES);
+
+      // Percentage is the maximum of real download progress or time-elapsed ramp
+      const targetPct = Math.min(100, Math.max(Math.round(realRatio * 100), Math.round(timeRatio * 100)));
+
+      setDisplayPct((prev) => {
+        if (prev < targetPct) {
+          const step = Math.max(1, Math.ceil((targetPct - prev) * 0.25));
+          return Math.min(targetPct, prev + step);
+        }
+        return prev;
+      });
+
+      if (elapsed >= MAX_DURATION_MS || frameCache.loadedCount >= TOTAL_FRAMES) {
+        triggerFinish();
+        return;
+      }
+
+      rafRef.current = requestAnimationFrame(updateProgress);
+    };
+
+    rafRef.current = requestAnimationFrame(updateProgress);
+
+    // Hard fallback timeout: guarantees exit within 3000ms max under all conditions
+    const hardTimeout = setTimeout(() => {
+      triggerFinish();
+    }, 2700);
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      clearTimeout(hardTimeout);
+    };
+  }, []);
 
   return (
     <div
@@ -154,20 +171,20 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         justifyContent: "center",
         padding: "24px",
         opacity: isExiting ? 0 : 1,
-        transform: isExiting ? "scale(1.03)" : "scale(1)",
+        transform: isExiting ? "scale(1.02)" : "scale(1)",
         pointerEvents: isExiting ? "none" : "auto",
-        transition: "opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
+        transition: "opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
       }}
     >
-      {/* Golden Aura Glow */}
+      {/* Subtle Golden Aura Glow */}
       <div
         style={{
           position: "absolute",
-          width: "480px",
-          height: "480px",
+          width: "420px",
+          height: "420px",
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(236, 196, 128, 0.18) 0%, rgba(184, 134, 54, 0.05) 50%, transparent 70%)",
+            "radial-gradient(circle, rgba(236, 196, 128, 0.16) 0%, rgba(184, 134, 54, 0.04) 50%, transparent 70%)",
           filter: "blur(60px)",
           pointerEvents: "none",
         }}
@@ -179,7 +196,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          maxWidth: "460px",
+          maxWidth: "420px",
           width: "100%",
           textAlign: "center",
         }}
@@ -188,11 +205,11 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         <div
           style={{
             position: "relative",
-            width: "110px",
-            height: "110px",
-            marginBottom: "28px",
-            filter: "drop-shadow(0 4px 25px rgba(212, 175, 55, 0.5))",
-            animation: "pulseLogo 3s ease-in-out infinite",
+            width: "95px",
+            height: "95px",
+            marginBottom: "24px",
+            filter: "drop-shadow(0 4px 22px rgba(212, 175, 55, 0.45))",
+            animation: "pulseLogo 2.5s ease-in-out infinite",
           }}
         >
           <Image
@@ -208,11 +225,11 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         <span
           style={{
             fontFamily: "var(--font-sans)",
-            fontSize: "0.75rem",
+            fontSize: "0.72rem",
             letterSpacing: "4px",
             color: "#ECC480",
             textTransform: "uppercase",
-            marginBottom: "12px",
+            marginBottom: "10px",
             fontWeight: 500,
           }}
         >
@@ -223,11 +240,11 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         <h2
           style={{
             fontFamily: "var(--font-serif)",
-            fontSize: "clamp(1.4rem, 3.5vw, 1.9rem)",
+            fontSize: "clamp(1.3rem, 3.2vw, 1.7rem)",
             fontWeight: 400,
             letterSpacing: "1.5px",
             color: "#f8f6f0",
-            marginBottom: "32px",
+            marginBottom: "28px",
           }}
         >
           THE ESSENCE OF ELEGANCE
@@ -238,12 +255,12 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           style={{
             position: "relative",
             width: "100%",
-            maxWidth: "340px",
+            maxWidth: "300px",
             height: "2px",
             background: "rgba(255, 255, 255, 0.12)",
             borderRadius: "4px",
             overflow: "hidden",
-            marginBottom: "16px",
+            marginBottom: "14px",
           }}
         >
           <div
@@ -255,58 +272,38 @@ export default function Preloader({ onComplete }: PreloaderProps) {
               width: `${displayPct}%`,
               background:
                 "linear-gradient(90deg, #9e7025 0%, #d4a04d 50%, #ECC480 100%)",
-              boxShadow: "0 0 14px rgba(236, 196, 128, 0.9)",
-              transition: "width 0.15s ease-out",
+              boxShadow: "0 0 12px rgba(236, 196, 128, 0.9)",
+              transition: "width 0.1s ease-out",
             }}
           />
         </div>
 
-        {/* Percentage & Frame Count Details */}
+        {/* ONLY Percentage Display (No frames text) */}
         <div
           style={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
+            alignItems: "center",
             width: "100%",
-            maxWidth: "340px",
-            fontSize: "0.75rem",
-            letterSpacing: "2px",
-            color: "#b0a594",
-            marginBottom: "16px",
+            fontSize: "0.82rem",
+            letterSpacing: "3px",
+            color: "#ECC480",
+            fontWeight: 600,
           }}
         >
-          <span style={{ color: "#ECC480", fontWeight: 600 }}>
-            {displayPct}%
-          </span>
-          <span>
-            {loadedCount} / {TOTAL_FRAMES} FRAMES
-          </span>
+          <span>{displayPct}%</span>
         </div>
-
-        {/* Status text */}
-        <p
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "0.78rem",
-            letterSpacing: "1.5px",
-            color: isReady ? "#ECC480" : "#7c7263",
-            transition: "color 0.3s ease",
-            textTransform: "uppercase",
-            fontWeight: 400,
-          }}
-        >
-          {isReady ? "✦ COMPLETE • ENTERING EXPERIENCE" : "Precaching Fragrance Sequence"}
-        </p>
       </div>
 
       <style jsx>{`
         @keyframes pulseLogo {
           0%, 100% {
             transform: scale(1);
-            filter: drop-shadow(0 4px 25px rgba(212, 175, 55, 0.45));
+            filter: drop-shadow(0 4px 22px rgba(212, 175, 55, 0.4));
           }
           50% {
             transform: scale(1.04);
-            filter: drop-shadow(0 6px 35px rgba(236, 196, 128, 0.75));
+            filter: drop-shadow(0 6px 30px rgba(236, 196, 128, 0.7));
           }
         }
       `}</style>
