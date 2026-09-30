@@ -1,405 +1,213 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 
 interface NavbarProps {
   onOpenCart?: () => void;
   cartCount?: number;
   onOpenContact?: () => void;
-  visible?: boolean;
 }
 
 export default function Navbar({
   onOpenCart,
   cartCount = 0,
   onOpenContact,
-  visible = true,
 }: NavbarProps) {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState("home");
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+  const lastYRef = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 40) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
+      const y = window.scrollY;
+      setIsScrolled(y > 30);
+
+      if (!menuOpen) {
+        if (y > lastYRef.current + 4 && y > 240) {
+          setIsHidden(true);
+        } else if (y < lastYRef.current - 4 || y < 240) {
+          setIsHidden(false);
+        }
       }
+      lastYRef.current = y;
     };
-    window.addEventListener("scroll", handleScroll);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, [menuOpen]);
+
+  // Section observer for active link
+  useEffect(() => {
+    const sections = ["home", "collection", "philosophy", "experience", "contact"];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
   }, []);
+
+  const handleToggleMenu = () => {
+    const nextState = !menuOpen;
+    setMenuOpen(nextState);
+    if (nextState) {
+      document.body.classList.add("menu-open");
+    } else {
+      document.body.classList.remove("menu-open");
+    }
+  };
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    if (menuOpen) {
+      setMenuOpen(false);
+      document.body.classList.remove("menu-open");
+    }
+    const target = document.getElementById(id);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
     <>
       <header
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          zIndex: 1000,
-          transform: visible ? "translateY(0)" : "translateY(-100%)",
-          opacity: visible ? 1 : 0,
-          pointerEvents: visible ? "auto" : "none",
-          transition:
-            "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, background 0.4s ease, padding 0.4s ease",
-          background: scrolled
-            ? "rgba(5, 5, 5, 0.92)"
-            : "rgba(8, 7, 6, 0.55)",
-          backdropFilter: "blur(18px)",
-          WebkitBackdropFilter: "blur(18px)",
-          borderBottom: scrolled
-            ? "1px solid rgba(212, 175, 55, 0.18)"
-            : "1px solid rgba(212, 175, 55, 0.1)",
-          padding: scrolled ? "14px 0" : "18px 0",
-        }}
+        className={`nav ${isScrolled ? "is-scrolled" : ""} ${
+          isHidden ? "is-hidden" : ""
+        }`}
       >
-        <div
-          style={{
-            maxWidth: "1400px",
-            margin: "0 auto",
-            padding: "0 40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
+        <a
+          href="#home"
+          className="nav__logo"
+          aria-label="ELXOR Perfumes"
+          onClick={(e) => handleLinkClick(e, "home")}
         >
-          {/* Logo */}
-          <Link
-            href="/"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              textDecoration: "none",
-            }}
-          >
-            <div
-              style={{
-                position: "relative",
-                height: "64px",
-                width: "60px",
-                filter: "drop-shadow(0 2px 12px rgba(212, 175, 55, 0.4))",
-                transition: "transform 0.3s ease",
-              }}
-            >
-              <Image
-                src="/images/logo.png"
-                alt="ELXOR"
-                fill
-                style={{ objectFit: "contain", objectPosition: "center" }}
-                priority
-              />
-            </div>
-          </Link>
+          <img
+            src="/images/logo-preloader-crisp.png"
+            alt="ELXOR Perfumes"
+            width={58}
+            height={61}
+          />
+        </a>
 
-          {/* Desktop Navigation Links */}
-          <nav
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "48px",
-            }}
-            className="desktop-nav"
-          >
-            <a
-              href="#home"
-              onClick={() => setActiveLink("home")}
-              style={{
-                color: activeLink === "home" ? "#ECC480" : "#d8cbba",
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.85rem",
-                letterSpacing: "2.5px",
-                fontWeight: 500,
-                textTransform: "uppercase",
-                position: "relative",
-                paddingBottom: "6px",
-                transition: "color 0.3s ease",
-              }}
-            >
-              HOME
-              {activeLink === "home" && (
-                <span
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: "15%",
-                    width: "70%",
-                    height: "2px",
-                    background:
-                      "linear-gradient(90deg, #ECC480 0%, #D8A253 100%)",
-                    borderRadius: "2px",
-                    boxShadow: "0 0 8px rgba(236, 196, 128, 0.6)",
-                  }}
-                />
-              )}
-            </a>
-
-            <a
-              href="#philosophy"
-              onClick={() => setActiveLink("about")}
-              style={{
-                color: activeLink === "about" ? "#ECC480" : "#d8cbba",
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.85rem",
-                letterSpacing: "2.5px",
-                fontWeight: 500,
-                textTransform: "uppercase",
-                position: "relative",
-                paddingBottom: "6px",
-                transition: "color 0.3s ease",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#ECC480")}
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color =
-                  activeLink === "about" ? "#ECC480" : "#d8cbba")
-              }
-            >
-              ABOUT US
-              {activeLink === "about" && (
-                <span
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: "15%",
-                    width: "70%",
-                    height: "2px",
-                    background:
-                      "linear-gradient(90deg, #ECC480 0%, #D8A253 100%)",
-                    borderRadius: "2px",
-                  }}
-                />
-              )}
-            </a>
-
-            <a
-              href="#contact"
-              onClick={() => {
-                setActiveLink("contact");
-                if (onOpenContact) onOpenContact();
-              }}
-              style={{
-                color: activeLink === "contact" ? "#ECC480" : "#d8cbba",
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.85rem",
-                letterSpacing: "2.5px",
-                fontWeight: 500,
-                textTransform: "uppercase",
-                position: "relative",
-                paddingBottom: "6px",
-                transition: "color 0.3s ease",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#ECC480")}
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color =
-                  activeLink === "contact" ? "#ECC480" : "#d8cbba")
-              }
-            >
-              CONTACT US
-            </a>
-          </nav>
-
-          {/* Right Action Buttons */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-            }}
-          >
-            {/* Bag Icon */}
-            {onOpenCart && (
-              <button
-                onClick={onOpenCart}
-                aria-label="View Shopping Bag"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "#d8cbba",
-                  cursor: "pointer",
-                  position: "relative",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "8px",
-                  transition: "all 0.3s ease",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#ECC480")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#d8cbba")}
-              >
-                <ShoppingBag size={20} strokeWidth={1.5} />
-                {cartCount > 0 && (
-                  <span
-                    style={{
-                      position: "absolute",
-                      top: "2px",
-                      right: "2px",
-                      background:
-                        "linear-gradient(135deg, #ECC480 0%, #D8A253 100%)",
-                      color: "#120d04",
-                      fontSize: "0.65rem",
-                      fontWeight: 700,
-                      width: "16px",
-                      height: "16px",
-                      borderRadius: "50%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-            )}
-
-            {/* Explore Pill Button */}
-            <a
-              href="#collection"
-              className="btn-pill-outline"
-              style={{
-                display: "inline-flex",
-              }}
-            >
-              EXPLORE
-            </a>
-
-            {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="mobile-toggle"
-              aria-label="Toggle menu"
-              style={{
-                display: "none",
-                background: "transparent",
-                border: "none",
-                color: "#ECC480",
-                cursor: "pointer",
-                padding: "6px",
-              }}
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile Drawer Menu */}
-      {mobileMenuOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100vh",
-            background: "rgba(5, 5, 5, 0.98)",
-            zIndex: 999,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "36px",
-            backdropFilter: "blur(20px)",
-          }}
-        >
-          <div
-            style={{
-              position: "relative",
-              width: "72px",
-              height: "76px",
-              marginBottom: "12px",
-              filter: "drop-shadow(0 2px 14px rgba(212, 175, 55, 0.45))",
-            }}
-          >
-            <Image
-              src="/images/logo.png"
-              alt="ELXOR"
-              fill
-              style={{ objectFit: "contain" }}
-            />
-          </div>
+        <nav className="nav__links" aria-label="Primary">
           <a
             href="#home"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{
-              color: "#ECC480",
-              fontSize: "1.4rem",
-              letterSpacing: "3px",
-              textTransform: "uppercase",
-              fontFamily: "var(--font-serif)",
-            }}
+            className={activeSection === "home" ? "is-active" : ""}
+            onClick={(e) => handleLinkClick(e, "home")}
           >
-            HOME
+            Home
+          </a>
+          <a
+            href="#collection"
+            className={activeSection === "collection" ? "is-active" : ""}
+            onClick={(e) => handleLinkClick(e, "collection")}
+          >
+            Collection
           </a>
           <a
             href="#philosophy"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{
-              color: "#f8f6f0",
-              fontSize: "1.4rem",
-              letterSpacing: "3px",
-              textTransform: "uppercase",
-              fontFamily: "var(--font-serif)",
-            }}
+            className={activeSection === "philosophy" ? "is-active" : ""}
+            onClick={(e) => handleLinkClick(e, "philosophy")}
           >
-            ABOUT US
+            About Us
           </a>
           <a
-            href="#collection"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{
-              color: "#f8f6f0",
-              fontSize: "1.4rem",
-              letterSpacing: "3px",
-              textTransform: "uppercase",
-              fontFamily: "var(--font-serif)",
-            }}
+            href="#experience"
+            className={activeSection === "experience" ? "is-active" : ""}
+            onClick={(e) => handleLinkClick(e, "experience")}
           >
-            COLLECTION
+            Experience
           </a>
           <a
             href="#contact"
-            onClick={() => {
-              setMobileMenuOpen(false);
-              if (onOpenContact) onOpenContact();
-            }}
-            style={{
-              color: "#f8f6f0",
-              fontSize: "1.4rem",
-              letterSpacing: "3px",
-              textTransform: "uppercase",
-              fontFamily: "var(--font-serif)",
-            }}
+            className={activeSection === "contact" ? "is-active" : ""}
+            onClick={(e) => handleLinkClick(e, "contact")}
           >
-            CONTACT US
+            Contact Us
+          </a>
+        </nav>
+
+        <div className="nav__actions">
+          {onOpenCart && (
+            <button
+              onClick={onOpenCart}
+              className="nav__cart-btn"
+              aria-label="View shopping cart"
+            >
+              <ShoppingBag size={18} />
+              {cartCount > 0 && (
+                <span className="nav__cart-badge">{cartCount}</span>
+              )}
+            </button>
+          )}
+
+          <a
+            href="#collection"
+            className="btn btn--ghost nav__cta"
+            onClick={(e) => handleLinkClick(e, "collection")}
+          >
+            Discover <i className="arrow" aria-hidden="true" />
+          </a>
+        </div>
+
+        <button
+          className="nav__toggle"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          aria-controls="menu"
+          onClick={handleToggleMenu}
+        >
+          <span />
+          <span />
+        </button>
+      </header>
+
+      {/* Fullscreen Luxury Mobile Menu */}
+      <div className="menu" id="menu" aria-hidden={!menuOpen}>
+        <nav className="menu__links" aria-label="Mobile">
+          <a href="#home" onClick={(e) => handleLinkClick(e, "home")}>
+            <em>01</em>Home
           </a>
           <a
             href="#collection"
-            onClick={() => setMobileMenuOpen(false)}
-            className="btn-gold-solid"
-            style={{ marginTop: "20px" }}
+            onClick={(e) => handleLinkClick(e, "collection")}
           >
-            EXPLORE COLLECTION
+            <em>02</em>Collection
           </a>
-        </div>
-      )}
-
-      <style jsx>{`
-        @media (max-width: 860px) {
-          .desktop-nav {
-            display: none !important;
-          }
-          .mobile-toggle {
-            display: block !important;
-          }
-        }
-      `}</style>
+          <a
+            href="#philosophy"
+            onClick={(e) => handleLinkClick(e, "philosophy")}
+          >
+            <em>03</em>Philosophy
+          </a>
+          <a
+            href="#experience"
+            onClick={(e) => handleLinkClick(e, "experience")}
+          >
+            <em>04</em>Experience
+          </a>
+          <a href="#contact" onClick={(e) => handleLinkClick(e, "contact")}>
+            <em>05</em>Contact
+          </a>
+        </nav>
+        <p className="menu__script">The essence of elegance</p>
+      </div>
     </>
   );
 }

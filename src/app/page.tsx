@@ -1,29 +1,32 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Preloader from "@/components/Preloader";
+import ScrollObserver from "@/components/ScrollObserver";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import StatementSection from "@/components/StatementSection";
 import CollectionSection, {
   PerfumeItem,
 } from "@/components/CollectionSection";
+import Marquee from "@/components/Marquee";
 import PhilosophySection from "@/components/PhilosophySection";
+import ValuesSection from "@/components/ValuesSection";
 import ExperienceSection from "@/components/ExperienceSection";
+import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import FragranceModal from "@/components/FragranceModal";
 import CartDrawer, { CartItem } from "@/components/CartDrawer";
 import ContactModal from "@/components/ContactModal";
-import GoldenDustCanvas from "@/components/GoldenDustCanvas";
 
 export default function Home() {
+  const [isLoaded, setIsLoaded] = useState(false);
   const [selectedPerfume, setSelectedPerfume] = useState<PerfumeItem | null>(
     null
   );
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [contactOpen, setContactOpen] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(true);
 
   const handleAddToCart = (
     perfume: PerfumeItem,
@@ -53,67 +56,72 @@ export default function Home() {
   );
 
   return (
-    <main
-      style={{
-        position: "relative",
-        backgroundColor: "#050505",
-        minHeight: "100vh",
-        color: "#f8f6f0",
-      }}
-    >
-      {/* Dedicated Luxury Preloader with breathing logo and percentage */}
+    <div style={{ position: "relative", minHeight: "100vh" }}>
+      {/* 1. Preloader: exact ELXOR executive loader with frame preload */}
       {!isLoaded && <Preloader onComplete={() => setIsLoaded(true)} />}
 
-      {/* Interactive Golden Fragrance Dust Canvas & Cursor Aura */}
-      <GoldenDustCanvas />
+      {/* 2. Lenis Smooth Scroll & Scroll Reveal Observer */}
+      <ScrollObserver />
 
-      {/* Top Luxury Glassmorphism Navbar */}
+      {/* 3. Luxury Navigation Bar & Fullscreen Mobile Menu */}
       <Navbar
-        visible={showNavbar}
         onOpenCart={() => setCartOpen(true)}
         cartCount={totalCartCount}
         onOpenContact={() => setContactOpen(true)}
       />
 
-      {/* 1. Hero Section with 120-Frame Cinematic Scroll Animation */}
-      <HeroSection
-        onExploreClick={() => {
-          const el = document.getElementById("collection");
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        }}
-        onDiscoverClick={() => {
-          const el = document.getElementById("philosophy");
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        }}
-      />
+      <main>
+        {/* 4. HERO: 460vh pinned frame sequence with 4 heading chapters */}
+        <HeroSection
+          isReady={isLoaded}
+          onExploreClick={() => {
+            const el = document.getElementById("collection");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
 
-      {/* 2. Collection Section (Second Section) */}
-      <CollectionSection
-        onSelectPerfume={(perfume) => setSelectedPerfume(perfume)}
-      />
+        {/* 5. Statement Section with progressive word light-up */}
+        <StatementSection />
 
-      {/* 3. Philosophy & Values Section (Third Section) */}
-      <PhilosophySection />
+        {/* 6. Collection: 640vh pinned product sequence with self-drawing lines,
+               feathers, frosted cards, notes, finale row & 7 sparks */}
+        <CollectionSection
+          onSelectPerfume={(perfume) => setSelectedPerfume(perfume)}
+          onContactClick={() => setContactOpen(true)}
+        />
 
-      {/* 4. Experience Section (Fourth Section) */}
-      <ExperienceSection
-        onDiscoverClick={() => {
-          const el = document.getElementById("collection");
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        }}
-      />
+        {/* 7. Marquee ticker */}
+        <Marquee />
 
-      {/* 5. Footer (Fifth Section) */}
+        {/* 8. Philosophy split section with parallax */}
+        <PhilosophySection />
+
+        {/* 9. Values section with bespoke SVG emblems */}
+        <ValuesSection />
+
+        {/* 10. Experience split section with parallax */}
+        <ExperienceSection
+          onDiscoverClick={() => {
+            const el = document.getElementById("collection");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
+
+        {/* 11. Luxury Get In Touch Contact Section */}
+        <ContactSection />
+      </main>
+
+      {/* 11. Luxury 4-Column Footer */}
       <Footer onOpenContact={() => setContactOpen(true)} />
 
-      {/* Interactive Quick-View Fragrance Discovery Modal */}
+      {/* 12. Interactive Fragrance Discovery Modal */}
       <FragranceModal
         perfume={selectedPerfume}
         onClose={() => setSelectedPerfume(null)}
         onAddToCart={handleAddToCart}
       />
 
-      {/* Luxury Cart Drawer */}
+      {/* 13. Luxury Slide-in Cart Drawer */}
       <CartDrawer
         isOpen={cartOpen}
         onClose={() => setCartOpen(false)}
@@ -122,11 +130,11 @@ export default function Home() {
         onClearCart={() => setCartItems([])}
       />
 
-      {/* Contact Concierge Modal */}
+      {/* 14. Luxury Concierge Contact Modal */}
       <ContactModal
         isOpen={contactOpen}
         onClose={() => setContactOpen(false)}
       />
-    </main>
+    </div>
   );
 }

@@ -1,167 +1,589 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import HeroScrollCanvas from "./HeroScrollCanvas";
-import { ChevronDown } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  FRAME_COUNT,
+  frameStore,
+  getNearestLoaded,
+  startFrameLoading,
+} from "@/lib/frameCache";
 
 interface HeroSectionProps {
+  isReady?: boolean;
   onExploreClick?: () => void;
-  onDiscoverClick?: () => void;
-  onProgressChange?: (progress: number) => void;
 }
 
+const FRAME_MAP: [number, number][] = [
+  [0, 0],
+  [0.18, 27],
+  [0.42, 49],
+  [0.66, 78],
+  [1, 119],
+];
+
+const progressToFrame = (p: number): number => {
+  for (let k = 1; k < FRAME_MAP.length; k++) {
+    const [p1, f1] = FRAME_MAP[k];
+    const [p0, f0] = FRAME_MAP[k - 1];
+    if (p <= p1) {
+      const t = (p - p0) / (p1 - p0);
+      return f0 + (f1 - f0) * t;
+    }
+  }
+  return FRAME_COUNT - 1;
+};
+
+const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+const LABELS = ["Essence", "Unveiling", "Trail", "Signature"];
+const CUTS = [0.42, 0.66];
+
 export default function HeroSection({
+  isReady = true,
   onExploreClick,
-  onProgressChange,
 }: HeroSectionProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const dustCanvasRef = useRef<HTMLCanvasElement>(null);
+  const shadeRef = useRef<HTMLDivElement>(null);
+  const flashRef = useRef<HTMLDivElement>(null);
+  const chaptersRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLSpanElement>(null);
+  const chapterNumRef = useRef<HTMLElement>(null);
+  const chapterLabelRef = useRef<HTMLSpanElement>(null);
 
-  // Responsive check
+  const chapterElementsRef = useRef<(HTMLElement | null)[]>([]);
+
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+    startFrameLoading();
 
-  // Track scroll position through the pinned hero section (calibrated 100vh-130vh scroll distance)
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const totalScrollable = rect.height - window.innerHeight;
-      if (totalScrollable <= 0) return;
+    const hero = heroRef.current;
+    const sticky = stickyRef.current;
+    const canvas = canvasRef.current;
+    const dust = dustCanvasRef.current;
+    const shade = shadeRef.current;
+    const flashEl = flashRef.current;
+    const chaptersEl = chaptersRef.current;
+    const track = trackRef.current;
+    const chapterNum = chapterNumRef.current;
+    const chapterLabel = chapterLabelRef.current;
 
-      const currentScroll = Math.max(0, -rect.top);
-      const progress = Math.min(1, Math.max(0, currentScroll / totalScrollable));
-      setScrollProgress(progress);
-      if (onProgressChange) {
-        onProgressChange(progress);
-      }
+    if (!hero || !sticky || !canvas || !dust || !shade || !flashEl || !chaptersEl)
+      return;
+
+    const ctx = canvas.getContext("2d", { alpha: false });
+    const dctx = dust.getContext("2d");
+    if (!ctx || !dctx) return;
+
+    // Sprite for gold dust
+    const sprite = document.createElement("canvas");
+    sprite.width = sprite.height = 64;
+    const sc = sprite.getContext("2d");
+    if (sc) {
+      const g = sc.createRadialGradient(32, 32, 0, 32, 32, 32);
+      g.addColorStop(0, "rgba(255, 244, 220, 1)");
+      g.addColorStop(0.18, "rgba(250, 216, 150, 0.8)");
+      g.addColorStop(0.45, "rgba(213, 160, 80, 0.18)");
+      g.addColorStop(1, "rgba(213, 160, 80, 0)");
+      sc.fillStyle = g;
+      sc.fillRect(0, 0, 64, 64);
+    }
+
+    let dw = 0;
+    let dh = 0;
+    let ddpr = 1;
+    interface Mote {
+      x: number;
+      y: number;
+      r: number;
+      vy: number;
+      vx: number;
+      ph: number;
+      tw: number;
+      a: number;
+      depth: number;
+    }
+    let motes: Mote[] = [];
+    let dustVel = 0;
+    let lastScrollForDust = 0;
+    let dustBoostFlash = 0;
+
+    const spawnMote = (anywhere: boolean): Mote => ({
+      x: Math.random() * dw,
+      y: anywhere ? Math.random() * dh : dh + 20,
+      r: (1.2 + Math.random() * 3.2) * ddpr,
+      vy: (0.12 + Math.random() * 0.4) * ddpr,
+      vx: (Math.random() - 0.5) * 0.12 * ddpr,
+      ph: Math.random() * Math.PI * 2,
+      tw: 0.008 + Math.random() * 0.025,
+      a: 0.25 + Math.random() * 0.55,
+      depth: 0.5 + Math.random() * 1.2,
+    });
+
+    const sizeDust = () => {
+      ddpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      dw = dust.width = Math.round(sticky.clientWidth * ddpr);
+      dh = dust.height = Math.round(sticky.clientHeight * ddpr);
+      const count = window.innerWidth < 760 ? 38 : 80;
+      motes = Array.from({ length: count }, () => spawnMote(true));
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [onProgressChange]);
+    let cw = 0;
+    let ch = 0;
+    let lastDrawn = -1;
 
-  // Scroll indicator opacity: visible at start, disappears smoothly after scrolling begins
-  const scrollIndicatorOpacity =
-    scrollProgress <= 0.03
-      ? 0.95
-      : Math.max(0, 1 - (scrollProgress - 0.03) * 14);
+    const sizeCanvas = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      cw = Math.round(sticky.clientWidth * dpr);
+      ch = Math.round(sticky.clientHeight * dpr);
+      canvas.width = cw;
+      canvas.height = ch;
+      lastDrawn = -1;
+    };
 
-  const handleScrollToCollection = () => {
-    if (onExploreClick) {
-      onExploreClick();
-    } else {
-      const el = document.getElementById("collection");
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+    const drawFrame = (targetIndex: number) => {
+      const i = getNearestLoaded(targetIndex);
+      if (i < 0 || i === lastDrawn) return;
+      const img = frameStore.frames[i];
+      if (!img || !img.naturalWidth) return;
+      const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+      const w = img.naturalWidth * s;
+      const h = img.naturalHeight * s;
+      ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+      lastDrawn = i;
+    };
+
+    const drawDust = () => {
+      const y = window.scrollY;
+      if (y > heroTop + hero.offsetHeight) return;
+      const vel = y - lastScrollForDust;
+      lastScrollForDust = y;
+      dustVel += (clamp(vel, -60, 60) * 0.06 - dustVel) * 0.12;
+      dctx.clearRect(0, 0, dw, dh);
+      dctx.globalCompositeOperation = "lighter";
+      const glow = 1 + dustBoostFlash * 1.4;
+      for (const m of motes) {
+        m.ph += m.tw;
+        m.y -= (m.vy + dustVel * ddpr) * m.depth;
+        m.x += m.vx + Math.sin(m.ph) * 0.18 * ddpr;
+        if (m.y < -30) Object.assign(m, spawnMote(false));
+        else if (m.y > dh + 30) Object.assign(m, spawnMote(false), { y: -20 });
+        if (m.x < -30) m.x = dw + 20;
+        else if (m.x > dw + 30) m.x = -20;
+        const size = m.r * 6 * (0.8 + m.depth * 0.3);
+        dctx.globalAlpha = Math.min(
+          1,
+          m.a * (0.55 + 0.45 * Math.sin(m.ph * 1.7)) * glow
+        );
+        dctx.drawImage(sprite, m.x - size / 2, m.y - size / 2, size, size);
+      }
+      dctx.globalAlpha = 1;
+    };
+
+    let heroTop = 0;
+    let heroRange = 1;
+    let vh = window.innerHeight;
+
+    const measure = () => {
+      vh = window.innerHeight;
+      const r = hero.getBoundingClientRect();
+      heroTop = r.top + window.scrollY;
+      heroRange = Math.max(1, hero.offsetHeight - vh);
+      sizeCanvas();
+      sizeDust();
+    };
+
+    measure();
+
+    // Mouse tracking for 3D depth
+    let mx = 0;
+    let my = 0;
+    let tmx = 0;
+    let tmy = 0;
+    let lastMx = 9;
+    let lastMy = 9;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      tmx = (e.clientX / window.innerWidth - 0.5) * 2;
+      tmy = (e.clientY / window.innerHeight - 0.5) * 2;
+    };
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+
+    const chapterConfigs = [
+      { a: -1, c: 0.1, d: 0.17, side: "b" as const, on: false, lastE: -1 },
+      { a: 0.19, c: 0.36, d: 0.42, side: "l" as const, on: false, lastE: -1 },
+      { a: 0.44, c: 0.6, d: 0.66, side: "r" as const, on: false, lastE: -1 },
+      { a: 0.7, c: 2, d: 3, side: "b" as const, on: false, lastE: -1 },
+    ];
+
+    let smoothP = 0;
+    let lastFlash = -1;
+    let lastRailIdx = -1;
+    const shadeState = { l: -1, r: -1, b: -1 };
+
+    let running = true;
+    const update = () => {
+      if (!running) return;
+
+      const raw = clamp((window.scrollY - heroTop) / heroRange);
+      smoothP += (raw - smoothP) * 0.14;
+      if (Math.abs(raw - smoothP) < 0.0004) smoothP = raw;
+      const p = smoothP;
+
+      // Draw canvas frame
+      drawFrame(Math.round(progressToFrame(p)));
+
+      // Camera push-out / push-in
+      const zoom =
+        p < 0.18
+          ? lerp(1.12, 1.04, p / 0.18)
+          : p < 0.66
+          ? 1.04
+          : lerp(1.04, 1.09, (p - 0.66) / 0.34);
+      canvas.style.setProperty("--zoom", zoom.toFixed(4));
+
+      // Warm bloom flash at video cuts
+      const flash = Math.max(
+        ...CUTS.map((cut) => 1 - Math.abs(p - cut) / 0.024),
+        0
+      );
+      const flashE = flash * flash * (3 - 2 * flash);
+      if (Math.abs(flashE - lastFlash) > 0.002) {
+        lastFlash = flashE;
+        flashEl.style.setProperty("--flash", (flashE * 0.75).toFixed(3));
+      }
+      dustBoostFlash = flashE;
+
+      // Mouse depth
+      mx += (tmx - mx) * 0.06;
+      my += (tmy - my) * 0.06;
+      if (Math.abs(mx - lastMx) > 0.0005 || Math.abs(my - lastMy) > 0.0005) {
+        lastMx = mx;
+        lastMy = my;
+        canvas.style.setProperty("--mx", `${(-mx * 16).toFixed(2)}px`);
+        canvas.style.setProperty("--my", `${(-my * 10).toFixed(2)}px`);
+        chaptersEl.style.setProperty("--tx", `${(mx * 10).toFixed(2)}px`);
+        chaptersEl.style.setProperty("--ty", `${(my * 6).toFixed(2)}px`);
+      }
+
+      // Shading & chapters
+      const sh = { l: 0, r: 0, b: 0 };
+      let railIdx = 0;
+
+      chapterConfigs.forEach((c, idx) => {
+        const el = chapterElementsRef.current[idx];
+        if (!el) return;
+
+        const shouldBeOn = isReady && p >= c.a && p < c.d;
+        if (shouldBeOn !== c.on) {
+          c.on = shouldBeOn;
+          el.classList.toggle("is-in", shouldBeOn);
+        }
+
+        const e = clamp((p - c.c) / (c.d - c.c));
+        if (Math.abs(e - c.lastE) > 0.001) {
+          c.lastE = e;
+          el.style.setProperty("--co", (1 - e).toFixed(3));
+          el.style.setProperty("--cy", `${(-e * 70).toFixed(1)}px`);
+          el.style.setProperty("--cb", `${(e * 10).toFixed(2)}px`);
+        }
+
+        if (p >= c.a) railIdx = idx;
+
+        const inAmt = idx === 0 ? 1 : clamp((p - c.a) / 0.05);
+        const vis =
+          (p >= c.a || idx === 0) && p < c.d ? inAmt * (1 - e) : 0;
+        sh[c.side] = Math.max(sh[c.side], vis);
+      });
+
+      (["l", "r", "b"] as const).forEach((k) => {
+        if (Math.abs(sh[k] - shadeState[k]) > 0.002) {
+          shadeState[k] = sh[k];
+          shade.style.setProperty(`--shade-${k}`, sh[k].toFixed(3));
+        }
+      });
+
+      shade.style.setProperty(
+        "--end-fade",
+        (clamp((p - 0.93) / 0.07) * 0.75).toFixed(3)
+      );
+      sticky.style.setProperty("--hint", (1 - clamp(p / 0.035)).toFixed(3));
+
+      if (track) {
+        track.style.setProperty("--p", p.toFixed(4));
+      }
+
+      if (railIdx !== lastRailIdx) {
+        lastRailIdx = railIdx;
+        if (chapterNum) {
+          chapterNum.textContent = String(railIdx + 1).padStart(2, "0");
+        }
+        if (chapterLabel) {
+          chapterLabel.textContent = LABELS[railIdx];
+        }
+      }
+
+      drawDust();
+      requestAnimationFrame(update);
+    };
+
+    const rafId = requestAnimationFrame(update);
+
+    const handleResize = () => {
+      measure();
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      running = false;
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isReady]);
 
   return (
-    <section
-      id="home"
-      ref={containerRef}
-      style={{
-        position: "relative",
-        minHeight: isMobile ? "200vh" : "230vh",
-        backgroundColor: "#050505",
-      }}
-    >
-      {/* Sticky Fullscreen Viewport for pure frame scrubbing (Frame 1 to 120) */}
-      <div
-        style={{
-          position: "sticky",
-          top: 0,
-          height: "100vh",
-          width: "100%",
-          overflow: "hidden",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 10,
-        }}
-      >
-        {/* Full-bleed 1080p Ultra-HQ WebP Canvas from the 120-frame video */}
-        <HeroScrollCanvas progress={scrollProgress} />
+    <section className="hero" id="home" ref={heroRef}>
+      <div className="hero__sticky" ref={stickyRef}>
+        <canvas className="hero__canvas" ref={canvasRef} aria-hidden="true" />
+        <div className="hero__shade" ref={shadeRef} aria-hidden="true" />
+        <div className="hero__flash" ref={flashRef} aria-hidden="true" />
+        <canvas className="hero__dust" ref={dustCanvasRef} aria-hidden="true" />
 
-        {/* Minimal Bottom Fade: only the bottom edge to blend seamlessly into #collection */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            width: "100%",
-            height: "120px",
-            zIndex: 2,
-            pointerEvents: "none",
-            background:
-              "linear-gradient(180deg, rgba(5,5,5,0) 0%, rgba(5,5,5,0.6) 65%, #050505 100%)",
-          }}
-        />
-
-        {/* Subtle Bottom Scroll Indicator: SCROLL TO DISCOVER ↓ */}
-        <div
-          onClick={handleScrollToCollection}
-          style={{
-            position: "absolute",
-            bottom: isMobile ? "18px" : "28px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 10,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "5px",
-            opacity: scrollIndicatorOpacity,
-            pointerEvents: scrollIndicatorOpacity > 0.1 ? "auto" : "none",
-            transition:
-              "opacity 0.4s ease, transform 0.4s ease, border-color 0.3s ease",
-            cursor: "pointer",
-            background: "rgba(9, 7, 6, 0.55)",
-            padding: "7px 18px",
-            borderRadius: "22px",
-            border: "1px solid rgba(216, 162, 83, 0.22)",
-            backdropFilter: "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",
-            boxShadow: "0 6px 20px rgba(0, 0, 0, 0.5)",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = "rgba(236, 196, 128, 0.55)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = "rgba(216, 162, 83, 0.22)";
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.68rem",
-              letterSpacing: "2.8px",
-              color: "#ded3c2",
-              textTransform: "uppercase",
-              fontWeight: 400,
-              userSelect: "none",
+        <div className="hero__chapters" ref={chaptersRef}>
+          {/* Chapter 1: Center */}
+          <article
+            className="chapter chapter--center"
+            ref={(el) => {
+              chapterElementsRef.current[0] = el;
             }}
           >
-            SCROLL TO DISCOVER ↓
-          </span>
-          <div
-            className="animate-bounce"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#ECC480",
+            <p className="eyebrow" data-piece style={{ "--i": 0 } as React.CSSProperties}>
+              <span className="brand">ELXOR Perfumes</span>
+            </p>
+            <h1 className="chapter__title">
+              <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
+                The{" "}
+              </span>
+              <span className="w" style={{ "--i": 2 } as React.CSSProperties}>
+                Essence
+              </span>
+              <br />{" "}
+              <span
+                className="w gold-text"
+                style={{ "--i": 3 } as React.CSSProperties}
+              >
+                of{" "}
+              </span>
+              <span
+                className="w gold-text"
+                style={{ "--i": 4 } as React.CSSProperties}
+              >
+                Elegance
+              </span>
+            </h1>
+            <p
+              className="chapter__script"
+              data-piece
+              style={{ "--i": 5 } as React.CSSProperties}
+            >
+              Crafted for distinction
+            </p>
+          </article>
+
+          {/* Chapter 2: Left */}
+          <article
+            className="chapter chapter--left"
+            ref={(el) => {
+              chapterElementsRef.current[1] = el;
             }}
           >
-            <ChevronDown size={14} />
-          </div>
+            <p className="eyebrow" data-piece style={{ "--i": 0 } as React.CSSProperties}>
+              II · The Unveiling
+            </p>
+            <h2 className="chapter__title">
+              <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
+                Luxury{" "}
+              </span>
+              <span className="w" style={{ "--i": 2 } as React.CSSProperties}>
+                begins
+              </span>
+              <br />{" "}
+              <span
+                className="w gold-text"
+                style={{ "--i": 3 } as React.CSSProperties}
+              >
+                before{" "}
+              </span>
+              <span
+                className="w gold-text"
+                style={{ "--i": 4 } as React.CSSProperties}
+              >
+                the
+              </span>
+              <br />{" "}
+              <span
+                className="w gold-text"
+                style={{ "--i": 5 } as React.CSSProperties}
+              >
+                first{" "}
+              </span>
+              <span
+                className="w gold-text"
+                style={{ "--i": 6 } as React.CSSProperties}
+              >
+                note
+              </span>
+            </h2>
+            <p
+              className="chapter__body"
+              data-piece
+              style={{ "--i": 7 } as React.CSSProperties}
+            >
+              It begins the moment the box opens, and the light finds the bottle.
+            </p>
+          </article>
+
+          {/* Chapter 3: Right */}
+          <article
+            className="chapter chapter--right"
+            ref={(el) => {
+              chapterElementsRef.current[2] = el;
+            }}
+          >
+            <p className="eyebrow" data-piece style={{ "--i": 0 } as React.CSSProperties}>
+              III · The Trail
+            </p>
+            <h2 className="chapter__title">
+              <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
+                One{" "}
+              </span>
+              <span className="w" style={{ "--i": 2 } as React.CSSProperties}>
+                touch.
+              </span>
+              <br />{" "}
+              <span
+                className="w gold-text"
+                style={{ "--i": 3 } as React.CSSProperties}
+              >
+                The{" "}
+              </span>
+              <span
+                className="w gold-text"
+                style={{ "--i": 4 } as React.CSSProperties}
+              >
+                air{" "}
+              </span>
+              <span
+                className="w gold-text"
+                style={{ "--i": 5 } as React.CSSProperties}
+              >
+                remembers.
+              </span>
+            </h2>
+            <p
+              className="chapter__body"
+              data-piece
+              style={{ "--i": 6 } as React.CSSProperties}
+            >
+              A single spray, and every room you leave holds a quiet trace of you.
+            </p>
+          </article>
+
+          {/* Chapter 4: Center Final */}
+          <article
+            className="chapter chapter--center chapter--final"
+            ref={(el) => {
+              chapterElementsRef.current[3] = el;
+            }}
+          >
+            <p className="eyebrow" data-piece style={{ "--i": 0 } as React.CSSProperties}>
+              IV · The Signature
+            </p>
+            <h2 className="chapter__title">
+              <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
+                Don’t{" "}
+              </span>
+              <span className="w" style={{ "--i": 2 } as React.CSSProperties}>
+                just{" "}
+              </span>
+              <span className="w" style={{ "--i": 3 } as React.CSSProperties}>
+                wear{" "}
+              </span>
+              <span className="w" style={{ "--i": 4 } as React.CSSProperties}>
+                a{" "}
+              </span>
+              <span className="w" style={{ "--i": 5 } as React.CSSProperties}>
+                fragrance,
+              </span>
+              <br />{" "}
+              <span
+                className="w gold-text"
+                style={{ "--i": 6 } as React.CSSProperties}
+              >
+                Leave{" "}
+              </span>
+              <span
+                className="w gold-text"
+                style={{ "--i": 7 } as React.CSSProperties}
+              >
+                a{" "}
+              </span>
+              <span
+                className="w gold-text"
+                style={{ "--i": 8 } as React.CSSProperties}
+              >
+                Presence
+              </span>
+            </h2>
+            <p
+              className="chapter__body"
+              data-piece
+              style={{ "--i": 9 } as React.CSSProperties}
+            >
+              Four signatures, each composed for a different kind of presence.
+            </p>
+            <div
+              data-piece
+              style={{ "--i": 10 } as React.CSSProperties}
+            >
+              <a
+                href="#collection"
+                className="btn btn--gold"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onExploreClick) {
+                    onExploreClick();
+                  } else {
+                    document
+                      .getElementById("collection")
+                      ?.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+                Explore the collection <i className="arrow" aria-hidden="true" />
+              </a>
+            </div>
+          </article>
         </div>
+
+        {/* Right rail indicator */}
+        <aside className="hero__rail" aria-hidden="true">
+          <span className="hero__count">
+            <b ref={chapterNumRef} className="js-chapter">
+              01
+            </b>{" "}
+            / 04
+          </span>
+          <span className="hero__track">
+            <span ref={trackRef} className="js-track" />
+          </span>
+          <span ref={chapterLabelRef} className="hero__label js-label">
+            Essence
+          </span>
+        </aside>
       </div>
     </section>
   );

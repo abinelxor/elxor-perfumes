@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { X, Send, CheckCircle2 } from "lucide-react";
 
 interface ContactModalProps {
@@ -26,7 +25,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     setTimeout(() => {
       setSubmitted(false);
       onClose();
-    }, 2000);
+    }, 2200);
   };
 
   return (
@@ -35,8 +34,9 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         position: "fixed",
         inset: 0,
         zIndex: 3500,
-        backgroundColor: "rgba(5, 5, 5, 0.85)",
-        backdropFilter: "blur(12px)",
+        backgroundColor: "rgba(5, 4, 3, 0.88)",
+        backdropFilter: "blur(14px)",
+        WebkitBackdropFilter: "blur(14px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -47,129 +47,111 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
       <div
         style={{
           width: "100%",
-          maxWidth: "560px",
-          backgroundColor: "#0d0b09",
-          border: "1px solid rgba(216, 162, 83, 0.4)",
-          borderRadius: "4px",
-          boxShadow: "0 25px 50px rgba(0, 0, 0, 0.95)",
-          padding: "36px 32px",
+          maxWidth: "640px",
+          backgroundColor: "#0a0806",
+          border: "1px solid rgba(213, 174, 111, 0.36)",
+          borderRadius: "6px",
+          boxShadow:
+            "0 30px 70px rgba(0, 0, 0, 0.98), 0 0 40px rgba(212, 175, 55, 0.12)",
+          padding: "clamp(32px, 5vw, 44px) clamp(24px, 4vw, 36px)",
           position: "relative",
         }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Close Button */}
         <button
           onClick={onClose}
-          aria-label="Close contact dialog"
+          aria-label="Close dialog"
           style={{
             position: "absolute",
             top: "20px",
             right: "20px",
             background: "transparent",
-            border: "1px solid rgba(216, 162, 83, 0.3)",
+            border: "1px solid rgba(213, 174, 111, 0.28)",
             borderRadius: "50%",
-            width: "32px",
-            height: "32px",
+            width: "36px",
+            height: "36px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#ecc480",
+            color: "#d5ae6f",
             cursor: "pointer",
+            transition: "all 0.3s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "#f5dca8";
+            e.currentTarget.style.color = "#f5dca8";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "rgba(213, 174, 111, 0.28)";
+            e.currentTarget.style.color = "#d5ae6f";
           }}
         >
-          <X size={16} />
+          <X size={18} />
         </button>
 
         {submitted ? (
           <div style={{ textAlign: "center", padding: "40px 10px" }}>
             <CheckCircle2
               size={52}
-              color="#ecc480"
+              color="#d5ae6f"
               style={{ margin: "0 auto 20px" }}
             />
             <h3
               style={{
-                fontFamily: "var(--font-serif)",
-                fontSize: "1.6rem",
-                color: "#ecc480",
+                fontFamily: "var(--f-display)",
+                fontSize: "1.7rem",
+                color: "#f5dca8",
+                letterSpacing: "0.08em",
                 marginBottom: "12px",
+                textTransform: "uppercase",
               }}
             >
-              MESSAGE RECEIVED
+              INQUIRY RECEIVED
             </h3>
-            <p style={{ color: "#c2baa9", fontSize: "0.95rem" }}>
-              Our bespoke concierge team will be in touch with you shortly.
+            <p style={{ color: "#bcb2a3", fontSize: "0.95rem" }}>
+              Our bespoke fragrance concierge will be in touch with you shortly.
             </p>
           </div>
         ) : (
           <>
-            <div style={{ textAlign: "center", marginBottom: "28px" }}>
-              <div
-                style={{
-                  position: "relative",
-                  width: "56px",
-                  height: "60px",
-                  margin: "0 auto 14px",
-                  filter: "drop-shadow(0 2px 10px rgba(212, 175, 55, 0.4))",
-                }}
-              >
-                <Image
-                  src="/images/logo.png"
-                  alt="ELXOR"
-                  fill
-                  style={{ objectFit: "contain" }}
-                />
-              </div>
-              <span
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "0.75rem",
-                  letterSpacing: "3px",
-                  color: "#d8a253",
-                  textTransform: "uppercase",
-                }}
-              >
-                VIP CONCIERGE
-              </span>
-              <h3
-                style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: "1.7rem",
-                  color: "#ecc480",
-                  letterSpacing: "1.5px",
-                  fontWeight: 500,
-                  marginTop: "6px",
-                }}
-              >
-                GET IN TOUCH
-              </h3>
-              <p
-                style={{
-                  color: "#aaa294",
-                  fontSize: "0.9rem",
-                  marginTop: "8px",
-                  fontWeight: 300,
-                }}
-              >
-                For bespoke fragrance consultations, private orders, or sample discovery inquiries.
-              </p>
-            </div>
+            <h2
+              style={{
+                fontFamily: "var(--f-display)",
+                fontSize: "clamp(30px, 4vw, 42px)",
+                fontWeight: 500,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                textAlign: "center",
+                marginBottom: "32px",
+                background:
+                  "linear-gradient(135deg, #fff9ee 0%, #f5d799 26%, #d4af37 54%, #b88636 82%, #7a5317 100%)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+                filter: "drop-shadow(0 2px 14px rgba(212, 175, 55, 0.35))",
+              }}
+            >
+              GET IN TOUCH
+            </h2>
 
             <form
               onSubmit={handleSubmit}
-              style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+              style={{ display: "flex", flexDirection: "column", gap: "20px" }}
             >
-              <div>
+              {/* YOUR NAME */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <label
                   style={{
-                    display: "block",
-                    fontSize: "0.75rem",
-                    letterSpacing: "1.5px",
-                    color: "#ecc480",
-                    marginBottom: "6px",
+                    fontSize: "11px",
+                    fontWeight: 500,
+                    letterSpacing: "0.22em",
                     textTransform: "uppercase",
+                    color: "var(--amber)",
+                    fontFamily: "var(--f-body)",
                   }}
                 >
-                  Your Name
+                  YOUR NAME
                 </label>
                 <input
                   type="text"
@@ -181,36 +163,39 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   }
                   style={{
                     width: "100%",
-                    padding: "12px 14px",
-                    background: "rgba(216, 162, 83, 0.04)",
-                    border: "1px solid rgba(216, 162, 83, 0.3)",
-                    borderRadius: "3px",
-                    color: "#f8f6f0",
-                    fontSize: "0.9rem",
+                    background: "rgba(14, 11, 8, 0.85)",
+                    border: "1px solid rgba(213, 174, 111, 0.36)",
+                    borderRadius: "6px",
+                    padding: "14px 18px",
+                    color: "var(--ink)",
+                    fontFamily: "var(--f-body)",
+                    fontSize: "15px",
                     outline: "none",
+                    boxShadow: "inset 0 2px 6px rgba(0, 0, 0, 0.6)",
                   }}
                 />
               </div>
 
+              {/* EMAIL & PHONE */}
               <div
                 style={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr",
-                  gap: "14px",
+                  gap: "18px",
                 }}
               >
-                <div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   <label
                     style={{
-                      display: "block",
-                      fontSize: "0.75rem",
-                      letterSpacing: "1.5px",
-                      color: "#ecc480",
-                      marginBottom: "6px",
+                      fontSize: "11px",
+                      fontWeight: 500,
+                      letterSpacing: "0.22em",
                       textTransform: "uppercase",
+                      color: "var(--amber)",
+                      fontFamily: "var(--f-body)",
                     }}
                   >
-                    Email Address
+                    EMAIL ADDRESS
                   </label>
                   <input
                     type="email"
@@ -222,29 +207,31 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     }
                     style={{
                       width: "100%",
-                      padding: "12px 14px",
-                      background: "rgba(216, 162, 83, 0.04)",
-                      border: "1px solid rgba(216, 162, 83, 0.3)",
-                      borderRadius: "3px",
-                      color: "#f8f6f0",
-                      fontSize: "0.9rem",
+                      background: "rgba(14, 11, 8, 0.85)",
+                      border: "1px solid rgba(213, 174, 111, 0.36)",
+                      borderRadius: "6px",
+                      padding: "14px 18px",
+                      color: "var(--ink)",
+                      fontFamily: "var(--f-body)",
+                      fontSize: "15px",
                       outline: "none",
+                      boxShadow: "inset 0 2px 6px rgba(0, 0, 0, 0.6)",
                     }}
                   />
                 </div>
 
-                <div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   <label
                     style={{
-                      display: "block",
-                      fontSize: "0.75rem",
-                      letterSpacing: "1.5px",
-                      color: "#ecc480",
-                      marginBottom: "6px",
+                      fontSize: "11px",
+                      fontWeight: 500,
+                      letterSpacing: "0.22em",
                       textTransform: "uppercase",
+                      color: "var(--amber)",
+                      fontFamily: "var(--f-body)",
                     }}
                   >
-                    Phone
+                    PHONE
                   </label>
                   <input
                     type="tel"
@@ -255,30 +242,33 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     }
                     style={{
                       width: "100%",
-                      padding: "12px 14px",
-                      background: "rgba(216, 162, 83, 0.04)",
-                      border: "1px solid rgba(216, 162, 83, 0.3)",
-                      borderRadius: "3px",
-                      color: "#f8f6f0",
-                      fontSize: "0.9rem",
+                      background: "rgba(14, 11, 8, 0.85)",
+                      border: "1px solid rgba(213, 174, 111, 0.36)",
+                      borderRadius: "6px",
+                      padding: "14px 18px",
+                      color: "var(--ink)",
+                      fontFamily: "var(--f-body)",
+                      fontSize: "15px",
                       outline: "none",
+                      boxShadow: "inset 0 2px 6px rgba(0, 0, 0, 0.6)",
                     }}
                   />
                 </div>
               </div>
 
-              <div>
+              {/* INQUIRY OR SCENT PREFERENCES */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <label
                   style={{
-                    display: "block",
-                    fontSize: "0.75rem",
-                    letterSpacing: "1.5px",
-                    color: "#ecc480",
-                    marginBottom: "6px",
+                    fontSize: "11px",
+                    fontWeight: 500,
+                    letterSpacing: "0.22em",
                     textTransform: "uppercase",
+                    color: "var(--amber)",
+                    fontFamily: "var(--f-body)",
                   }}
                 >
-                  Inquiry or Scent Preferences
+                  INQUIRY OR SCENT PREFERENCES
                 </label>
                 <textarea
                   rows={4}
@@ -290,30 +280,49 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   }
                   style={{
                     width: "100%",
-                    padding: "12px 14px",
-                    background: "rgba(216, 162, 83, 0.04)",
-                    border: "1px solid rgba(216, 162, 83, 0.3)",
-                    borderRadius: "3px",
-                    color: "#f8f6f0",
-                    fontSize: "0.9rem",
+                    background: "rgba(14, 11, 8, 0.85)",
+                    border: "1px solid rgba(213, 174, 111, 0.36)",
+                    borderRadius: "6px",
+                    padding: "14px 18px",
+                    color: "var(--ink)",
+                    fontFamily: "var(--f-body)",
+                    fontSize: "15px",
                     outline: "none",
                     resize: "none",
+                    minHeight: "110px",
+                    boxShadow: "inset 0 2px 6px rgba(0, 0, 0, 0.6)",
                   }}
                 />
               </div>
 
+              {/* SEND INQUIRY BUTTON */}
               <button
                 type="submit"
-                className="btn-gold-solid"
                 style={{
-                  marginTop: "12px",
-                  padding: "14px",
-                  fontSize: "0.85rem",
-                  letterSpacing: "2px",
+                  marginTop: "8px",
+                  width: "100%",
+                  height: "54px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "12px",
+                  background:
+                    "linear-gradient(100deg, #b98c4a, #f5dca8 45%, #d5ae6f 70%, #a57a3d)",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "#140d04",
+                  fontFamily: "var(--f-body)",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  letterSpacing: "0.24em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  boxShadow: "0 4px 20px rgba(212, 175, 55, 0.25)",
+                  transition: "all 0.4s var(--ease)",
                 }}
               >
                 <span>SEND INQUIRY</span>
-                <Send size={15} />
+                <Send size={16} strokeWidth={2} />
               </button>
             </form>
           </>

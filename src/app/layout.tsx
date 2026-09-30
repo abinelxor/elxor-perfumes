@@ -1,33 +1,21 @@
-import type { Metadata } from "next";
-import { Cinzel, Cormorant_Garamond, Montserrat } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
-
-const cinzel = Cinzel({
-  variable: "--font-cinzel",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
-
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-});
-
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "ELXOR PERFUMES | The Essence of Elegance",
   description:
-    "Discover a world of refined luxury fragrances crafted for distinction. Bold, mysterious, and unforgettable signature scents.",
-  keywords: "luxury perfume, luxury fragrances, ELXOR, oud, noir essence, velvet rouge, silver ambre",
+    "ELXOR Perfumes. Timeless fragrances crafted for those who appreciate distinction. Discover Noir Essence, Royal Oud, Silver Ambre and Velvet Rouge.",
+  keywords:
+    "luxury perfume, luxury fragrances, ELXOR, oud, noir essence, velvet rouge, silver ambre, luxury scents",
+  icons: {
+    icon: "/images/favicon.png",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#050403",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -36,10 +24,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${cinzel.variable} ${cormorant.variable} ${montserrat.variable}`}
-    >
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..700&family=Inria+Serif:wght@400&family=Inter:wght@300;400;500;600&family=Pinyon+Script&display=swap"
+          rel="stylesheet"
+        />
+        <link rel="preload" as="image" href="/frames/frame_001.webp" />
+      </head>
       <body>{children}</body>
     </html>
   );
