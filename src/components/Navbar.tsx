@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import { ShoppingBag } from "lucide-react";
+import React, { useState, useEffect } from "react";
 
 interface NavbarProps {
   onOpenCart?: () => void;
@@ -128,28 +126,7 @@ export default function Navbar({
           </a>
         </nav>
 
-        <div className="nav__actions">
-          {onOpenCart && (
-            <button
-              onClick={onOpenCart}
-              className="nav__cart-btn"
-              aria-label="View shopping cart"
-            >
-              <ShoppingBag size={18} />
-              {cartCount > 0 && (
-                <span className="nav__cart-badge">{cartCount}</span>
-              )}
-            </button>
-          )}
-
-          <a
-            href="#collection"
-            className="btn btn--ghost nav__cta"
-            onClick={(e) => handleLinkClick(e, "collection")}
-          >
-            Discover <i className="arrow" aria-hidden="true" />
-          </a>
-        </div>
+        <div className="nav__spacer" aria-hidden="true" />
 
         <button
           className="nav__toggle"

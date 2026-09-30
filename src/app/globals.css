@@ -664,10 +664,11 @@ body::after {
   color: var(--gold);
 }
 
-.nav__actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+.nav__spacer {
+  width: 58px;
+  height: 1px;
+  pointer-events: none;
+  visibility: hidden;
 }
 
 .nav__cta {
@@ -1826,7 +1827,7 @@ body::after {
    Responsive Adaptations
    ========================================================================== */
 @media (max-width: 1100px) {
-  .nav__links, .nav__cta { display: none; }
+  .nav__links, .nav__cta, .nav__spacer { display: none; }
   .nav__toggle { display: block; }
   .seq__card { width: min(340px, 36vw); padding: 32px 28px 26px; }
   .seq__steps span { display: none; }
