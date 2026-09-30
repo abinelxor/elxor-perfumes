@@ -1189,7 +1189,7 @@ body::after {
 
 .seq {
   position: relative;
-  height: 640vh;
+  height: 420vh;
 }
 
 .seq__sticky {
@@ -1246,7 +1246,7 @@ body::after {
   pointer-events: none;
 }
 
-/* Bottles: feathered masks into deep black */
+/* Bottles: square transparent luxury rendering */
 .seq__stage {
   position: absolute;
   inset: 0;
@@ -1256,9 +1256,9 @@ body::after {
 .seq__bottle {
   position: absolute;
   left: 50%;
-  top: 52%;
-  width: min(46vw, 640px);
-  aspect-ratio: 426 / 286;
+  top: 50%;
+  width: min(44vw, 540px);
+  aspect-ratio: 1 / 1;
   margin: 0;
   opacity: 0;
   transform: translate(-50%, -50%);
@@ -1268,10 +1268,8 @@ body::after {
 .seq__bottle img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  -webkit-mask-image: radial-gradient(ellipse 46% 50% at 50% 50%, #000 52%, transparent 100%);
-  mask-image: radial-gradient(ellipse 46% 50% at 50% 50%, #000 52%, transparent 100%);
-  filter: drop-shadow(0 40px 60px rgba(0, 0, 0, 0.6));
+  object-fit: contain;
+  filter: drop-shadow(0 30px 55px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 40px rgba(213, 174, 111, 0.22));
 }
 
 .seq__bottle::after {
@@ -1893,10 +1891,10 @@ body::after {
   }
 
   .seq {
-    height: 560vh;
+    height: 380vh;
   }
   .seq__bottle {
-    width: 88vw;
+    width: 82vw;
     top: 36%;
   }
   .seq__ghost span {

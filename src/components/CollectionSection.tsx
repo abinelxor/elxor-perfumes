@@ -18,56 +18,30 @@ export interface PerfumeItem {
 
 export const perfumesData: PerfumeItem[] = [
   {
-    id: "noir-essence",
-    name: "NOIR ESSENCE",
-    tagline: "Bold. Mysterious. Unforgettable.",
-    image: "/images/perfume_noir_essence.png",
-    price: "$340",
+    id: "sanctix",
+    name: "SANCTIX",
+    tagline: "Sacred Amber. Luminous Heat. Unrivaled Majesty.",
+    image: "/images/perfume_sanctix.png",
+    price: "$380",
     size: "100ml / 3.4 FL. OZ.",
-    topNotes: ["Black Truffle", "Smoked Bergamot", "Pink Pepper"],
-    heartNotes: ["Black Orchid", "Midnight Jasmine", "Patchouli Leaf"],
-    baseNotes: ["Smoked Incense", "Bourbon Vanilla", "Rare Dark Amber"],
+    topNotes: ["Solar Bergamot", "Golden Saffron", "Pink Pepper"],
+    heartNotes: ["Liquid Amber", "Smoked Incense", "Honeyed Labdanum"],
+    baseNotes: ["Sacred Oud", "Bourbon Vanilla", "Precious Woods"],
     story:
-      "A nocturnal masterpiece evoking shadow and light. Noir Essence wraps the wearer in an intoxicating aura of rare dark woods, golden smoke, and mysterious midnight blooms.",
+      "A radiant creation born from molten gold and sacred resins. Sanctix opens with vibrant solar citrus and rare spice before deepening into a glowing heart of ambergris, rare woods, and pure golden warmth.",
   },
   {
-    id: "royal-oud",
-    name: "ROYAL OUD",
-    tagline: "A timeless expression of luxury.",
-    image: "/images/perfume_royal_oud.png",
-    price: "$390",
-    size: "100ml / 3.4 FL. OZ.",
-    topNotes: ["Calabrian Lemon", "Sicilian Bergamot", "Cardamom"],
-    heartNotes: ["Cambodian Agarwood", "Damask Rose", "Cedar Shards"],
-    baseNotes: ["Warm Sandalwood", "Golden Amber", "Rich Tonka Bean"],
-    story:
-      "Crafted for modern royalty. Royal Oud marries precious aged Cambodian agarwood with glowing warm amber and majestic roses, forming an unmistakable statement of prestige.",
-  },
-  {
-    id: "silver-ambre",
-    name: "SILVER AMBRE",
-    tagline: "Fresh. Refined. Distinct.",
-    image: "/images/perfume_silver_ambre.png",
-    price: "$310",
-    size: "100ml / 3.4 FL. OZ.",
-    topNotes: ["Silver Mint", "Crisp Mandarin", "Aquatic Minerals"],
-    heartNotes: ["Grey Ambergris", "White Iris", "Clary Sage"],
-    baseNotes: ["Cashmere Wood", "White Musk", "Vetiver Root"],
-    story:
-      "A crystal-clear horizon in twilight. Silver Ambre presents an exhilarating interplay of crisp minerality and velvety warmth, leaving a pristine and unforgettable trail.",
-  },
-  {
-    id: "velvet-rouge",
-    name: "VELVET ROUGE",
-    tagline: "Passion in every drop.",
-    image: "/images/perfume_velvet_rouge.png",
+    id: "amoriel",
+    name: "AMORIEL",
+    tagline: "Celestial Blooms. Velvet Silk. Pure Devotion.",
+    image: "/images/perfume_amoriel.png",
     price: "$360",
     size: "100ml / 3.4 FL. OZ.",
-    topNotes: ["Blood Orange", "Wild Saffron", "Spiced Plum"],
-    heartNotes: ["Turkish Rose", "Red Carnation", "Smoked Praline"],
-    baseNotes: ["Cedarwood", "Amber Crystals", "Leather Accord"],
+    topNotes: ["White Peach", "Sweet Mandarin", "Dewy Neroli"],
+    heartNotes: ["Celestial Jasmine", "Imperial White Rose", "Soft Iris"],
+    baseNotes: ["Cashmere Silk", "Warm Sandalwood", "Golden Amber Accord"],
     story:
-      "An intoxicating symphony of crimson warmth. Velvet Rouge captivates the senses with rich Turkish rose, spiced saffron, and velvet-smooth amber crystals.",
+      "An ethereal symphony of white petals and golden silk. Amoriel captures the delicate majesty of celestial jasmine, soft powdery iris, and warm velvety cashmere, leaving an unforgettable, enchanting trail.",
   },
 ];
 
@@ -82,9 +56,9 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-const BEAT = 0.19;
+const BEAT = 0.36;
 const BEAT0 = 0.0;
-const FINAL = 0.76;
+const FINAL = 0.72;
 
 export default function CollectionSection({
   onSelectPerfume,
@@ -163,10 +137,10 @@ export default function CollectionSection({
 
         const enter =
           i === 0
-            ? easeOut(clamp((q + 0.02) / 0.06))
-            : easeOut(clamp((q - (s - 0.05)) / 0.065));
-        const hold = clamp((q - (s + 0.02)) / 0.11);
-        const exit = last ? 0 : ease(clamp((q - (s + 0.13)) / 0.06));
+            ? easeOut(clamp((q + 0.02) / 0.08))
+            : easeOut(clamp((q - (s - 0.06)) / 0.08));
+        const hold = clamp((q - (s + 0.03)) / 0.16);
+        const exit = last ? 0 : ease(clamp((q - (s + 0.24)) / 0.08));
         const vis = Math.min(1, enter * 1.25) * (1 - exit);
         const float = Math.sin(hold * Math.PI);
 
@@ -174,10 +148,10 @@ export default function CollectionSection({
         const fs = last ? FINAL : FINAL + 0.01 + i * 0.03;
         const f = ease(clamp((q - fs) / 0.09));
         const rowX = mobile
-          ? ((i % 2) - 0.5) * 44 * vw
-          : (i - 1.5) * Math.min(21 * vw, 300);
-        const rowY = mobile ? 6 + Math.floor(i / 2) * 21 : 12;
-        const rowS = mobile ? 0.5 : 0.56;
+          ? ((i % 2) - 0.5) * 48 * vw
+          : (i - 0.5) * Math.min(32 * vw, 420);
+        const rowY = mobile ? 4 : 8;
+        const rowS = mobile ? 0.52 : 0.58;
 
         const pX = 0;
         const pY = (1 - enter) * 30 - exit * 30;
@@ -230,8 +204,8 @@ export default function CollectionSection({
         const c = cardRefs.current[i];
         if (c) {
           const side = i % 2 === 0 ? 1 : -1;
-          const cin = ease(clamp((q - (s + 0.015)) / 0.055));
-          const cout = ease(clamp((q - (s + 0.115)) / 0.05));
+          const cin = ease(clamp((q - (s + 0.02)) / 0.08));
+          const cout = ease(clamp((q - (s + 0.22)) / 0.08));
           const cx = mobile ? 0 : (1 - cin) * side * 16;
           const cy =
             (1 - cin) * (mobile ? 10 : 8) - cout * (mobile ? 12 : 26);
@@ -249,8 +223,8 @@ export default function CollectionSection({
 
         const n = noteRefs.current[i];
         if (n) {
-          const nin = clamp((q - (s + 0.035)) / 0.05);
-          const nout = ease(clamp((q - (s + 0.115)) / 0.045));
+          const nin = clamp((q - (s + 0.04)) / 0.07);
+          const nout = ease(clamp((q - (s + 0.22)) / 0.07));
           n.style.opacity = (easeOut(nin) * (1 - nout)).toFixed(3);
           n.style.transform = `translateY(${(
             (1 - easeOut(nin)) * 20 -
@@ -332,10 +306,8 @@ export default function CollectionSection({
   };
 
   const notesList = [
-    "bold & mysterious",
-    "timeless",
-    "fresh & refined",
-    "pure passion",
+    "sacred & luminous",
+    "pure devotion",
   ];
 
   const sparks = [
@@ -452,8 +424,8 @@ export default function CollectionSection({
                 <img
                   src={perfume.image}
                   alt={`ELXOR ${perfume.name} perfume bottle`}
-                  width={426}
-                  height={286}
+                  width={640}
+                  height={640}
                 />
               </figure>
             ))}
@@ -541,7 +513,7 @@ export default function CollectionSection({
           {/* Finale Stage */}
           <div className="seq__final" ref={seqFinalRef}>
             <h2 className="seq__title">
-              <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Four</span>
+              <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Two</span>
               <span className="w" style={{ "--i": 1 } as React.CSSProperties}>signatures.</span>
               <br />
               <span className="w gold-text" style={{ "--i": 2 } as React.CSSProperties}>Which</span>

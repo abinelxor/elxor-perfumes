@@ -61,10 +61,10 @@ export default function Footer({ onOpenContact }: FooterProps) {
         <div className="footer__col">
           <h3>Our Collection</h3>
           <a href="#collection" onClick={(e) => handleScrollTo(e, "collection")}>
-            Men&rsquo;s Fragrances
+            Sanctix
           </a>
           <a href="#collection" onClick={(e) => handleScrollTo(e, "collection")}>
-            Women&rsquo;s Fragrances
+            Amoriel
           </a>
           <a href="#collection" onClick={(e) => handleScrollTo(e, "collection")}>
             Signature Collection

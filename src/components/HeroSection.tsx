@@ -536,7 +536,7 @@ export default function HeroSection({
               data-piece
               style={{ "--i": 9 } as React.CSSProperties}
             >
-              Four signatures, each composed for a different kind of presence.
+              Two signatures, each composed for a different kind of presence.
             </p>
             <div
               data-piece

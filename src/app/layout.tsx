@@ -4,9 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "ELXOR PERFUMES | The Essence of Elegance",
   description:
-    "ELXOR Perfumes. Timeless fragrances crafted for those who appreciate distinction. Discover Noir Essence, Royal Oud, Silver Ambre and Velvet Rouge.",
+    "ELXOR Perfumes. Timeless fragrances crafted for those who appreciate distinction. Discover Sanctix and Amoriel.",
   keywords:
-    "luxury perfume, luxury fragrances, ELXOR, oud, noir essence, velvet rouge, silver ambre, luxury scents",
+    "luxury perfume, luxury fragrances, ELXOR, sanctix, amoriel, sacred amber, celestial blooms, luxury scents",
   icons: {
     icon: "/images/favicon.png",
   },
