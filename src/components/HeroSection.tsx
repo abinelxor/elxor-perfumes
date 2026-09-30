@@ -384,13 +384,6 @@ export default function HeroSection({
                 Elegance
               </span>
             </h1>
-            <p
-              className="chapter__script"
-              data-piece
-              style={{ "--i": 5 } as React.CSSProperties}
-            >
-              Crafted for distinction
-            </p>
           </article>
 
           {/* Chapter 2: Left */}
