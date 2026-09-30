@@ -69,6 +69,7 @@ export default function CollectionSection({
   const stepsWrapRef = useRef<HTMLOListElement>(null);
   const lineARefs = useRef<(SVGPathElement | null)[]>([]);
   const lineBRefs = useRef<(SVGPathElement | null)[]>([]);
+  const seqFinalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const seq = seqRef.current;
@@ -113,8 +114,8 @@ export default function CollectionSection({
       const vw = window.innerWidth / 100;
 
       // Draw SVG lines
-      const da = (1 - clamp(q / 0.5)).toFixed(4);
-      const db = (1 - clamp((q - 0.25) / 0.6)).toFixed(4);
+      const da = (1 - clamp(q / 0.55)).toFixed(4);
+      const db = (1 - clamp((q - 0.20) / 0.6)).toFixed(4);
       lineARefs.current.forEach((l) => {
         if (l) l.style.setProperty("--draw", da);
       });
@@ -122,27 +123,60 @@ export default function CollectionSection({
         if (l) l.style.setProperty("--draw", db);
       });
 
-      const active = q < 0.48 ? 0 : 1;
+      const active = q < 0.32 ? 0 : 1;
+      const finaleProgress = ease(clamp((q - 0.64) / 0.08));
 
       perfumesData.forEach((_, i) => {
         const dir = i % 2 ? 1 : -1;
         const isFirst = i === 0;
 
-        // Continuous enter and exit: no blank moments, no dead scroll
-        const enter = isFirst ? 1 : easeOut(clamp((q - 0.40) / 0.12));
-        const exit = isFirst ? ease(clamp((q - 0.40) / 0.12)) : 0;
-        const vis = isFirst ? 1 - exit : enter;
+        // Solo enter / exit
+        const soloEnter = isFirst ? 1 : easeOut(clamp((q - 0.28) / 0.09));
+        const soloExit = isFirst ? ease(clamp((q - 0.28) / 0.09)) : 0;
+        const soloVis = isFirst ? 1 - soloExit : soloEnter;
         const float = Math.sin(
-          clamp((q - (isFirst ? 0.05 : 0.55)) / 0.35) * Math.PI
+          clamp((q - (isFirst ? 0.04 : 0.38)) / 0.26) * Math.PI
         );
 
-        const tx = 0;
-        const ty = isFirst ? -exit * 24 : (1 - enter) * 24;
-        const rot =
-          (1 - enter) * -12 * dir + exit * 10 * dir + float * 2.5 * dir;
-        const sc =
-          0.88 + 0.12 * (isFirst ? 1 - exit * 0.1 : enter) + float * 0.02;
-        const op = vis;
+        // Solo positions
+        const pX = 0;
+        const pY = isFirst ? -soloExit * 24 : (1 - soloEnter) * 24;
+        const pR =
+          (1 - soloEnter) * -12 * dir + soloExit * 10 * dir + float * 2.5 * dir;
+        const pS =
+          0.88 + 0.12 * (isFirst ? 1 - soloExit * 0.1 : soloEnter) + float * 0.02;
+
+        // Finale side-by-side row positions
+        const rowX = mobile
+          ? ((i % 2) - 0.5) * 44 * vw
+          : (i - 0.5) * Math.min(30 * vw, 380);
+        const rowY = mobile ? 2 : 5;
+        const rowS = mobile ? 0.48 : 0.54;
+
+        let tx, ty, rot, sc, op;
+        if (q >= 0.64) {
+          if (isFirst) {
+            // Sanctix re-enters from left into finale position
+            tx = rowX;
+            ty = rowY + (1 - finaleProgress) * 24;
+            rot = (1 - finaleProgress) * -8 + float * 2 * dir;
+            sc = rowS;
+            op = finaleProgress;
+          } else {
+            // Amoriel smoothly slides from center to right into finale position
+            tx = lerp(pX, rowX, finaleProgress);
+            ty = lerp(0, rowY, finaleProgress);
+            rot = lerp(pR, 0, finaleProgress) + float * 2 * dir;
+            sc = lerp(1.0, rowS, finaleProgress);
+            op = 1;
+          }
+        } else {
+          tx = pX;
+          ty = pY;
+          rot = pR;
+          sc = pS;
+          op = soloVis;
+        }
 
         const b = bottleRefs.current[i];
         if (b) {
@@ -154,22 +188,26 @@ export default function CollectionSection({
           )}deg) scale(${sc.toFixed(3)})`;
         }
 
+        // Ghost number behind bottle (fades out as finale begins)
+        const ghostVis = soloVis * (1 - ease(clamp((q - 0.62) / 0.05)));
         const g = ghostRefs.current[i];
         if (g) {
-          g.style.opacity = (vis * 0.9).toFixed(3);
-          g.style.transform = `translate(-50%, -50%) translateY(${ty.toFixed(
+          g.style.opacity = (ghostVis * 0.9).toFixed(3);
+          g.style.transform = `translate(-50%, -50%) translateY(${pY.toFixed(
             2
           )}vh) scale(${(
             0.92 +
-            0.08 * (isFirst ? 1 - exit : enter)
+            0.08 * (isFirst ? 1 - soloExit : soloEnter)
           ).toFixed(3)})`;
         }
 
         const c = cardRefs.current[i];
         if (c) {
           const side = isFirst ? 1 : -1;
-          const cin = isFirst ? 1 : ease(clamp((q - 0.42) / 0.10));
-          const cout = isFirst ? ease(clamp((q - 0.40) / 0.10)) : 0;
+          const cin = isFirst ? 1 : ease(clamp((q - 0.30) / 0.08));
+          const cout = isFirst
+            ? ease(clamp((q - 0.28) / 0.08))
+            : ease(clamp((q - 0.62) / 0.06));
           const cx = mobile ? 0 : (1 - cin) * side * 16;
           const cy =
             (1 - cin) * (mobile ? 10 : 8) - cout * (mobile ? 12 : 24);
@@ -187,8 +225,10 @@ export default function CollectionSection({
 
         const n = noteRefs.current[i];
         if (n) {
-          const nin = isFirst ? 1 : clamp((q - 0.44) / 0.10);
-          const nout = isFirst ? ease(clamp((q - 0.40) / 0.10)) : 0;
+          const nin = isFirst ? 1 : clamp((q - 0.32) / 0.08);
+          const nout = isFirst
+            ? ease(clamp((q - 0.28) / 0.08))
+            : ease(clamp((q - 0.62) / 0.06));
           n.style.opacity = (easeOut(nin) * (1 - nout)).toFixed(3);
           n.style.transform = `translateY(${(-nout * 30).toFixed(
             1
@@ -196,14 +236,16 @@ export default function CollectionSection({
           n.style.setProperty(
             "--draw",
             isFirst
-              ? (1 - clamp(q / 0.2)).toFixed(3)
-              : (1 - clamp((q - 0.48) / 0.2)).toFixed(3)
+              ? (1 - clamp(q / 0.18)).toFixed(3)
+              : (1 - clamp((q - 0.35) / 0.18)).toFixed(3)
           );
         }
 
         const st = stepRefs.current[i];
         if (st) {
-          const fillProg = isFirst ? clamp(q / 0.48) : clamp((q - 0.48) / 0.48);
+          const fillProg = isFirst
+            ? clamp(q / 0.28)
+            : clamp((q - 0.32) / 0.30);
           st.style.setProperty("--fill", fillProg.toFixed(3));
         }
       });
@@ -213,6 +255,23 @@ export default function CollectionSection({
         stepRefs.current.forEach((st, k) => {
           if (st) st.classList.toggle("is-active", k === active);
         });
+      }
+
+      // Hide step indicator during finale
+      if (stepsWrapRef.current) {
+        stepsWrapRef.current.style.setProperty(
+          "--steps",
+          (1 - clamp((q - 0.62) / 0.05)).toFixed(3)
+        );
+      }
+
+      // Toggle finale stage
+      const on = q >= 0.68;
+      if (on !== finalOn) {
+        finalOn = on;
+        if (seqFinalRef.current) {
+          seqFinalRef.current.classList.toggle("is-in", on);
+        }
       }
 
       requestAnimationFrame(update);
@@ -245,6 +304,25 @@ export default function CollectionSection({
   const notesList = [
     "sacred & luminous",
     "pure devotion",
+  ];
+
+  const handleFinaleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onContactClick) {
+      onContactClick();
+    } else {
+      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const sparks = [
+    { x: "-38vw", y: "-4vh", s: 1.1, d: "0ms" },
+    { x: "34vw", y: "-12vh", s: 0.8, d: "120ms" },
+    { x: "-26vw", y: "20vh", s: 0.6, d: "240ms" },
+    { x: "40vw", y: "16vh", s: 1.3, d: "80ms" },
+    { x: "-44vw", y: "34vh", s: 0.9, d: "300ms" },
+    { x: "22vw", y: "-30vh", s: 0.55, d: "200ms" },
+    { x: "-14vw", y: "-34vh", s: 0.7, d: "360ms" },
   ];
 
   return (
@@ -438,6 +516,48 @@ export default function CollectionSection({
           })}
 
 
+
+          {/* Finale Stage: Both Perfumes Showcased Side by Side */}
+          <div className="seq__final" ref={seqFinalRef}>
+            <h2 className="seq__title">
+              <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Two</span>
+              <span className="w" style={{ "--i": 1 } as React.CSSProperties}>signatures.</span>
+              <br />
+              <span className="w gold-text" style={{ "--i": 2 } as React.CSSProperties}>Which</span>
+              <span className="w gold-text" style={{ "--i": 3 } as React.CSSProperties}>one</span>
+              <span className="w gold-text" style={{ "--i": 4 } as React.CSSProperties}>is</span>
+              <span className="w gold-text" style={{ "--i": 5 } as React.CSSProperties}>yours?</span>
+            </h2>
+            <div data-piece style={{ "--i": 6 } as React.CSSProperties}>
+              <a
+                href="#contact"
+                className="btn btn--gold"
+                onClick={handleFinaleClick}
+              >
+                Find your signature <i className="arrow" aria-hidden="true" />
+              </a>
+            </div>
+
+            {/* 7 Gold Star Sparks */}
+            {sparks.map((spark, idx) => (
+              <img
+                key={idx}
+                className="seq__spark"
+                src="/images/gold_star-alpha.png"
+                alt=""
+                width={40}
+                height={40}
+                style={
+                  {
+                    "--x": spark.x,
+                    "--y": spark.y,
+                    "--s": spark.s,
+                    "--d": spark.d,
+                  } as React.CSSProperties
+                }
+              />
+            ))}
+          </div>
 
           {/* Step Progress Indicators */}
           <ol className="seq__steps" ref={stepsWrapRef} aria-hidden="true">
