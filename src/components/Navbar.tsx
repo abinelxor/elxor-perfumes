@@ -16,29 +16,18 @@ export default function Navbar({
   onOpenContact,
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isHidden, setIsHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const lastYRef = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      const y = window.scrollY;
-      setIsScrolled(y > 30);
-
-      if (!menuOpen) {
-        if (y > lastYRef.current + 4 && y > 240) {
-          setIsHidden(true);
-        } else if (y < lastYRef.current - 4 || y < 240) {
-          setIsHidden(false);
-        }
-      }
-      lastYRef.current = y;
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [menuOpen]);
+  }, []);
 
   // Section observer for active link
   useEffect(() => {
@@ -86,11 +75,7 @@ export default function Navbar({
 
   return (
     <>
-      <header
-        className={`nav ${isScrolled ? "is-scrolled" : ""} ${
-          isHidden ? "is-hidden" : ""
-        }`}
-      >
+      <header className={`nav ${isScrolled ? "is-scrolled" : ""}`}>
         <a
           href="#home"
           className="nav__logo"
