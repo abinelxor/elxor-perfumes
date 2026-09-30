@@ -29,8 +29,8 @@ export default function PhilosophySection() {
       <div className="split__media" ref={mediaRef} data-parallax="-0.06">
         <img
           ref={imgRef}
-          src="/images/philosophy_visual.png"
-          alt="ELXOR perfume bottle among dark wood, stone and white blossoms"
+          src="/images/ELXOR_AMORIEL_left.png"
+          alt="ELXOR Amoriel perfume bottle with celestial blooms and golden silk"
           width={745}
           height={490}
           loading="lazy"
