@@ -2,13 +2,20 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ELXOR PERFUMES | The Essence of Elegance",
+  title: "Luxury Unisex Perfume Dubai | ELXOR Long Lasting Fragrance",
   description:
-    "ELXOR Perfumes. Timeless fragrances crafted for those who appreciate distinction. Discover Sanctix and Amoriel.",
+    "ELXOR is a Dubai perfume brand with two long lasting fragrance collections, Signature and Promise, for men and women. Order online via Amazon in the UAE.",
   keywords:
-    "luxury perfume, luxury fragrances, ELXOR, sanctix, amoriel, sacred amber, celestial blooms, luxury scents",
+    "luxury unisex perfume dubai, elxor long lasting fragrance, dubai perfume brand, amoriel, sanctix, eau de parfum, perfume for men, perfume for women, best perfume for men, best perfumes for women, buy best perfume online, amazon uae",
   icons: {
     icon: "/images/favicon.png",
+  },
+  openGraph: {
+    title: "Luxury Unisex Perfume Dubai | ELXOR Long Lasting Fragrance",
+    description:
+      "ELXOR is a Dubai perfume brand with two long lasting fragrance collections, Signature and Promise, for men and women. Order online via Amazon in the UAE.",
+    type: "website",
+    siteName: "ELXOR Perfumes",
   },
 };
 

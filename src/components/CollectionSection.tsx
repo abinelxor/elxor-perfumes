@@ -7,6 +7,7 @@ export interface PerfumeItem {
   id: string;
   name: string;
   tagline: string;
+  description?: string;
   image: string;
   price: string;
   size: string;
@@ -18,22 +19,11 @@ export interface PerfumeItem {
 
 export const perfumesData: PerfumeItem[] = [
   {
-    id: "sanctix",
-    name: "SANCTIX",
-    tagline: "Sacred Amber. Luminous Heat. Unrivaled Majesty.",
-    image: "/images/perfume_sanctix.png",
-    price: "$380",
-    size: "100ml / 3.4 FL. OZ.",
-    topNotes: ["Solar Bergamot", "Golden Saffron", "Pink Pepper"],
-    heartNotes: ["Liquid Amber", "Smoked Incense", "Honeyed Labdanum"],
-    baseNotes: ["Sacred Oud", "Bourbon Vanilla", "Precious Woods"],
-    story:
-      "A radiant creation born from molten gold and sacred resins. Sanctix opens with vibrant solar citrus and rare spice before deepening into a glowing heart of ambergris, rare woods, and pure golden warmth.",
-  },
-  {
     id: "amoriel",
     name: "AMORIEL",
-    tagline: "Celestial Blooms. Velvet Silk. Pure Devotion.",
+    tagline: "Love, captured in a signature scent.",
+    description:
+      "Discover a captivating unisex Eau de Parfum crafted to leave a lasting impression.",
     image: "/images/perfume_amoriel.png",
     price: "$360",
     size: "100ml / 3.4 FL. OZ.",
@@ -41,7 +31,22 @@ export const perfumesData: PerfumeItem[] = [
     heartNotes: ["Celestial Jasmine", "Imperial White Rose", "Soft Iris"],
     baseNotes: ["Cashmere Silk", "Warm Sandalwood", "Golden Amber Accord"],
     story:
-      "An ethereal symphony of white petals and golden silk. Amoriel captures the delicate majesty of celestial jasmine, soft powdery iris, and warm velvety cashmere, leaving an unforgettable, enchanting trail.",
+      "Love, captured in a signature scent. Discover a captivating unisex Eau de Parfum crafted to leave a lasting impression. An ethereal symphony of white petals and golden silk, Amoriel captures the delicate majesty of celestial jasmine, soft powdery iris, and warm velvety cashmere.",
+  },
+  {
+    id: "sanctix",
+    name: "SANCTIX",
+    tagline: "Elegance, bottled with distinction.",
+    description:
+      "Experience a sophisticated unisex Eau de Parfum created to elevate your presence.",
+    image: "/images/perfume_sanctix.png",
+    price: "$380",
+    size: "100ml / 3.4 FL. OZ.",
+    topNotes: ["Solar Bergamot", "Golden Saffron", "Pink Pepper"],
+    heartNotes: ["Liquid Amber", "Smoked Incense", "Honeyed Labdanum"],
+    baseNotes: ["Sacred Oud", "Bourbon Vanilla", "Precious Woods"],
+    story:
+      "Elegance, bottled with distinction. Experience a sophisticated unisex Eau de Parfum created to elevate your presence. A radiant creation born from molten gold and sacred resins, Sanctix deepens into a glowing heart of ambergris, rare woods, and pure golden warmth.",
   },
 ];
 
@@ -302,8 +307,8 @@ export default function CollectionSection({
   };
 
   const notesList = [
-    "sacred & luminous",
     "pure devotion",
+    "sacred & luminous",
   ];
 
   const handleFinaleClick = (e: React.MouseEvent) => {
@@ -460,13 +465,16 @@ export default function CollectionSection({
                 <p className="eyebrow">Signature No. {String(i + 1).padStart(2, "0")}</p>
                 <h3>{perfume.name}</h3>
                 <span className="seq__card-rule" />
-                <p className="seq__card-text">{perfume.tagline}</p>
+                <p className="seq__card-tagline">{perfume.tagline}</p>
+                {perfume.description && (
+                  <p className="seq__card-text">{perfume.description}</p>
+                )}
                 <button
                   type="button"
                   className="link"
                   onClick={(e) => handleCardDiscover(e, perfume)}
                 >
-                  Discover <i className="arrow" aria-hidden="true" />
+                  Shop Now <i className="arrow" aria-hidden="true" />
                 </button>
               </article>
             );

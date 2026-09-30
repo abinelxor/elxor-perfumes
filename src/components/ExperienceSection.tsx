@@ -77,8 +77,7 @@ export default function ExperienceSection({
 
         <div data-reveal>
           <a href="#collection" className="btn btn--ghost" onClick={handleClick}>
-            Discover <span className="brand">ELXOR</span>{" "}
-            <i className="arrow" aria-hidden="true" />
+            Shop Now <i className="arrow" aria-hidden="true" />
           </a>
         </div>
       </div>

@@ -74,6 +74,14 @@ export default function StatementSection() {
           </span>
         ))}
       </p>
+      <div className="statement__narrative" data-reveal>
+        <p className="statement__lead">
+          <strong className="brand">ELXOR Perfumes</strong> is a Dubai-based luxury fragrance brand created for those who believe a fragrance should be more than just a scent—it should become a signature of presence. Our collection combines refined fragrance artistry, sophisticated character, and long-lasting performance to create memorable scents for modern lifestyles. Our current collection features two distinctive unisex Eau de Parfum collections, <strong>AMORIEL</strong> and <strong>SANCTIX</strong>, each designed to transcend traditional boundaries and offer an elegant expression that can be enjoyed as a <em>perfume for men</em> or a <em>perfume for women</em>. Whether you are searching for the best perfume for men, the best perfumes for women, or a versatile unisex fragrance, ELXOR offers sophisticated aromas designed to leave a lasting impression.
+        </p>
+        <p className="statement__body">
+          At <span className="brand">ELXOR</span>, we believe the right fragrance does more than complement your style—it becomes part of your identity. From everyday moments to special occasions, our long-lasting Eau de Parfum fragrances are created to help you express your aura with confidence. Whether you are looking for the best fragrance perfume, a distinctive best fragrance for male or best fragrance for women, or simply want to buy best perfume online, discover the <strong>AMORIEL</strong> and <strong>SANCTIX</strong> collections exclusively through <strong>Amazon</strong> and find the fragrance that becomes your signature.
+        </p>
+      </div>
       <p className="wordmark" data-reveal>
         <span className="brand">ELXOR</span>
       </p>
