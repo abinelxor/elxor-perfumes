@@ -23,22 +23,7 @@ export default function Home() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [contactOpen, setContactOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(false);
-
-  // Fallback scroll listener ensuring navbar is always visible on sections below the hero
-  useEffect(() => {
-    const handleScroll = () => {
-      const heroEl = document.getElementById("home");
-      if (heroEl) {
-        const rect = heroEl.getBoundingClientRect();
-        if (rect.bottom <= window.innerHeight * 0.4) {
-          setShowNavbar(true);
-        }
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const [showNavbar, setShowNavbar] = useState(true);
 
   const handleAddToCart = (
     perfume: PerfumeItem,
@@ -76,13 +61,13 @@ export default function Home() {
         color: "#f8f6f0",
       }}
     >
-      {/* Dedicated Luxury Preloader ensuring all 125 WebP frames are fully decoded before entry */}
+      {/* Dedicated Luxury Preloader with breathing logo and percentage */}
       {!isLoaded && <Preloader onComplete={() => setIsLoaded(true)} />}
 
       {/* Interactive Golden Fragrance Dust Canvas & Cursor Aura */}
       <GoldenDustCanvas />
 
-      {/* Top Navbar: ONLY shown after scrolling animation completes */}
+      {/* Top Luxury Glassmorphism Navbar */}
       <Navbar
         visible={showNavbar}
         onOpenCart={() => setCartOpen(true)}
@@ -90,12 +75,8 @@ export default function Home() {
         onOpenContact={() => setContactOpen(true)}
       />
 
-      {/* 1. Hero Section with 1080p Ultra-HQ WebP Frame Scrubbing Animation */}
+      {/* 1. Hero Section with 120-Frame Cinematic Scroll Animation */}
       <HeroSection
-        onProgressChange={(progress) => {
-          // Show navbar only after the scrolling animation completes
-          setShowNavbar(progress >= 0.92);
-        }}
         onExploreClick={() => {
           const el = document.getElementById("collection");
           if (el) el.scrollIntoView({ behavior: "smooth" });

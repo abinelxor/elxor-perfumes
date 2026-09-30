@@ -25,7 +25,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     };
   }, []);
 
-  // Completion trigger: max 3 seconds total (including 500ms fade-out)
+  // Completion trigger with smooth fade out
   const triggerFinish = () => {
     if (hasFinishedRef.current) return;
     hasFinishedRef.current = true;
@@ -93,9 +93,9 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       });
     };
 
-    // 30 parallel streams for fast loading
+    // 24 parallel streams for lightning fast loading
     const loadAll = async () => {
-      const concurrency = 30;
+      const concurrency = 24;
       let currentIndex = 1;
 
       const worker = async () => {
@@ -117,7 +117,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     };
   }, []);
 
-  // Smooth timer-driven & load-driven percentage loop (strictly caps duration to max 3s)
+  // Smooth timer-driven & load-driven percentage loop
   useEffect(() => {
     const updateProgress = () => {
       if (hasFinishedRef.current) return;
@@ -127,7 +127,10 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       const realRatio = Math.min(1, frameCache.loadedCount / TOTAL_FRAMES);
 
       // Percentage is the maximum of real download progress or time-elapsed ramp
-      const targetPct = Math.min(100, Math.max(Math.round(realRatio * 100), Math.round(timeRatio * 100)));
+      const targetPct = Math.min(
+        100,
+        Math.max(Math.round(realRatio * 100), Math.round(timeRatio * 100))
+      );
 
       setDisplayPct((prev) => {
         if (prev < targetPct) {
@@ -150,7 +153,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     // Hard fallback timeout: guarantees exit within 3000ms max under all conditions
     const hardTimeout = setTimeout(() => {
       triggerFinish();
-    }, 2700);
+    }, 2800);
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -230,13 +233,13 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           />
         </div>
 
-        {/* Title: UNVEIL YOUR AURA */}
+        {/* Title: ENTER THE WORLD OF ELXOR */}
         <h2
           style={{
             fontFamily: "var(--font-cinzel), 'Cinzel', serif",
-            fontSize: "clamp(1.35rem, 3.2vw, 1.85rem)",
+            fontSize: "clamp(1.15rem, 2.7vw, 1.65rem)",
             fontWeight: 400,
-            letterSpacing: "clamp(4px, 1.2vw, 6px)",
+            letterSpacing: "clamp(3.5px, 1vw, 5.5px)",
             marginBottom: "28px",
             background:
               "linear-gradient(135deg, #FFF9EE 0%, #F5D799 26%, #D4AF37 54%, #B88636 82%, #7A5317 100%)",
@@ -247,7 +250,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             whiteSpace: "nowrap",
           }}
         >
-          UNVEIL YOUR AURA
+          ENTER THE WORLD OF ELXOR
         </h2>
 
         {/* Progress Bar Container - Executive Minimalist Hairline */}

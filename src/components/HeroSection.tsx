@@ -12,7 +12,6 @@ interface HeroSectionProps {
 
 export default function HeroSection({
   onExploreClick,
-  onDiscoverClick,
   onProgressChange,
 }: HeroSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,7 +26,7 @@ export default function HeroSection({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Track scroll position through the pinned hero section (240vh track for comfortable, silky scrubbing)
+  // Track scroll position through the pinned hero section (calibrated 100vh-130vh scroll distance)
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
@@ -48,17 +47,32 @@ export default function HeroSection({
     return () => window.removeEventListener("scroll", handleScroll);
   }, [onProgressChange]);
 
+  // Scroll indicator opacity: visible at start, disappears smoothly after scrolling begins
+  const scrollIndicatorOpacity =
+    scrollProgress <= 0.03
+      ? 0.95
+      : Math.max(0, 1 - (scrollProgress - 0.03) * 14);
+
+  const handleScrollToCollection = () => {
+    if (onExploreClick) {
+      onExploreClick();
+    } else {
+      const el = document.getElementById("collection");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section
       id="home"
       ref={containerRef}
       style={{
         position: "relative",
-        minHeight: "240vh",
+        minHeight: isMobile ? "200vh" : "230vh",
         backgroundColor: "#050505",
       }}
     >
-      {/* Sticky Fullscreen Viewport for Pure Frame Scrubbing: fits screen 100% perfectly */}
+      {/* Sticky Fullscreen Viewport for pure frame scrubbing (Frame 1 to 120) */}
       <div
         style={{
           position: "sticky",
@@ -72,75 +86,80 @@ export default function HeroSection({
           zIndex: 10,
         }}
       >
-        {/* Full-bleed 1080p Ultra-HQ WebP Canvas: fits screen edge-to-edge */}
+        {/* Full-bleed 1080p Ultra-HQ WebP Canvas from the 120-frame video */}
         <HeroScrollCanvas progress={scrollProgress} />
 
-        {/* Hero Content Overlay: Compact & Non-Intrusive, leaving the entire animation in full view */}
+        {/* Minimal Bottom Fade: only the bottom edge to blend seamlessly into #collection */}
         <div
           style={{
-            position: "relative",
-            zIndex: 5,
+            position: "absolute",
+            bottom: 0,
+            left: 0,
             width: "100%",
-            maxWidth: "1400px",
-            height: "100%",
-            margin: "0 auto",
-            padding: isMobile ? "40px 20px 24px" : "50px 48px 30px",
+            height: "120px",
+            zIndex: 2,
+            pointerEvents: "none",
+            background:
+              "linear-gradient(180deg, rgba(5,5,5,0) 0%, rgba(5,5,5,0.6) 65%, #050505 100%)",
+          }}
+        />
+
+        {/* Subtle Bottom Scroll Indicator: SCROLL TO DISCOVER ↓ */}
+        <div
+          onClick={handleScrollToCollection}
+          style={{
+            position: "absolute",
+            bottom: isMobile ? "18px" : "28px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 10,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "flex-end",
-            pointerEvents: "none",
+            alignItems: "center",
+            gap: "5px",
+            opacity: scrollIndicatorOpacity,
+            pointerEvents: scrollIndicatorOpacity > 0.1 ? "auto" : "none",
+            transition:
+              "opacity 0.4s ease, transform 0.4s ease, border-color 0.3s ease",
+            cursor: "pointer",
+            background: "rgba(9, 7, 6, 0.55)",
+            padding: "7px 18px",
+            borderRadius: "22px",
+            border: "1px solid rgba(216, 162, 83, 0.22)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            boxShadow: "0 6px 20px rgba(0, 0, 0, 0.5)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "rgba(236, 196, 128, 0.55)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "rgba(216, 162, 83, 0.22)";
           }}
         >
-          {/* Main Content Area: Centered Minimalist Scroll Indicator */}
-          <div
+          <span
             style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-              marginBottom: "15px",
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.68rem",
+              letterSpacing: "2.8px",
+              color: "#ded3c2",
+              textTransform: "uppercase",
+              fontWeight: 400,
+              userSelect: "none",
             }}
           >
-            {/* Scroll Hint */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "4px",
-                opacity: scrollProgress > 0.85 ? 0.2 : 0.9,
-                transition: "opacity 0.4s ease",
-                background: "rgba(8, 7, 6, 0.45)",
-                padding: "6px 14px",
-                borderRadius: "20px",
-                border: "1px solid rgba(216, 162, 83, 0.15)",
-                backdropFilter: "blur(8px)",
-                pointerEvents: "auto",
-              }}
-            >
-              <span
-                style={{
-                  fontSize: "0.68rem",
-                  letterSpacing: "2.5px",
-                  color: "#ded3c2",
-                  textTransform: "uppercase",
-                  fontWeight: 400,
-                }}
-              >
-                SCROLL TO EXPERIENCE
-              </span>
-              <div
-                className="animate-bounce"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#ECC480",
-                }}
-              >
-                <ChevronDown size={14} />
-              </div>
-            </div>
+            SCROLL TO DISCOVER ↓
+          </span>
+          <div
+            className="animate-bounce"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#ECC480",
+            }}
+          >
+            <ChevronDown size={14} />
           </div>
         </div>
       </div>

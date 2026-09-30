@@ -1,5 +1,5 @@
-// Global shared memory cache for the 125-frame WebP animation sequence
-export const TOTAL_FRAMES = 125;
+// Global shared memory cache for the 120-frame WebP animation sequence
+export const TOTAL_FRAMES = 120;
 
 export const frameCache: {
   images: (HTMLImageElement | null)[];

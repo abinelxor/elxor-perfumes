@@ -49,13 +49,14 @@ export default function Navbar({
           transition:
             "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, background 0.4s ease, padding 0.4s ease",
           background: scrolled
-            ? "rgba(5, 5, 5, 0.88)"
-            : "linear-gradient(180deg, rgba(5,5,5,0.85) 0%, rgba(5,5,5,0) 100%)",
-          backdropFilter: scrolled ? "blur(16px)" : "none",
+            ? "rgba(5, 5, 5, 0.92)"
+            : "rgba(8, 7, 6, 0.55)",
+          backdropFilter: "blur(18px)",
+          WebkitBackdropFilter: "blur(18px)",
           borderBottom: scrolled
-            ? "1px solid rgba(212, 175, 55, 0.15)"
-            : "1px solid transparent",
-          padding: scrolled ? "14px 0" : "20px 0",
+            ? "1px solid rgba(212, 175, 55, 0.18)"
+            : "1px solid rgba(212, 175, 55, 0.1)",
+          padding: scrolled ? "14px 0" : "18px 0",
         }}
       >
         <div
