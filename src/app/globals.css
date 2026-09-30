@@ -1189,7 +1189,7 @@ body::after {
 
 .seq {
   position: relative;
-  height: 220vh;
+  height: 320vh;
 }
 
 .seq__sticky {
@@ -1839,7 +1839,7 @@ body::after {
   }
 
   .seq {
-    height: 200vh;
+    height: 280vh;
   }
   .seq__bottle {
     width: 82vw;

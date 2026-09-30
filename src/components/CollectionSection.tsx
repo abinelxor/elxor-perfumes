@@ -122,14 +122,14 @@ export default function CollectionSection({
         if (l) l.style.setProperty("--draw", db);
       });
 
-      const active = q < 0.5 ? 0 : 1;
+      const active = q < 0.48 ? 0 : 1;
 
       perfumesData.forEach((_, i) => {
         const dir = i % 2 ? 1 : -1;
         const isFirst = i === 0;
 
         // Continuous enter and exit: no blank moments, no dead scroll
-        const enter = isFirst ? 1 : easeOut(clamp((q - 0.38) / 0.12));
+        const enter = isFirst ? 1 : easeOut(clamp((q - 0.40) / 0.12));
         const exit = isFirst ? ease(clamp((q - 0.40) / 0.12)) : 0;
         const vis = isFirst ? 1 - exit : enter;
         const float = Math.sin(
@@ -137,7 +137,7 @@ export default function CollectionSection({
         );
 
         const tx = 0;
-        const ty = isFirst ? -exit * 20 : (1 - enter) * 20;
+        const ty = isFirst ? -exit * 24 : (1 - enter) * 24;
         const rot =
           (1 - enter) * -12 * dir + exit * 10 * dir + float * 2.5 * dir;
         const sc =
@@ -168,8 +168,8 @@ export default function CollectionSection({
         const c = cardRefs.current[i];
         if (c) {
           const side = isFirst ? 1 : -1;
-          const cin = isFirst ? 1 : ease(clamp((q - 0.40) / 0.10));
-          const cout = isFirst ? ease(clamp((q - 0.38) / 0.10)) : 0;
+          const cin = isFirst ? 1 : ease(clamp((q - 0.42) / 0.10));
+          const cout = isFirst ? ease(clamp((q - 0.40) / 0.10)) : 0;
           const cx = mobile ? 0 : (1 - cin) * side * 16;
           const cy =
             (1 - cin) * (mobile ? 10 : 8) - cout * (mobile ? 12 : 24);
@@ -187,8 +187,8 @@ export default function CollectionSection({
 
         const n = noteRefs.current[i];
         if (n) {
-          const nin = isFirst ? 1 : clamp((q - 0.42) / 0.10);
-          const nout = isFirst ? ease(clamp((q - 0.38) / 0.10)) : 0;
+          const nin = isFirst ? 1 : clamp((q - 0.44) / 0.10);
+          const nout = isFirst ? ease(clamp((q - 0.40) / 0.10)) : 0;
           n.style.opacity = (easeOut(nin) * (1 - nout)).toFixed(3);
           n.style.transform = `translateY(${(-nout * 30).toFixed(
             1
@@ -197,13 +197,13 @@ export default function CollectionSection({
             "--draw",
             isFirst
               ? (1 - clamp(q / 0.2)).toFixed(3)
-              : (1 - clamp((q - 0.45) / 0.2)).toFixed(3)
+              : (1 - clamp((q - 0.48) / 0.2)).toFixed(3)
           );
         }
 
         const st = stepRefs.current[i];
         if (st) {
-          const fillProg = isFirst ? clamp(q / 0.5) : clamp((q - 0.5) / 0.5);
+          const fillProg = isFirst ? clamp(q / 0.48) : clamp((q - 0.48) / 0.48);
           st.style.setProperty("--fill", fillProg.toFixed(3));
         }
       });
