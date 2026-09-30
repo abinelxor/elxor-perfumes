@@ -70,7 +70,7 @@ export default function StatementSection() {
               w.isGold ? "gold-text" : ""
             }`}
           >
-            {w.text}{" "}
+            {w.text}
           </span>
         ))}
       </p>

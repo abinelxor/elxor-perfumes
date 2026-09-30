@@ -1050,6 +1050,15 @@ body::after {
 
 .w {
   display: inline-block;
+  margin-right: 0.28em;
+}
+
+.w:last-child {
+  margin-right: 0;
+}
+
+.w:has(+ br) {
+  margin-right: 0;
 }
 
 .chapter .w,

@@ -365,17 +365,17 @@ export default function HeroSection({
             </p>
             <h1 className="chapter__title">
               <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
-                The{" "}
+                The
               </span>
               <span className="w" style={{ "--i": 2 } as React.CSSProperties}>
                 Essence
               </span>
-              <br />{" "}
+              <br />
               <span
                 className="w gold-text"
                 style={{ "--i": 3 } as React.CSSProperties}
               >
-                of{" "}
+                of
               </span>
               <span
                 className="w gold-text"
@@ -405,17 +405,17 @@ export default function HeroSection({
             </p>
             <h2 className="chapter__title">
               <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
-                Luxury{" "}
+                Luxury
               </span>
               <span className="w" style={{ "--i": 2 } as React.CSSProperties}>
                 begins
               </span>
-              <br />{" "}
+              <br />
               <span
                 className="w gold-text"
                 style={{ "--i": 3 } as React.CSSProperties}
               >
-                before{" "}
+                before
               </span>
               <span
                 className="w gold-text"
@@ -423,12 +423,12 @@ export default function HeroSection({
               >
                 the
               </span>
-              <br />{" "}
+              <br />
               <span
                 className="w gold-text"
                 style={{ "--i": 5 } as React.CSSProperties}
               >
-                first{" "}
+                first
               </span>
               <span
                 className="w gold-text"
@@ -458,23 +458,23 @@ export default function HeroSection({
             </p>
             <h2 className="chapter__title">
               <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
-                One{" "}
+                One
               </span>
               <span className="w" style={{ "--i": 2 } as React.CSSProperties}>
                 touch.
               </span>
-              <br />{" "}
+              <br />
               <span
                 className="w gold-text"
                 style={{ "--i": 3 } as React.CSSProperties}
               >
-                The{" "}
+                The
               </span>
               <span
                 className="w gold-text"
                 style={{ "--i": 4 } as React.CSSProperties}
               >
-                air{" "}
+                air
               </span>
               <span
                 className="w gold-text"
@@ -504,32 +504,32 @@ export default function HeroSection({
             </p>
             <h2 className="chapter__title">
               <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
-                Don’t{" "}
+                Don’t
               </span>
               <span className="w" style={{ "--i": 2 } as React.CSSProperties}>
-                just{" "}
+                just
               </span>
               <span className="w" style={{ "--i": 3 } as React.CSSProperties}>
-                wear{" "}
+                wear
               </span>
               <span className="w" style={{ "--i": 4 } as React.CSSProperties}>
-                a{" "}
+                a
               </span>
               <span className="w" style={{ "--i": 5 } as React.CSSProperties}>
                 fragrance,
               </span>
-              <br />{" "}
+              <br />
               <span
                 className="w gold-text"
                 style={{ "--i": 6 } as React.CSSProperties}
               >
-                Leave{" "}
+                Leave
               </span>
               <span
                 className="w gold-text"
                 style={{ "--i": 7 } as React.CSSProperties}
               >
-                a{" "}
+                a
               </span>
               <span
                 className="w gold-text"

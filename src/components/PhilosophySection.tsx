@@ -43,14 +43,14 @@ export default function PhilosophySection() {
         </p>
 
         <h2 className="section-title section-title--left" data-split-reveal>
-          <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Elegance </span>
-          <span className="w" style={{ "--i": 1 } as React.CSSProperties}>is </span>
-          <span className="w" style={{ "--i": 2 } as React.CSSProperties}>not </span>
-          <span className="w" style={{ "--i": 3 } as React.CSSProperties}>simply </span>
-          <span className="w" style={{ "--i": 4 } as React.CSSProperties}>seen. </span>
+          <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Elegance</span>
+          <span className="w" style={{ "--i": 1 } as React.CSSProperties}>is</span>
+          <span className="w" style={{ "--i": 2 } as React.CSSProperties}>not</span>
+          <span className="w" style={{ "--i": 3 } as React.CSSProperties}>simply</span>
+          <span className="w" style={{ "--i": 4 } as React.CSSProperties}>seen.</span>
           <br />
-          <span className="w gold-text" style={{ "--i": 5 } as React.CSSProperties}>It </span>
-          <span className="w gold-text" style={{ "--i": 6 } as React.CSSProperties}>is </span>
+          <span className="w gold-text" style={{ "--i": 5 } as React.CSSProperties}>It</span>
+          <span className="w gold-text" style={{ "--i": 6 } as React.CSSProperties}>is</span>
           <span className="w gold-text" style={{ "--i": 7 } as React.CSSProperties}>experienced.</span>
         </h2>
 

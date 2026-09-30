@@ -356,8 +356,8 @@ export default function CollectionSection({
           Our Collection
         </p>
         <h2 className="section-title" data-split-reveal>
-          <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Crafted </span>
-          <span className="w" style={{ "--i": 1 } as React.CSSProperties}>for </span>
+          <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Crafted</span>
+          <span className="w" style={{ "--i": 1 } as React.CSSProperties}>for</span>
           <span className="w gold-text" style={{ "--i": 2 } as React.CSSProperties}>distinction</span>
         </h2>
         <div className="divider" data-reveal>
@@ -541,12 +541,12 @@ export default function CollectionSection({
           {/* Finale Stage */}
           <div className="seq__final" ref={seqFinalRef}>
             <h2 className="seq__title">
-              <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Four </span>
+              <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Four</span>
               <span className="w" style={{ "--i": 1 } as React.CSSProperties}>signatures.</span>
-              <br />{" "}
-              <span className="w gold-text" style={{ "--i": 2 } as React.CSSProperties}>Which </span>
-              <span className="w gold-text" style={{ "--i": 3 } as React.CSSProperties}>one </span>
-              <span className="w gold-text" style={{ "--i": 4 } as React.CSSProperties}>is </span>
+              <br />
+              <span className="w gold-text" style={{ "--i": 2 } as React.CSSProperties}>Which</span>
+              <span className="w gold-text" style={{ "--i": 3 } as React.CSSProperties}>one</span>
+              <span className="w gold-text" style={{ "--i": 4 } as React.CSSProperties}>is</span>
               <span className="w gold-text" style={{ "--i": 5 } as React.CSSProperties}>yours?</span>
             </h2>
             <div data-piece style={{ "--i": 6 } as React.CSSProperties}>

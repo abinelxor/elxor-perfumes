@@ -58,10 +58,10 @@ export default function ExperienceSection({
         </p>
 
         <h2 className="section-title section-title--left" data-split-reveal>
-          <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Your </span>
-          <span className="w" style={{ "--i": 1 } as React.CSSProperties}>scent. </span>
+          <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Your</span>
+          <span className="w" style={{ "--i": 1 } as React.CSSProperties}>scent.</span>
           <br />
-          <span className="w gold-text" style={{ "--i": 2 } as React.CSSProperties}>Your </span>
+          <span className="w gold-text" style={{ "--i": 2 } as React.CSSProperties}>Your</span>
           <span className="w gold-text" style={{ "--i": 3 } as React.CSSProperties}>signature.</span>
         </h2>
 

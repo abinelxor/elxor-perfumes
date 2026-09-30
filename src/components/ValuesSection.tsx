@@ -10,9 +10,9 @@ export default function ValuesSection() {
           Our Values
         </p>
         <h2 className="section-title" id="values-title" data-split-reveal>
-          <span className="w" style={{ "--i": 0 } as React.CSSProperties}>What </span>
-          <span className="w" style={{ "--i": 1 } as React.CSSProperties}>every </span>
-          <span className="w" style={{ "--i": 2 } as React.CSSProperties}>bottle </span>
+          <span className="w" style={{ "--i": 0 } as React.CSSProperties}>What</span>
+          <span className="w" style={{ "--i": 1 } as React.CSSProperties}>every</span>
+          <span className="w" style={{ "--i": 2 } as React.CSSProperties}>bottle</span>
           <span className="w gold-text" style={{ "--i": 3 } as React.CSSProperties}>carries</span>
         </h2>
         <div className="divider" data-reveal>
