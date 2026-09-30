@@ -4,14 +4,14 @@ import React from "react";
 
 export default function Marquee() {
   const items = [
-    "Noir Essence",
-    "Royal Oud",
-    "Silver Ambre",
-    "Velvet Rouge",
-    "Noir Essence",
-    "Royal Oud",
-    "Silver Ambre",
-    "Velvet Rouge",
+    "Sanctix",
+    "Amoriel",
+    "Sanctix",
+    "Amoriel",
+    "Sanctix",
+    "Amoriel",
+    "Sanctix",
+    "Amoriel",
   ];
 
   return (

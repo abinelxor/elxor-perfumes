@@ -56,10 +56,6 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-const BEAT = 0.36;
-const BEAT0 = 0.0;
-const FINAL = 0.72;
-
 export default function CollectionSection({
   onSelectPerfume,
   onContactClick,
@@ -73,7 +69,6 @@ export default function CollectionSection({
   const stepsWrapRef = useRef<HTMLOListElement>(null);
   const lineARefs = useRef<(SVGPathElement | null)[]>([]);
   const lineBRefs = useRef<(SVGPathElement | null)[]>([]);
-  const seqFinalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const seq = seqRef.current;
@@ -118,8 +113,8 @@ export default function CollectionSection({
       const vw = window.innerWidth / 100;
 
       // Draw SVG lines
-      const da = (1 - clamp(q / 0.55)).toFixed(4);
-      const db = (1 - clamp((q - 0.3) / 0.6)).toFixed(4);
+      const da = (1 - clamp(q / 0.5)).toFixed(4);
+      const db = (1 - clamp((q - 0.25) / 0.6)).toFixed(4);
       lineARefs.current.forEach((l) => {
         if (l) l.style.setProperty("--draw", da);
       });
@@ -127,58 +122,27 @@ export default function CollectionSection({
         if (l) l.style.setProperty("--draw", db);
       });
 
-      let active = 0;
-      let activeVis = -1;
+      const active = q < 0.5 ? 0 : 1;
 
       perfumesData.forEach((_, i) => {
-        const s = BEAT0 + i * BEAT;
         const dir = i % 2 ? 1 : -1;
-        const last = i === perfumesData.length - 1;
+        const isFirst = i === 0;
 
-        const enter =
-          i === 0
-            ? easeOut(clamp((q + 0.02) / 0.08))
-            : easeOut(clamp((q - (s - 0.06)) / 0.08));
-        const hold = clamp((q - (s + 0.03)) / 0.16);
-        const exit = last ? 0 : ease(clamp((q - (s + 0.24)) / 0.08));
-        const vis = Math.min(1, enter * 1.25) * (1 - exit);
-        const float = Math.sin(hold * Math.PI);
+        // Continuous enter and exit: no blank moments, no dead scroll
+        const enter = isFirst ? 1 : easeOut(clamp((q - 0.38) / 0.12));
+        const exit = isFirst ? ease(clamp((q - 0.40) / 0.12)) : 0;
+        const vis = isFirst ? 1 - exit : enter;
+        const float = Math.sin(
+          clamp((q - (isFirst ? 0.05 : 0.55)) / 0.35) * Math.PI
+        );
 
-        // Finale glide
-        const fs = last ? FINAL : FINAL + 0.01 + i * 0.03;
-        const f = ease(clamp((q - fs) / 0.09));
-        const rowX = mobile
-          ? ((i % 2) - 0.5) * 48 * vw
-          : (i - 0.5) * Math.min(32 * vw, 420);
-        const rowY = mobile ? 4 : 8;
-        const rowS = mobile ? 0.52 : 0.58;
-
-        const pX = 0;
-        const pY = (1 - enter) * 30 - exit * 30;
-        const pR =
-          (1 - enter) * -16 * dir + exit * 10 * dir + float * 2.5 * dir;
-        const pS = 0.78 + 0.22 * enter - 0.16 * exit + float * 0.03;
-
-        let tx, ty, rot, sc, op;
-        if (q >= fs && last) {
-          tx = lerp(pX, rowX, f);
-          ty = lerp(pY, rowY, f);
-          rot = lerp(pR, 0, f);
-          sc = lerp(pS, rowS, f);
-          op = 1;
-        } else if (q >= fs && f > 0) {
-          tx = rowX;
-          ty = rowY + (1 - f) * 40;
-          rot = (1 - f) * dir * 10;
-          sc = rowS;
-          op = f;
-        } else {
-          tx = pX;
-          ty = pY;
-          rot = pR;
-          sc = pS;
-          op = vis;
-        }
+        const tx = 0;
+        const ty = isFirst ? -exit * 20 : (1 - enter) * 20;
+        const rot =
+          (1 - enter) * -12 * dir + exit * 10 * dir + float * 2.5 * dir;
+        const sc =
+          0.88 + 0.12 * (isFirst ? 1 - exit * 0.1 : enter) + float * 0.02;
+        const op = vis;
 
         const b = bottleRefs.current[i];
         if (b) {
@@ -190,25 +154,25 @@ export default function CollectionSection({
           )}deg) scale(${sc.toFixed(3)})`;
         }
 
-        const ghostVis =
-          vis * (last ? 1 - ease(clamp((q - (FINAL - 0.02)) / 0.05)) : 1);
         const g = ghostRefs.current[i];
         if (g) {
-          g.style.opacity = (ghostVis * 0.9).toFixed(3);
-          g.style.transform = `translate(-50%, -50%) translateY(${(
-            (1 - enter) * 20 -
-            exit * 20
-          ).toFixed(2)}vh) scale(${(0.92 + 0.08 * enter).toFixed(3)})`;
+          g.style.opacity = (vis * 0.9).toFixed(3);
+          g.style.transform = `translate(-50%, -50%) translateY(${ty.toFixed(
+            2
+          )}vh) scale(${(
+            0.92 +
+            0.08 * (isFirst ? 1 - exit : enter)
+          ).toFixed(3)})`;
         }
 
         const c = cardRefs.current[i];
         if (c) {
-          const side = i % 2 === 0 ? 1 : -1;
-          const cin = ease(clamp((q - (s + 0.02)) / 0.08));
-          const cout = ease(clamp((q - (s + 0.22)) / 0.08));
+          const side = isFirst ? 1 : -1;
+          const cin = isFirst ? 1 : ease(clamp((q - 0.40) / 0.10));
+          const cout = isFirst ? ease(clamp((q - 0.38) / 0.10)) : 0;
           const cx = mobile ? 0 : (1 - cin) * side * 16;
           const cy =
-            (1 - cin) * (mobile ? 10 : 8) - cout * (mobile ? 12 : 26);
+            (1 - cin) * (mobile ? 10 : 8) - cout * (mobile ? 12 : 24);
           const cr = mobile ? 0 : side * (2 + (1 - cin) * 7) - cout * side * 5;
           const cb = (1 - cin) * 10 + cout * 8;
           c.style.opacity = (cin * (1 - cout)).toFixed(3);
@@ -223,27 +187,24 @@ export default function CollectionSection({
 
         const n = noteRefs.current[i];
         if (n) {
-          const nin = clamp((q - (s + 0.04)) / 0.07);
-          const nout = ease(clamp((q - (s + 0.22)) / 0.07));
+          const nin = isFirst ? 1 : clamp((q - 0.42) / 0.10);
+          const nout = isFirst ? ease(clamp((q - 0.38) / 0.10)) : 0;
           n.style.opacity = (easeOut(nin) * (1 - nout)).toFixed(3);
-          n.style.transform = `translateY(${(
-            (1 - easeOut(nin)) * 20 -
-            nout * 40
-          ).toFixed(1)}px) rotate(${i % 2 ? 3 : -3}deg)`;
+          n.style.transform = `translateY(${(-nout * 30).toFixed(
+            1
+          )}px) rotate(${i % 2 ? 3 : -3}deg)`;
           n.style.setProperty(
             "--draw",
-            (1 - clamp((q - (s + 0.045)) / 0.045)).toFixed(3)
+            isFirst
+              ? (1 - clamp(q / 0.2)).toFixed(3)
+              : (1 - clamp((q - 0.45) / 0.2)).toFixed(3)
           );
-        }
-
-        if (vis > activeVis) {
-          activeVis = vis;
-          active = i;
         }
 
         const st = stepRefs.current[i];
         if (st) {
-          st.style.setProperty("--fill", clamp((q - s) / BEAT).toFixed(3));
+          const fillProg = isFirst ? clamp(q / 0.5) : clamp((q - 0.5) / 0.5);
+          st.style.setProperty("--fill", fillProg.toFixed(3));
         }
       });
 
@@ -252,21 +213,6 @@ export default function CollectionSection({
         stepRefs.current.forEach((st, k) => {
           if (st) st.classList.toggle("is-active", k === active);
         });
-      }
-
-      if (stepsWrapRef.current) {
-        stepsWrapRef.current.style.setProperty(
-          "--steps",
-          (1 - clamp((q - (FINAL - 0.04)) / 0.04)).toFixed(3)
-        );
-      }
-
-      const on = q >= FINAL;
-      if (on !== finalOn) {
-        finalOn = on;
-        if (seqFinalRef.current) {
-          seqFinalRef.current.classList.toggle("is-in", on);
-        }
       }
 
       requestAnimationFrame(update);
@@ -296,28 +242,9 @@ export default function CollectionSection({
     }
   };
 
-  const handleFinaleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (onContactClick) {
-      onContactClick();
-    } else {
-      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   const notesList = [
     "sacred & luminous",
     "pure devotion",
-  ];
-
-  const sparks = [
-    { x: "-38vw", y: "-4vh", s: 1.1, d: "0ms" },
-    { x: "34vw", y: "-12vh", s: 0.8, d: "120ms" },
-    { x: "-26vw", y: "20vh", s: 0.6, d: "240ms" },
-    { x: "40vw", y: "16vh", s: 1.3, d: "80ms" },
-    { x: "-44vw", y: "34vh", s: 0.9, d: "300ms" },
-    { x: "22vw", y: "-30vh", s: 0.55, d: "200ms" },
-    { x: "-14vw", y: "-34vh", s: 0.7, d: "360ms" },
   ];
 
   return (
@@ -510,47 +437,7 @@ export default function CollectionSection({
             );
           })}
 
-          {/* Finale Stage */}
-          <div className="seq__final" ref={seqFinalRef}>
-            <h2 className="seq__title">
-              <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Two</span>
-              <span className="w" style={{ "--i": 1 } as React.CSSProperties}>signatures.</span>
-              <br />
-              <span className="w gold-text" style={{ "--i": 2 } as React.CSSProperties}>Which</span>
-              <span className="w gold-text" style={{ "--i": 3 } as React.CSSProperties}>one</span>
-              <span className="w gold-text" style={{ "--i": 4 } as React.CSSProperties}>is</span>
-              <span className="w gold-text" style={{ "--i": 5 } as React.CSSProperties}>yours?</span>
-            </h2>
-            <div data-piece style={{ "--i": 6 } as React.CSSProperties}>
-              <a
-                href="#contact"
-                className="btn btn--gold"
-                onClick={handleFinaleClick}
-              >
-                Find your signature <i className="arrow" aria-hidden="true" />
-              </a>
-            </div>
 
-            {/* 7 Gold Star Sparks */}
-            {sparks.map((spark, idx) => (
-              <img
-                key={idx}
-                className="seq__spark"
-                src="/images/gold_star-alpha.png"
-                alt=""
-                width={40}
-                height={40}
-                style={
-                  {
-                    "--x": spark.x,
-                    "--y": spark.y,
-                    "--s": spark.s,
-                    "--d": spark.d,
-                  } as React.CSSProperties
-                }
-              />
-            ))}
-          </div>
 
           {/* Step Progress Indicators */}
           <ol className="seq__steps" ref={stepsWrapRef} aria-hidden="true">
