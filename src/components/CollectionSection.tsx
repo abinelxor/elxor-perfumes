@@ -156,7 +156,7 @@ export default function CollectionSection({
           ? ((i % 2) - 0.5) * 44 * vw
           : (i - 0.5) * Math.min(30 * vw, 380);
         const rowY = mobile ? 2 : 5;
-        const rowS = mobile ? 0.48 : 0.54;
+        const rowS = mobile ? 0.62 : 0.72; // Increased size
 
         let tx, ty, rot, sc, op;
         if (q >= 0.64) {
@@ -422,6 +422,12 @@ export default function CollectionSection({
 
           {/* 3D Bottles Stage */}
           <div className="seq__stage">
+            <style jsx>{`
+              @keyframes gentleFloat {
+                0% { transform: translateY(0); }
+                100% { transform: translateY(-14px); }
+              }
+            `}</style>
             {perfumesData.map((perfume, i) => (
               <figure
                 key={perfume.id}
@@ -436,6 +442,9 @@ export default function CollectionSection({
                   alt={`ELXOR ${perfume.name} perfume bottle`}
                   width={640}
                   height={640}
+                  style={{
+                    animation: `gentleFloat ${3.2 + i * 0.5}s ease-in-out infinite alternate`
+                  }}
                 />
               </figure>
             ))}

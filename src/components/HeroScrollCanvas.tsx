@@ -13,6 +13,8 @@ export default function HeroScrollCanvas({ progress }: HeroScrollCanvasProps) {
   const targetFrameRef = useRef(1);
   const rafIdRef = useRef<number | null>(null);
 
+  const drawFrameRef = useRef<(frameIndex: number) => void>(() => {});
+
   // Draw target frame fitting the screen edge-to-edge with maximum visual fidelity
   const drawFrame = useCallback((frameIndex: number) => {
     const canvas = canvasRef.current;
@@ -36,7 +38,7 @@ export default function HeroScrollCanvas({ progress }: HeroScrollCanvasProps) {
           frameCache.images[frameIndex] = loadingImg;
           // Redraw if this is still the active frame
           if (Math.round(currentFrameRef.current) === frameIndex) {
-            drawFrame(frameIndex);
+            drawFrameRef.current(frameIndex);
           }
         };
         frameCache.images[frameIndex] = loadingImg;
@@ -83,6 +85,10 @@ export default function HeroScrollCanvas({ progress }: HeroScrollCanvasProps) {
 
     ctx.drawImage(img, 0, 0, iw, ih, sx, sy, sw, sh);
   }, []);
+
+  useEffect(() => {
+    drawFrameRef.current = drawFrame;
+  }, [drawFrame]);
 
   // Map progress (0 to 1) directly to target frame (1 to 120)
   useEffect(() => {

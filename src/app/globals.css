@@ -574,7 +574,7 @@ body::after {
   height: var(--nav-h);
   display: flex;
   align-items: center;
-  gap: 40px;
+  justify-content: space-between;
   padding: 0 var(--gutter);
   transition: background .6s var(--ease), border-color .6s var(--ease), height .6s var(--ease);
   border-bottom: 1px solid transparent;
@@ -592,6 +592,7 @@ body::after {
   display: flex;
   align-items: center;
   gap: 14px;
+  z-index: 11;
 }
 
 .nav__logo img {
@@ -622,9 +623,15 @@ body::after {
 }
 
 .nav__links {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
+  align-items: center;
   gap: 36px;
-  margin: 0 auto;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 .nav__links a {
@@ -634,6 +641,7 @@ body::after {
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: rgba(243, 237, 227, 0.8);
+  white-space: nowrap;
   transition: color .4s;
 }
 
@@ -669,6 +677,14 @@ body::after {
   height: 1px;
   pointer-events: none;
   visibility: hidden;
+}
+
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 11;
+  margin-left: auto;
 }
 
 .nav__cta {
@@ -1808,6 +1824,56 @@ body::after {
   color: var(--gold);
 }
 
+.footer__socials {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.footer__social-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(213, 174, 111, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  text-decoration: none;
+  transition: all 0.35s var(--ease);
+}
+
+.footer__social-btn:hover {
+  background: var(--gold-btn-gradient);
+  color: #050403;
+  border-color: transparent;
+  box-shadow: 0 4px 18px rgba(213, 174, 111, 0.45);
+  transform: translateY(-3px);
+}
+
+.footer__contact-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted) !important;
+  font-size: 14.5px !important;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  width: fit-content;
+}
+
+.footer__contact-line:hover {
+  color: var(--gold) !important;
+}
+
+.footer__contact-icon {
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
 .footer__bottom {
   max-width: var(--max);
   margin: 72px auto 0;
@@ -1868,7 +1934,7 @@ body::after {
    Responsive Adaptations
    ========================================================================== */
 @media (max-width: 1100px) {
-  .nav__links, .nav__cta, .nav__spacer { display: none; }
+  .nav__links, .nav__cta, .nav__spacer { display: none !important; }
   .nav__toggle { display: block; }
   .seq__card { width: min(340px, 36vw); padding: 32px 28px 26px; }
   .seq__steps span { display: none; }

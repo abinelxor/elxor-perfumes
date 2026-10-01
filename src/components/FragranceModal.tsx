@@ -16,7 +16,7 @@ export default function FragranceModal({
   onClose,
   onAddToCart,
 }: FragranceModalProps) {
-  const [selectedSize, setSelectedSize] = useState("100ml");
+  const [selectedSize, setSelectedSize] = useState("50ml");
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
@@ -225,60 +225,49 @@ export default function FragranceModal({
                 </div>
               </div>
 
-              {/* Size Selector */}
-              <div style={{ display: "flex", gap: "12px", marginBottom: "26px" }}>
-                {["50ml", "100ml"].map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    style={{
-                      flex: 1,
-                      padding: "10px",
-                      background:
-                        selectedSize === size
-                          ? "rgba(216, 162, 83, 0.15)"
-                          : "transparent",
-                      border: `1px solid ${
-                        selectedSize === size
-                          ? "#ecc480"
-                          : "rgba(216, 162, 83, 0.3)"
-                      }`,
-                      color: selectedSize === size ? "#ecc480" : "#aba395",
-                      fontFamily: "var(--font-sans)",
-                      fontSize: "0.85rem",
-                      letterSpacing: "1px",
-                      borderRadius: "3px",
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    {size === "50ml" ? "50ml — $280" : "100ml — " + perfume.price}
-                  </button>
-                ))}
+              {/* Size */}
+              <div style={{ marginBottom: "26px", fontSize: "0.85rem", color: "#aba395", letterSpacing: "1px", fontFamily: "var(--font-sans)" }}>
+                SIZE: <span style={{ color: "#ecc480", fontWeight: 500 }}>50ml</span>
               </div>
             </div>
 
-            {/* Add to Bag Action */}
+            {/* Shop Now Action */}
             <div style={{ display: "flex", gap: "14px" }}>
               <button
                 onClick={handleAdd}
-                className="btn-gold-solid"
                 style={{
                   flex: 1,
-                  padding: "14px",
-                  fontSize: "0.88rem",
-                  letterSpacing: "2px",
+                  padding: "12px",
+                  background: "rgba(216, 162, 83, 0.15)",
+                  border: "1px solid #ecc480",
+                  color: "#ecc480",
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.85rem",
+                  letterSpacing: "1.5px",
+                  borderRadius: "3px",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(216, 162, 83, 0.25)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(216, 162, 83, 0.15)";
                 }}
               >
                 {added ? (
                   <>
-                    <Check size={18} />
-                    <span>ADDED TO BAG</span>
+                    <Check size={16} />
+                    <span>SHOP NOW</span>
                   </>
                 ) : (
                   <>
                     <Sparkles size={16} />
-                    <span>ADD TO BAG</span>
+                    <span>SHOP NOW</span>
                   </>
                 )}
               </button>

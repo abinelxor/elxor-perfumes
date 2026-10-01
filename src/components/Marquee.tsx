@@ -4,14 +4,12 @@ import React from "react";
 
 export default function Marquee() {
   const items = [
-    "Sanctix",
-    "Amoriel",
-    "Sanctix",
-    "Amoriel",
-    "Sanctix",
-    "Amoriel",
-    "Sanctix",
-    "Amoriel",
+    "Make Every Moment Memorable with ELXOR Perfumes",
+    "Make Every Moment Memorable with ELXOR Perfumes",
+    "Make Every Moment Memorable with ELXOR Perfumes",
+    "Make Every Moment Memorable with ELXOR Perfumes",
+    "Make Every Moment Memorable with ELXOR Perfumes",
+    "Make Every Moment Memorable with ELXOR Perfumes",
   ];
 
   return (

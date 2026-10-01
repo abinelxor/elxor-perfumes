@@ -29,10 +29,10 @@ export default function PhilosophySection() {
       <div className="split__media" ref={mediaRef} data-parallax="-0.06">
         <img
           ref={imgRef}
-          src="/images/ELXOR_AMORIEL_left.png"
+          src="/images/ELXOR_AMORIEL_left.png?v=2"
           alt="ELXOR Amoriel perfume bottle with celestial blooms and golden silk"
-          width={745}
-          height={490}
+          width={1440}
+          height={1240}
           loading="lazy"
         />
       </div>

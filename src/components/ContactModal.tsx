@@ -235,7 +235,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   </label>
                   <input
                     type="tel"
-                    placeholder="+91 98765 43210"
+                    placeholder="+971 55 469 6935"
                     value={formData.phone}
                     onChange={(e) =>
                       setFormData({ ...formData, phone: e.target.value })

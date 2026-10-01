@@ -29,7 +29,7 @@ export default function Navbar({
 
   // Section observer for active link
   useEffect(() => {
-    const sections = ["home", "collection", "philosophy", "experience", "contact"];
+    const sections = ["home", "collection", "philosophy", "experience", "faq", "contact"];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -126,18 +126,33 @@ export default function Navbar({
           </a>
         </nav>
 
-        <div className="nav__spacer" aria-hidden="true" />
+        <div className="nav__actions">
+          <a
+            href="#collection"
+            className="btn btn--gold nav__shop-btn"
+            style={{ padding: "8px 24px", fontSize: "0.75rem", minWidth: "auto", minHeight: "auto", height: "auto" }}
+            onClick={(e) => handleLinkClick(e, "collection")}
+          >
+            SHOP NOW
+          </a>
 
-        <button
-          className="nav__toggle"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={menuOpen}
-          aria-controls="menu"
-          onClick={handleToggleMenu}
-        >
-          <span />
-          <span />
-        </button>
+          <button
+            className="nav__toggle"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="menu"
+            onClick={handleToggleMenu}
+          >
+            <span />
+            <span />
+          </button>
+        </div>
+
+        <style>{`
+          @media (max-width: 768px) {
+            .nav__shop-btn { display: none !important; }
+          }
+        `}</style>
       </header>
 
       {/* Fullscreen Luxury Mobile Menu */}
@@ -166,6 +181,14 @@ export default function Navbar({
           </a>
           <a href="#contact" onClick={(e) => handleLinkClick(e, "contact")}>
             <em>05</em>Contact
+          </a>
+          <a 
+            href="#collection" 
+            className="btn btn--gold" 
+            style={{ marginTop: "2rem", alignSelf: "flex-start", padding: "12px 32px" }} 
+            onClick={(e) => handleLinkClick(e, "collection")}
+          >
+            SHOP NOW
           </a>
         </nav>
         <p className="menu__script">The essence of elegance</p>

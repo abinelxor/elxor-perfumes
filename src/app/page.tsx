@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Preloader from "@/components/Preloader";
 import ScrollObserver from "@/components/ScrollObserver";
 import Navbar from "@/components/Navbar";
@@ -13,6 +13,7 @@ import Marquee from "@/components/Marquee";
 import PhilosophySection from "@/components/PhilosophySection";
 import ValuesSection from "@/components/ValuesSection";
 import ExperienceSection from "@/components/ExperienceSection";
+import FaqSection from "@/components/FaqSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import FragranceModal from "@/components/FragranceModal";
@@ -21,6 +22,14 @@ import ContactModal from "@/components/ContactModal";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
   const [selectedPerfume, setSelectedPerfume] = useState<PerfumeItem | null>(
     null
   );
@@ -107,7 +116,10 @@ export default function Home() {
           }}
         />
 
-        {/* 11. Luxury Get In Touch Contact Section */}
+        {/* 11. Luxury Animated FAQ Section */}
+        <FaqSection onOpenContact={() => setContactOpen(true)} />
+
+        {/* 12. Luxury Get In Touch Contact Section */}
         <ContactSection />
       </main>
 
