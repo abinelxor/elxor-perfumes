@@ -1787,8 +1787,9 @@ body::after {
 }
 
 .footer__brand img {
-  width: 72px;
-  margin-bottom: 26px;
+  width: 115px;
+  height: auto;
+  margin-bottom: 24px;
 }
 
 .footer__brand h2 {

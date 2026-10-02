@@ -20,12 +20,17 @@ export default function Footer({ onOpenContact }: FooterProps) {
       <div className="footer__top">
         <div className="footer__brand">
           <img
-            src="/images/logo-320.png"
-            alt="ELXOR"
-            width={92}
-            height={94}
+            src="/images/logo-preloader-crisp.png"
+            alt="ELXOR Perfumes"
+            width={120}
+            height={127}
             loading="lazy"
-            style={{ width: "72px", height: "auto", marginBottom: "26px" }}
+            style={{
+              width: "115px",
+              height: "auto",
+              marginBottom: "24px",
+              filter: "drop-shadow(0 2px 14px rgba(213, 174, 111, 0.3))",
+            }}
           />
           <h2>The Essence of Elegance</h2>
           <p>
@@ -123,10 +128,10 @@ export default function Footer({ onOpenContact }: FooterProps) {
         <div className="footer__col">
           <h3>Our Collection</h3>
           <a href="#collection" onClick={(e) => handleScrollTo(e, "collection")}>
-            Sanctix
+            Amoriel
           </a>
           <a href="#collection" onClick={(e) => handleScrollTo(e, "collection")}>
-            Amoriel
+            Sanctix
           </a>
         </div>
 
@@ -148,9 +153,9 @@ export default function Footer({ onOpenContact }: FooterProps) {
             </svg>
             <span>+971 554696935 (WhatsApp)</span>
           </a>
-          <a href="mailto:info@elxorperfumes.com" className="footer__contact-line" title="Email us">
+          <a href="mailto:sales@elxorperfumes.com" className="footer__contact-line" title="Email us">
             <Mail size={14} className="footer__contact-icon" />
-            <span>info@elxorperfumes.com</span>
+            <span>sales@elxorperfumes.com</span>
           </a>
           <span className="footer__contact-line">
             <MapPin size={14} className="footer__contact-icon" />

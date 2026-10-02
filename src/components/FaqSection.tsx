@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown, ExternalLink, Sparkles, MessageCircle } from "lucide-react";
+import { ChevronDown, MessageCircle } from "lucide-react";
 
 interface FaqItem {
   id: string;
@@ -38,20 +38,9 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
       tag: "Brand & Origins",
       question: "What is ELXOR?",
       answer: (
-        <>
-          <p>
-            <strong className="brand gold-highlight">ELXOR</strong> is a luxury
-            Dubai-based perfume house crafting two signature fragrance collections,{" "}
-            <strong className="gold-highlight">AMORIEL</strong> and{" "}
-            <strong className="gold-highlight">SANCTIX</strong>, tailored for
-            men, women, and universal wear.
-          </p>
-          <p style={{ marginTop: "12px" }}>
-            Born from the heart of the Middle East&apos;s rich olfactory heritage,
-            our creations blend noble oud, radiant amber, and rare florals with modern
-            French perfumery techniques. The brand sells exclusively through Amazon.
-          </p>
-        </>
+        <p>
+          <strong className="brand gold-highlight">ELXOR</strong> is a Dubai based perfume brand producing two fragrance collections, <strong className="gold-highlight">AMORIEL</strong> and <strong className="gold-highlight">SANCTIX</strong>, for men, women and unisex wear. The brand sells exclusively through Amazon.
+        </p>
       ),
     },
     {
@@ -60,19 +49,9 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
       tag: "Composition & Gender",
       question: "Are ELXOR perfumes unisex?",
       answer: (
-        <>
-          <p>
-            Yes. Both <strong className="gold-highlight">AMORIEL</strong> and{" "}
-            <strong className="gold-highlight">SANCTIX</strong> are crafted as
-            luxury unisex fragrances, designed to be worn and celebrated by both
-            men and women without boundary.
-          </p>
-          <p style={{ marginTop: "12px" }}>
-            Rather than adhering to traditional gender divisions, each composition
-            features harmonious, balanced accords that adapt intuitively to your
-            unique skin chemistry, personal style, and every distinctive occasion.
-          </p>
-        </>
+        <p>
+          Are <strong className="gold-highlight">AMORIEL</strong> and <strong className="gold-highlight">SANCTIX</strong> both unisex fragrances, or is either collection specifically designed for men or women.
+        </p>
       ),
     },
     {
@@ -81,33 +60,9 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
       tag: "Authorized Channels",
       question: "Where can I buy ELXOR perfume online?",
       answer: (
-        <>
-          <p>
-            <strong className="brand gold-highlight">ELXOR</strong> is sold only
-            through our official Amazon storefront. We do not sell directly
-            through this website, and we do not supply third-party unauthorized
-            resellers.
-          </p>
-          <p style={{ marginTop: "12px" }}>
-            This exclusive distribution ensures strict batch freshness, climate-controlled
-            storage, and guaranteed authenticity for every bottle delivered to your door.
-          </p>
-          <div className="faq-action-row">
-            <a
-              href="https://www.amazon.ae"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="faq-cta-btn"
-            >
-              <span>Visit Official Store</span>
-              <ExternalLink size={14} />
-            </a>
-            <span className="faq-authenticity-pill">
-              <Sparkles size={13} color="var(--gold)" />
-              100% Guaranteed Authentic
-            </span>
-          </div>
-        </>
+        <p>
+          <strong className="brand gold-highlight">ELXOR</strong> is sold only through our official Amazon storefront. We do not sell through this website, and we do not supply third party resellers. This is the only channel where authenticity is guaranteed.
+        </p>
       ),
     },
     {
@@ -116,19 +71,9 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
       tag: "Gifting & Presentation",
       question: "Does ELXOR offer perfume gift sets for women and men?",
       answer: (
-        <>
-          <p>
-            Yes. <strong className="brand gold-highlight">ELXOR</strong> fragrances
-            make an exceptional, elegant gift choice for both men and women,
-            offering sophisticated scents suitable for different celebrations,
-            milestones, and personal milestones.
-          </p>
-          <p style={{ marginTop: "12px" }}>
-            Every bottle arrives in our executive midnight-and-gold presentation
-            casket, complete with our signature seal, making it ready for gifting
-            upon arrival.
-          </p>
-        </>
+        <p>
+          Yes. <strong className="brand gold-highlight">ELXOR</strong> fragrances make an elegant gift choice for both men and women, offering sophisticated scents suitable for different occasions and personal styles.
+        </p>
       ),
     },
   ];

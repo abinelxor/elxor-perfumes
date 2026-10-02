@@ -2,7 +2,11 @@
 
 import React, { useEffect, useRef } from "react";
 
-export default function PhilosophySection() {
+interface PhilosophySectionProps {
+  onShopClick?: () => void;
+}
+
+export default function PhilosophySection({ onShopClick }: PhilosophySectionProps = {}) {
   const mediaRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -23,6 +27,15 @@ export default function PhilosophySection() {
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleShopClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onShopClick) {
+      onShopClick();
+    } else {
+      document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
     <section className="split split--image-left" id="philosophy">
@@ -65,9 +78,11 @@ export default function PhilosophySection() {
           fragrances that become a part of your identity.
         </p>
 
-        <p className="wordmark wordmark--left" data-reveal>
-          <span className="brand">ELXOR Perfumes</span>
-        </p>
+        <div data-reveal>
+          <a href="#collection" className="btn btn--ghost" onClick={handleShopClick}>
+            Shop Now <i className="arrow" aria-hidden="true" />
+          </a>
+        </div>
       </div>
     </section>
   );

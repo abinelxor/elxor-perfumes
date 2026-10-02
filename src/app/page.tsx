@@ -103,7 +103,12 @@ export default function Home() {
         <Marquee />
 
         {/* 8. Philosophy split section with parallax */}
-        <PhilosophySection />
+        <PhilosophySection
+          onShopClick={() => {
+            const el = document.getElementById("collection");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
 
         {/* 9. Values section with bespoke SVG emblems */}
         <ValuesSection />
