@@ -786,7 +786,7 @@ body::after {
 .menu__links a:not(.btn) {
   font-family: var(--f-display);
   font-weight: 500;
-  font-size: clamp(32px, 9vw, 50px);
+  font-size: clamp(18px, 5vw, 32px);
   text-transform: uppercase;
   line-height: 1.2;
   display: flex;
