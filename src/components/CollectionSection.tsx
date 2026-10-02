@@ -117,6 +117,7 @@ export default function CollectionSection({
       const q = smoothQ;
       const mobile = window.innerWidth <= 760;
       const vw = window.innerWidth / 100;
+      const aspect = window.innerHeight / window.innerWidth;
 
       // Draw SVG lines
       const da = (1 - clamp(q / 0.55)).toFixed(4);
@@ -155,8 +156,10 @@ export default function CollectionSection({
         const rowX = mobile
           ? 0
           : (i - 0.5) * Math.min(30 * vw, 380);
-        const rowY = mobile ? (i === 0 ? -1 : 24) : 5;
-        const rowS = mobile ? 0.47 : 0.72;
+        const rowY = mobile ? (i === 0 ? 0 : 27.5) : 5;
+        const rowS = mobile
+          ? Math.min(0.58, 0.54 + Math.max(0, aspect - 1.77) * 0.1)
+          : 0.72;
 
         let tx, ty, rot, sc, op;
         if (q >= 0.64) {

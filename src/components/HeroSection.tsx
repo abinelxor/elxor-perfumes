@@ -148,10 +148,77 @@ export default function HeroSection({
       if (i < 0 || i === lastDrawn) return;
       const img = frameStore.frames[i];
       if (!img || !img.naturalWidth) return;
-      const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+
+      const isMobilePortrait = sticky.clientWidth < 768 || ch > cw * 1.12;
+
+      if (!isMobilePortrait) {
+        const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+        const w = img.naturalWidth * s;
+        const h = img.naturalHeight * s;
+        ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+        lastDrawn = i;
+        return;
+      }
+
+      // Mobile portrait view: fit the presentation box fully with breathing margins
+      const progress = clamp(targetIndex / (FRAME_COUNT - 1));
+
+      // In early frames, center precisely on the perfume box (horizontal center = 977)
+      // As the bottle emerges, center smoothly on the bottle (center = 960)
+      const boxCenterX = 977;
+      const bottleCenterX = 960;
+      const targetCenterX = lerp(boxCenterX, bottleCenterX, clamp((progress - 0.22) / 0.38));
+
+      // Scale:
+      // Fit the complete 1158px box into ~90% of screen width (cw / 1280) with equal breathing margins on left and right
+      // As bottle emerges, scale smoothly so the bottle is grand and majestic
+      const startScale = cw / 1280;
+      const endScale = Math.min(cw / 1060, (ch / img.naturalHeight) * 0.94);
+      const s = lerp(startScale, endScale, clamp((progress - 0.28) / 0.5));
+
       const w = img.naturalWidth * s;
       const h = img.naturalHeight * s;
-      ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+
+      const sx = (cw / 2) - targetCenterX * s;
+
+      // Vertical position:
+      // In early frames, center on the box vertical center (y = 420)
+      // Place it right in the visual middle (0.46 of screen height) between top navbar and bottom text
+      const boxCenterY = 420;
+      const bottleCenterY = 540;
+      const targetCenterY = lerp(boxCenterY, bottleCenterY, clamp((progress - 0.22) / 0.38));
+      const desiredScreenY = lerp(ch * 0.46, ch * 0.48, progress);
+      const sy = desiredScreenY - targetCenterY * s;
+
+      // Fill canvas background with matching dark warm gradient so canvas is seamless
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, ch);
+      bgGrad.addColorStop(0, "#080604");
+      bgGrad.addColorStop(clamp(Math.max(0, sy) / ch), "#120a05");
+      bgGrad.addColorStop(clamp(Math.min(ch, sy + h) / ch), "#251408");
+      bgGrad.addColorStop(1, "#080604");
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, cw, ch);
+
+      // Draw the frame image
+      ctx.drawImage(img, sx, sy, w, h);
+
+      // Soft edge blending for the top and bottom of the frame
+      const blendH = Math.min(32 * (cw / 390), h * 0.12);
+
+      // Top soft blend
+      const topGrad = ctx.createLinearGradient(0, sy - 1, 0, sy + blendH);
+      topGrad.addColorStop(0, "#120a05");
+      topGrad.addColorStop(1, "rgba(18, 10, 5, 0)");
+      ctx.fillStyle = topGrad;
+      ctx.fillRect(0, sy - 1, cw, blendH + 1);
+
+      // Bottom soft blend
+      const btmGrad = ctx.createLinearGradient(0, sy + h - blendH, 0, sy + h + 1);
+      btmGrad.addColorStop(0, "rgba(37, 20, 8, 0)");
+      btmGrad.addColorStop(1, "#251408");
+      ctx.fillStyle = btmGrad;
+      ctx.fillRect(0, sy + h - blendH, cw, blendH + 1);
+
       lastDrawn = i;
     };
 

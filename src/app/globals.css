@@ -1647,6 +1647,12 @@ body::after {
   width: 64%;
 }
 
+.split__media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .split__media img {
   width: 100%;
   height: 115%;
@@ -1957,10 +1963,16 @@ body::after {
   .footer__brand { grid-column: 1 / -1; }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   :root { --nav-h: 72px; }
   .hero { height: 400vh; }
   .hero__rail { display: none; }
+  .hero__sticky {
+    background: #080604 url("/images/hero-poster.jpg") 50.9% 46% / min(150vw, 700px) auto no-repeat !important;
+  }
+  .hero__canvas {
+    transform: translate3d(0, 0, 0) scale(1) !important;
+  }
   .chapter,
   .chapter--center,
   .chapter--left,
@@ -2081,13 +2093,33 @@ body::after {
     position: relative;
     width: calc(100% + 2 * var(--gutter));
     margin: 0 calc(-1 * var(--gutter)) 28px;
-    height: 62vw;
+    height: clamp(340px, 92vw, 480px);
+    overflow: hidden;
     -webkit-mask-image: none !important;
     mask-image: none !important;
   }
+  .split__media picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
   .split__media img {
+    width: 100%;
     height: 100%;
     margin-top: 0;
+    object-fit: cover;
+    object-position: center;
+  }
+  .split__media::after {
+    background: linear-gradient(
+      0deg,
+      var(--bg) 0%,
+      rgba(8, 7, 6, 0.45) 6%,
+      transparent 18%,
+      transparent 84%,
+      rgba(8, 7, 6, 0.45) 94%,
+      var(--bg) 100%
+    );
   }
   .split__content {
     margin-left: 0 !important;

@@ -40,14 +40,26 @@ export default function PhilosophySection({ onShopClick }: PhilosophySectionProp
   return (
     <section className="split split--image-left" id="philosophy">
       <div className="split__media" ref={mediaRef} data-parallax="-0.06">
-        <img
-          ref={imgRef}
-          src="/images/ELXOR_AMORIEL_left.png?v=3"
-          alt="ELXOR Amoriel perfume bottle on golden stone with celestial blooms"
-          width={1440}
-          height={1240}
-          loading="lazy"
-        />
+        <picture>
+          <source
+            media="(max-width: 900px)"
+            srcSet="/images/ELXOR_AMORIEL_mobile.webp"
+            type="image/webp"
+          />
+          <source
+            media="(max-width: 900px)"
+            srcSet="/images/ELXOR_AMORIEL_mobile.png"
+            type="image/png"
+          />
+          <img
+            ref={imgRef}
+            src="/images/ELXOR_AMORIEL_left.png?v=3"
+            alt="ELXOR Amoriel perfume bottle on golden stone with celestial blooms"
+            width={1440}
+            height={1240}
+            loading="lazy"
+          />
+        </picture>
       </div>
 
       <div className="split__content">
