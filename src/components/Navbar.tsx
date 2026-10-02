@@ -171,7 +171,7 @@ export default function Navbar({
             href="#philosophy"
             onClick={(e) => handleLinkClick(e, "philosophy")}
           >
-            <em>03</em>Philosophy
+            <em>03</em>About Us
           </a>
           <a
             href="#experience"
@@ -180,7 +180,7 @@ export default function Navbar({
             <em>04</em>Experience
           </a>
           <a href="#contact" onClick={(e) => handleLinkClick(e, "contact")}>
-            <em>05</em>Contact
+            <em>05</em>Contact Us
           </a>
           <a 
             href="#collection" 

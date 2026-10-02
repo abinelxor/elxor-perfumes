@@ -151,24 +151,26 @@ export default function CollectionSection({
         const pS =
           0.88 + 0.12 * (isFirst ? 1 - soloExit * 0.1 : soloEnter) + float * 0.02;
 
-        // Finale side-by-side row positions
+        // Finale positions: stacked vertically on mobile, side-by-side on desktop
         const rowX = mobile
-          ? ((i % 2) - 0.5) * 44 * vw
+          ? 0
           : (i - 0.5) * Math.min(30 * vw, 380);
-        const rowY = mobile ? 2 : 5;
-        const rowS = mobile ? 0.62 : 0.72; // Increased size
+        const rowY = mobile ? (i === 0 ? -1 : 24) : 5;
+        const rowS = mobile ? 0.47 : 0.72;
 
         let tx, ty, rot, sc, op;
         if (q >= 0.64) {
           if (isFirst) {
-            // Sanctix re-enters from left into finale position
+            // Amoriel enters into top finale position on mobile, left on desktop
             tx = rowX;
-            ty = rowY + (1 - finaleProgress) * 24;
+            ty = mobile
+              ? rowY - (1 - finaleProgress) * 12
+              : rowY + (1 - finaleProgress) * 24;
             rot = (1 - finaleProgress) * -8 + float * 2 * dir;
             sc = rowS;
             op = finaleProgress;
           } else {
-            // Amoriel smoothly slides from center to right into finale position
+            // Sanctix smoothly transitions to bottom finale position on mobile, right on desktop
             tx = lerp(pX, rowX, finaleProgress);
             ty = lerp(0, rowY, finaleProgress);
             rot = lerp(pR, 0, finaleProgress) + float * 2 * dir;

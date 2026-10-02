@@ -72,7 +72,13 @@ export default function HeroScrollCanvas({ progress }: HeroScrollCanvasProps) {
     // Aspect ratio fitting: Cover mode
     const hRatio = cw / iw;
     const vRatio = ch / ih;
-    const ratio = Math.max(hRatio, vRatio);
+    let ratio = Math.max(hRatio, vRatio);
+
+    // Optimize for mobile portrait to avoid excessive horizontal cropping
+    if (cw < 768 && ch > cw) {
+      // Allow the drawn image to be slightly letterboxed vertically to preserve the horizontal text/details
+      ratio = Math.max(hRatio, vRatio * 0.85); 
+    }
 
     const sw = iw * ratio;
     const sh = ih * ratio;
@@ -80,7 +86,7 @@ export default function HeroScrollCanvas({ progress }: HeroScrollCanvasProps) {
     // Center horizontally
     const sx = (cw - sw) / 2;
 
-    // Anchor to top (sy = 0) whenever sh >= ch so bottle cap and spray crown are NEVER clipped
+    // Center vertically. Anchor to top only if it overflows significantly.
     const sy = sh >= ch ? 0 : (ch - sh) / 2;
 
     ctx.drawImage(img, 0, 0, iw, ih, sx, sy, sw, sh);

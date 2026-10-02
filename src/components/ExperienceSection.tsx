@@ -44,8 +44,8 @@ export default function ExperienceSection({
       <div className="split__media" ref={mediaRef} data-parallax="-0.06">
         <img
           ref={imgRef}
-          src="/images/ELXOR_SANCTIX_right.png?v=2"
-          alt="ELXOR Sanctix perfume bottle with glowing amber nectar and molten gold essence"
+          src="/images/ELXOR_SANCTIX_right.png?v=3"
+          alt="ELXOR Sanctix perfume bottle on golden stone with amber essence"
           width={1440}
           height={1240}
           loading="lazy"

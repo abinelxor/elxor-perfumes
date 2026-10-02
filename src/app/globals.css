@@ -783,7 +783,7 @@ body::after {
   gap: 10px;
 }
 
-.menu__links a {
+.menu__links a:not(.btn) {
   font-family: var(--f-display);
   font-weight: 500;
   font-size: clamp(32px, 9vw, 50px);
@@ -792,6 +792,16 @@ body::after {
   display: flex;
   align-items: baseline;
   gap: 18px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .6s var(--ease), transform .6s var(--ease);
+}
+
+.menu__links a.btn {
+  font-family: var(--f-body);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.26em;
   opacity: 0;
   transform: translateY(24px);
   transition: opacity .6s var(--ease), transform .6s var(--ease);
@@ -814,6 +824,7 @@ body::after {
 .menu-open .menu__links a:nth-child(3) { transition-delay: .12s; }
 .menu-open .menu__links a:nth-child(4) { transition-delay: .18s; }
 .menu-open .menu__links a:nth-child(5) { transition-delay: .24s; }
+.menu-open .menu__links a:nth-child(6) { transition-delay: .30s; }
 
 .menu__script {
   font-size: 34px;
@@ -1957,7 +1968,7 @@ body::after {
     left: 20px;
     right: 20px;
     top: auto;
-    bottom: 15vh;
+    bottom: 8vh;
     width: auto;
     max-width: none;
     transform: translateY(var(--cy));
@@ -1966,7 +1977,7 @@ body::after {
   .chapter__title,
   .chapter--left .chapter__title,
   .chapter--right .chapter__title {
-    font-size: clamp(38px, 11vw, 56px);
+    font-size: clamp(32px, 8.5vw, 44px);
   }
   .chapter__body {
     font-size: 15.5px;
@@ -2017,19 +2028,22 @@ body::after {
     left: 20px;
     right: 20px;
     top: auto;
-    bottom: 13vh;
+    bottom: 5vh;
     width: auto;
-    text-align: left;
-    padding: 30px 24px 22px;
+    text-align: center;
+    padding: 24px 20px 20px;
     --tyb: 0%;
   }
-  .seq__card--left .seq__card-star {
+  .seq__card--left .seq__card-star,
+  .seq__card--right .seq__card-star {
+    left: 50%;
     right: auto;
-    left: 24px;
+    transform: translateX(-50%);
   }
+  .seq__card-rule,
   .seq__card--left .seq__card-rule {
-    margin-left: 0;
-    background: linear-gradient(90deg, var(--gold), transparent);
+    margin: 12px auto;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
   }
   .seq__card h3 {
     font-size: 28px;
@@ -2084,6 +2098,12 @@ body::after {
   }
   .value::before {
     display: none;
+  }
+  .statement {
+    padding: 80px var(--gutter) 60px;
+  }
+  .statement__quote {
+    font-size: 200px;
   }
   .footer__top {
     grid-template-columns: 1fr;
