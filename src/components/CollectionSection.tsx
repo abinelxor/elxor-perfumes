@@ -32,7 +32,7 @@ export const perfumesData: PerfumeItem[] = [
     heartNotes: ["Celestial Jasmine", "Imperial White Rose", "Soft Iris"],
     baseNotes: ["Cashmere Silk", "Warm Sandalwood", "Golden Amber Accord"],
     story:
-      "Discover AMORIEL, a luxurious unisex Eau de Parfum crafted for those who appreciate sophistication, confidence, and timeless elegance. Designed for both men and women, AMORIEL creates a captivating presence that complements your personality and leaves a memorable impression wherever you go.\n\nWith its refined fragrance character and premium feel, AMORIEL is perfect for everyday sophistication, special occasions, romantic evenings, and unforgettable moments. More than just a perfume, AMORIEL is an expression of charm, elegance, and individuality.",
+      "Discover AMORIEL, a luxurious unisex Eau de Parfum crafted for those who appreciate sophistication, confidence, and timeless elegance. Designed for both men and women, AMORIEL creates a captivating presence that complements your personality and leaves a memorable impression wherever you go.",
     signatureQuote: "AMORIEL by ELXOR — Wear the feeling. Leave the memory.",
   },
   {
@@ -48,7 +48,7 @@ export const perfumesData: PerfumeItem[] = [
     heartNotes: ["Liquid Amber", "Smoked Incense", "Honeyed Labdanum"],
     baseNotes: ["Sacred Oud", "Bourbon Vanilla", "Precious Woods"],
     story:
-      "Step into a world of refined luxury with SANCTIX, an exclusive unisex Eau de Parfum created for individuals who embrace confidence, sophistication, and distinctive style. Designed for both men and women, SANCTIX adds an aura of intrigue to your presence, making every moment feel exceptional.\n\nWhether you're heading to a business meeting, enjoying an evening out, or celebrating a special occasion, SANCTIX complements your style with a luxurious fragrance experience.\n\nBold yet sophisticated, distinctive yet versatile, SANCTIX is made for those who prefer to stand apart without saying a word.",
+      "Step into a world of refined luxury with SANCTIX, an exclusive unisex Eau de Parfum created for individuals who embrace confidence, sophistication, and distinctive style. Designed for both men and women, SANCTIX adds an aura of intrigue to your presence, making every moment feel exceptional.",
     signatureQuote: "SANCTIX by ELXOR — Your presence. Your power. Your signature.",
   },
 ];
