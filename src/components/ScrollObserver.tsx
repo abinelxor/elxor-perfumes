@@ -14,11 +14,14 @@ export default function ScrollObserver() {
     let rafId: number;
 
     if (!prefersReducedMotion) {
+      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
       lenis = new Lenis({
-        lerp: 0.085,
+        lerp: isMobile ? 0.07 : 0.085,
         smoothWheel: true,
         wheelMultiplier: 0.95,
+        touchMultiplier: isMobile ? 0.85 : 1,
       });
+      (window as unknown as { lenis?: Lenis | null }).lenis = lenis;
 
       const tick = (time: number) => {
         lenis?.raf(time);
@@ -54,6 +57,7 @@ export default function ScrollObserver() {
       observer.disconnect();
       if (rafId) cancelAnimationFrame(rafId);
       lenis?.destroy();
+      (window as unknown as { lenis?: Lenis | null }).lenis = null;
     };
   }, []);
 

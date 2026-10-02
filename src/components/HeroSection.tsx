@@ -295,7 +295,9 @@ export default function HeroSection({
       if (!running) return;
 
       const raw = clamp((window.scrollY - heroTop) / heroRange);
-      smoothP += (raw - smoothP) * 0.14;
+      const isMobile = window.innerWidth < 768;
+      const lerpFactor = isMobile ? 0.068 : 0.14;
+      smoothP += (raw - smoothP) * lerpFactor;
       if (Math.abs(raw - smoothP) < 0.0004) smoothP = raw;
       const p = smoothP;
 
@@ -612,6 +614,7 @@ export default function HeroSection({
               <a
                 href="#collection"
                 className="btn btn--gold"
+                style={{ whiteSpace: "nowrap" }}
                 onClick={(e) => {
                   e.preventDefault();
                   if (onExploreClick) {

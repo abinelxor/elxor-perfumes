@@ -12,7 +12,17 @@ export default function Footer({ onOpenContact }: FooterProps) {
 
   const handleScrollTo = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    const target = document.getElementById(id);
+    if (target) {
+      const win = window as unknown as {
+        lenis?: { scrollTo: (t: HTMLElement, opts?: { offset?: number; duration?: number }) => void };
+      };
+      if (win.lenis) {
+        win.lenis.scrollTo(target, { offset: 0, duration: 1.2 });
+      } else {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    }
   };
 
   return (
@@ -106,7 +116,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
           <a href="#home" onClick={(e) => handleScrollTo(e, "home")}>
             Home
           </a>
-          <a href="#philosophy" onClick={(e) => handleScrollTo(e, "philosophy")}>
+          <a href="#about" onClick={(e) => handleScrollTo(e, "about")}>
             About Us
           </a>
           <a href="#faq" onClick={(e) => handleScrollTo(e, "faq")}>

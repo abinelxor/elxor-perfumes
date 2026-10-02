@@ -47,10 +47,11 @@ export default function FragranceModal({
       onClick={onClose}
     >
       <div
+        className="modal-card"
         style={{
           position: "relative",
-          width: "100%",
-          maxWidth: "850px",
+          width: "92vw",
+          maxWidth: "980px",
           background: "#0c0a08",
           border: "1px solid rgba(216, 162, 83, 0.4)",
           borderRadius: "4px",
@@ -66,13 +67,13 @@ export default function FragranceModal({
           aria-label="Close dialog"
           style={{
             position: "absolute",
-            top: "20px",
-            right: "20px",
+            top: "16px",
+            right: "16px",
             background: "rgba(20, 18, 14, 0.7)",
             border: "1px solid rgba(216, 162, 83, 0.3)",
             borderRadius: "50%",
-            width: "36px",
-            height: "36px",
+            width: "34px",
+            height: "34px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -90,13 +91,14 @@ export default function FragranceModal({
             e.currentTarget.style.transform = "none";
           }}
         >
-          <X size={18} />
+          <X size={17} />
         </button>
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1.2fr",
+            gridTemplateColumns: "1fr 1.35fr",
+            alignItems: "stretch",
           }}
           className="modal-grid"
         >
@@ -104,20 +106,20 @@ export default function FragranceModal({
           <div
             style={{
               position: "relative",
-              minHeight: "420px",
+              minHeight: "360px",
               background: "#050403",
               borderRight: "1px solid rgba(216, 162, 83, 0.2)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              padding: "30px",
+              padding: "24px",
             }}
           >
             <div
               style={{
                 position: "relative",
                 width: "100%",
-                height: "340px",
+                height: "300px",
               }}
             >
               <Image
@@ -134,8 +136,9 @@ export default function FragranceModal({
 
           {/* Right: Fragrance Details */}
           <div
+            className="modal-content-scroll"
             style={{
-              padding: "40px 36px",
+              padding: "26px 30px",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -145,13 +148,13 @@ export default function FragranceModal({
               <span
                 style={{
                   fontFamily: "var(--font-sans)",
-                  fontSize: "0.75rem",
-                  letterSpacing: "3px",
+                  fontSize: "0.68rem",
+                  letterSpacing: "2.5px",
                   color: "#d8a253",
                   fontWeight: 600,
                   textTransform: "uppercase",
                   display: "block",
-                  marginBottom: "8px",
+                  marginBottom: "4px",
                 }}
               >
                 HAUTE PARFUMERIE
@@ -160,10 +163,10 @@ export default function FragranceModal({
               <h2
                 style={{
                   fontFamily: "var(--font-serif)",
-                  fontSize: "1.9rem",
-                  letterSpacing: "1.5px",
+                  fontSize: "1.65rem",
+                  letterSpacing: "1.2px",
                   color: "#ecc480",
-                  marginBottom: "6px",
+                  marginBottom: "2px",
                   fontWeight: 500,
                 }}
               >
@@ -173,60 +176,55 @@ export default function FragranceModal({
               <p
                 style={{
                   fontFamily: "var(--font-sans)",
-                  fontSize: "0.95rem",
+                  fontSize: "0.85rem",
                   fontStyle: "italic",
                   color: "#c2bab0",
-                  marginBottom: "16px",
+                  marginBottom: "10px",
                 }}
               >
                 &ldquo;{perfume.tagline}&rdquo;
               </p>
 
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "0.9rem",
-                  lineHeight: 1.6,
-                  color: "#aba395",
-                  fontWeight: 300,
-                  marginBottom: "24px",
-                }}
-              >
-                {perfume.story}
-              </p>
-
-              {/* Olfactory Notes Pyramid */}
               <div
                 style={{
-                  background: "rgba(216, 162, 83, 0.04)",
-                  border: "1px solid rgba(216, 162, 83, 0.2)",
-                  borderRadius: "3px",
-                  padding: "16px 18px",
-                  marginBottom: "24px",
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.79rem",
+                  lineHeight: 1.48,
+                  color: "#aba395",
+                  fontWeight: 300,
+                  marginBottom: "12px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "7px",
                 }}
               >
-                <div style={{ marginBottom: "8px", fontSize: "0.82rem" }}>
-                  <span style={{ color: "#ecc480", fontWeight: 600, letterSpacing: "1px" }}>
-                    TOP NOTES:{" "}
-                  </span>
-                  <span style={{ color: "#d2cbbf" }}>{perfume.topNotes.join(" • ")}</span>
-                </div>
-                <div style={{ marginBottom: "8px", fontSize: "0.82rem" }}>
-                  <span style={{ color: "#ecc480", fontWeight: 600, letterSpacing: "1px" }}>
-                    HEART NOTES:{" "}
-                  </span>
-                  <span style={{ color: "#d2cbbf" }}>{perfume.heartNotes.join(" • ")}</span>
-                </div>
-                <div style={{ fontSize: "0.82rem" }}>
-                  <span style={{ color: "#ecc480", fontWeight: 600, letterSpacing: "1px" }}>
-                    BASE NOTES:{" "}
-                  </span>
-                  <span style={{ color: "#d2cbbf" }}>{perfume.baseNotes.join(" • ")}</span>
-                </div>
+                {perfume.story.split("\n\n").map((para, idx) => (
+                  <p key={idx}>{para}</p>
+                ))}
               </div>
 
+              {perfume.signatureQuote && (
+                <p
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "0.78rem",
+                    color: "#ecc480",
+                    fontStyle: "italic",
+                    letterSpacing: "0.3px",
+                    fontWeight: 500,
+                    marginBottom: "14px",
+                    padding: "7px 12px",
+                    background: "rgba(216, 162, 83, 0.08)",
+                    borderLeft: "2px solid #ecc480",
+                    borderRadius: "0 2px 2px 0",
+                  }}
+                >
+                  {perfume.signatureQuote}
+                </p>
+              )}
+
               {/* Size */}
-              <div style={{ marginBottom: "26px", fontSize: "0.85rem", color: "#aba395", letterSpacing: "1px", fontFamily: "var(--font-sans)" }}>
+              <div style={{ marginBottom: "14px", fontSize: "0.8rem", color: "#aba395", letterSpacing: "1px", fontFamily: "var(--font-sans)" }}>
                 SIZE: <span style={{ color: "#ecc480", fontWeight: 500 }}>50ml</span>
               </div>
             </div>
@@ -237,12 +235,12 @@ export default function FragranceModal({
                 onClick={handleAdd}
                 style={{
                   flex: 1,
-                  padding: "12px",
+                  padding: "10px",
                   background: "rgba(216, 162, 83, 0.15)",
                   border: "1px solid #ecc480",
                   color: "#ecc480",
                   fontFamily: "var(--font-sans)",
-                  fontSize: "0.85rem",
+                  fontSize: "0.82rem",
                   letterSpacing: "1.5px",
                   borderRadius: "3px",
                   cursor: "pointer",
@@ -277,10 +275,26 @@ export default function FragranceModal({
       </div>
 
       <style jsx>{`
+        .modal-card {
+          max-height: 94vh;
+        }
         @media (max-width: 768px) {
+          .modal-card {
+            max-height: 90vh;
+            overflow-y: auto !important;
+          }
           .modal-grid {
             grid-template-columns: 1fr !important;
           }
+        }
+        .modal-card::-webkit-scrollbar,
+        .modal-content-scroll::-webkit-scrollbar {
+          width: 4px;
+        }
+        .modal-card::-webkit-scrollbar-thumb,
+        .modal-content-scroll::-webkit-scrollbar-thumb {
+          background: rgba(216, 162, 83, 0.35);
+          border-radius: 4px;
         }
       `}</style>
     </div>

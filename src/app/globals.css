@@ -346,14 +346,17 @@ body::after {
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  height: 52px;
-  padding: 0 30px;
+  justify-content: center;
+  gap: 12px;
+  height: 50px;
+  padding: 0 24px;
   font-family: var(--f-body);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+  white-space: nowrap;
+  max-width: 100%;
   transition: background .5s var(--ease), color .5s var(--ease), border-color .5s var(--ease), gap .5s var(--ease);
 }
 
@@ -1162,6 +1165,7 @@ body::after {
     radial-gradient(ellipse 60% 55% at 50% 45%, var(--brown), transparent 70%),
     var(--bg);
   overflow: hidden;
+  scroll-margin-top: 80px;
 }
 
 .statement__quote {
@@ -1489,13 +1493,14 @@ body::after {
 .seq__title {
   position: absolute;
   left: 50%;
-  top: 13vh;
+  top: calc(var(--nav-h) + 16px);
   transform: translateX(-50%);
-  width: min(92vw, 1000px);
+  width: min(92vw, 900px);
   font-family: var(--f-display);
   font-weight: 500;
-  font-size: clamp(32px, 4.4vw, 68px);
-  line-height: 1.1;
+  font-size: clamp(20px, 2.2vw, 32px);
+  line-height: 1.2;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -1965,7 +1970,18 @@ body::after {
 
 @media (max-width: 768px) {
   :root { --nav-h: 72px; }
-  .hero { height: 400vh; }
+  .btn {
+    height: 46px;
+    padding: 0 16px;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .arrow {
+    flex-shrink: 0;
+  }
+  .hero { height: 620vh; }
   .hero__rail { display: none; }
   .hero__sticky {
     background: #080604 url("/images/hero-poster.jpg") 50.9% 46% / min(150vw, 700px) auto no-repeat !important;
@@ -2025,7 +2041,7 @@ body::after {
   }
 
   .seq {
-    height: 360vh;
+    height: 580vh;
   }
   .seq__bottle {
     width: 82vw;
@@ -2068,8 +2084,9 @@ body::after {
     display: none;
   }
   .seq__title {
-    top: 11vh;
-    font-size: clamp(26px, 7.6vw, 38px);
+    top: calc(var(--nav-h) + 12px);
+    font-size: clamp(18px, 5.2vw, 26px);
+    line-height: 1.22;
   }
   .seq__spark {
     width: 24px;

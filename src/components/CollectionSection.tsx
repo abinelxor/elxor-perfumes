@@ -15,38 +15,41 @@ export interface PerfumeItem {
   heartNotes: string[];
   baseNotes: string[];
   story: string;
+  signatureQuote?: string;
 }
 
 export const perfumesData: PerfumeItem[] = [
   {
     id: "amoriel",
     name: "AMORIEL",
-    tagline: "Love, captured in a signature scent.",
+    tagline: "A Fragrance That Speaks of Elegance",
     description:
-      "Discover a captivating unisex Eau de Parfum crafted to leave a lasting impression.",
+      "A luxurious unisex Eau de Parfum crafted for those who appreciate sophistication, confidence, and timeless elegance.",
     image: "/images/perfume_amoriel.png",
     price: "$360",
-    size: "100ml / 3.4 FL. OZ.",
+    size: "50ml",
     topNotes: ["White Peach", "Sweet Mandarin", "Dewy Neroli"],
     heartNotes: ["Celestial Jasmine", "Imperial White Rose", "Soft Iris"],
     baseNotes: ["Cashmere Silk", "Warm Sandalwood", "Golden Amber Accord"],
     story:
-      "Love, captured in a signature scent. Discover a captivating unisex Eau de Parfum crafted to leave a lasting impression. An ethereal symphony of white petals and golden silk, Amoriel captures the delicate majesty of celestial jasmine, soft powdery iris, and warm velvety cashmere.",
+      "Discover AMORIEL, a luxurious unisex Eau de Parfum crafted for those who appreciate sophistication, confidence, and timeless elegance. Designed for both men and women, AMORIEL creates a captivating presence that complements your personality and leaves a memorable impression wherever you go.\n\nWith its refined fragrance character and premium feel, AMORIEL is perfect for everyday sophistication, special occasions, romantic evenings, and unforgettable moments. More than just a perfume, AMORIEL is an expression of charm, elegance, and individuality.",
+    signatureQuote: "AMORIEL by ELXOR — Wear the feeling. Leave the memory.",
   },
   {
     id: "sanctix",
     name: "SANCTIX",
-    tagline: "Elegance, bottled with distinction.",
+    tagline: "The Essence of Power and Mystery",
     description:
-      "Experience a sophisticated unisex Eau de Parfum created to elevate your presence.",
+      "An exclusive unisex Eau de Parfum created for individuals who embrace confidence, sophistication, and distinctive style.",
     image: "/images/perfume_sanctix.png",
     price: "$380",
-    size: "100ml / 3.4 FL. OZ.",
+    size: "50ml",
     topNotes: ["Solar Bergamot", "Golden Saffron", "Pink Pepper"],
     heartNotes: ["Liquid Amber", "Smoked Incense", "Honeyed Labdanum"],
     baseNotes: ["Sacred Oud", "Bourbon Vanilla", "Precious Woods"],
     story:
-      "Elegance, bottled with distinction. Experience a sophisticated unisex Eau de Parfum created to elevate your presence. A radiant creation born from molten gold and sacred resins, Sanctix deepens into a glowing heart of ambergris, rare woods, and pure golden warmth.",
+      "Step into a world of refined luxury with SANCTIX, an exclusive unisex Eau de Parfum created for individuals who embrace confidence, sophistication, and distinctive style. Designed for both men and women, SANCTIX adds an aura of intrigue to your presence, making every moment feel exceptional.\n\nWhether you're heading to a business meeting, enjoying an evening out, or celebrating a special occasion, SANCTIX complements your style with a luxurious fragrance experience.\n\nBold yet sophisticated, distinctive yet versatile, SANCTIX is made for those who prefer to stand apart without saying a word.",
+    signatureQuote: "SANCTIX by ELXOR — Your presence. Your power. Your signature.",
   },
 ];
 
@@ -111,11 +114,12 @@ export default function CollectionSection({
       }
 
       const raw = clamp((y - seqTop) / seqRange);
-      smoothQ = seqVisible ? smoothQ + (raw - smoothQ) * 0.14 : raw;
+      const mobile = window.innerWidth <= 768;
+      const lerpFactor = mobile ? 0.068 : 0.14;
+      smoothQ = seqVisible ? smoothQ + (raw - smoothQ) * lerpFactor : raw;
       if (Math.abs(raw - smoothQ) < 0.0003) smoothQ = raw;
       seqVisible = true;
       const q = smoothQ;
-      const mobile = window.innerWidth <= 760;
       const vw = window.innerWidth / 100;
       const aspect = window.innerHeight / window.innerWidth;
 
@@ -130,15 +134,15 @@ export default function CollectionSection({
       });
 
       const active = q < 0.32 ? 0 : 1;
-      const finaleProgress = ease(clamp((q - 0.64) / 0.08));
+      const finaleProgress = ease(clamp((q - (mobile ? 0.62 : 0.64)) / (mobile ? 0.12 : 0.08)));
 
       perfumesData.forEach((_, i) => {
         const dir = i % 2 ? 1 : -1;
         const isFirst = i === 0;
 
         // Solo enter / exit
-        const soloEnter = isFirst ? 1 : easeOut(clamp((q - 0.28) / 0.09));
-        const soloExit = isFirst ? ease(clamp((q - 0.28) / 0.09)) : 0;
+        const soloEnter = isFirst ? 1 : easeOut(clamp((q - 0.28) / (mobile ? 0.13 : 0.09)));
+        const soloExit = isFirst ? ease(clamp((q - 0.28) / (mobile ? 0.13 : 0.09))) : 0;
         const soloVis = isFirst ? 1 - soloExit : soloEnter;
         const float = Math.sin(
           clamp((q - (isFirst ? 0.04 : 0.38)) / 0.26) * Math.PI
@@ -156,10 +160,10 @@ export default function CollectionSection({
         const rowX = mobile
           ? 0
           : (i - 0.5) * Math.min(30 * vw, 380);
-        const rowY = mobile ? (i === 0 ? 0 : 27.5) : 5;
+        const rowY = mobile ? (i === 0 ? -3.5 : 26.5) : 10;
         const rowS = mobile
-          ? Math.min(0.58, 0.54 + Math.max(0, aspect - 1.77) * 0.1)
-          : 0.72;
+          ? Math.min(0.76, Math.max(0.66, vh / 1100))
+          : Math.min(0.62, Math.max(0.46, (vh * 0.44) / 640));
 
         let tx, ty, rot, sc, op;
         if (q >= 0.64) {
@@ -214,10 +218,10 @@ export default function CollectionSection({
         const c = cardRefs.current[i];
         if (c) {
           const side = isFirst ? 1 : -1;
-          const cin = isFirst ? 1 : ease(clamp((q - 0.30) / 0.08));
+          const cin = isFirst ? 1 : ease(clamp((q - (mobile ? 0.28 : 0.30)) / (mobile ? 0.12 : 0.08)));
           const cout = isFirst
-            ? ease(clamp((q - 0.28) / 0.08))
-            : ease(clamp((q - 0.62) / 0.06));
+            ? ease(clamp((q - 0.28) / (mobile ? 0.12 : 0.08)))
+            : ease(clamp((q - (mobile ? 0.58 : 0.62)) / (mobile ? 0.09 : 0.06)));
           const cx = mobile ? 0 : (1 - cin) * side * 16;
           const cy =
             (1 - cin) * (mobile ? 10 : 8) - cout * (mobile ? 12 : 24);
@@ -235,10 +239,10 @@ export default function CollectionSection({
 
         const n = noteRefs.current[i];
         if (n) {
-          const nin = isFirst ? 1 : clamp((q - 0.32) / 0.08);
+          const nin = isFirst ? 1 : clamp((q - 0.32) / (mobile ? 0.12 : 0.08));
           const nout = isFirst
-            ? ease(clamp((q - 0.28) / 0.08))
-            : ease(clamp((q - 0.62) / 0.06));
+            ? ease(clamp((q - 0.28) / (mobile ? 0.12 : 0.08)))
+            : ease(clamp((q - (mobile ? 0.58 : 0.62)) / (mobile ? 0.09 : 0.06)));
           n.style.opacity = (easeOut(nin) * (1 - nout)).toFixed(3);
           n.style.transform = `translateY(${(-nout * 30).toFixed(
             1
@@ -271,12 +275,12 @@ export default function CollectionSection({
       if (stepsWrapRef.current) {
         stepsWrapRef.current.style.setProperty(
           "--steps",
-          (1 - clamp((q - 0.62) / 0.05)).toFixed(3)
+          (1 - clamp((q - (mobile ? 0.58 : 0.62)) / (mobile ? 0.08 : 0.05))).toFixed(3)
         );
       }
 
       // Toggle finale stage
-      const on = q >= 0.68;
+      const on = q >= (mobile ? 0.62 : 0.68);
       if (on !== finalOn) {
         finalOn = on;
         if (seqFinalRef.current) {

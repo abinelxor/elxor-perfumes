@@ -29,7 +29,7 @@ export default function Navbar({
 
   // Section observer for active link
   useEffect(() => {
-    const sections = ["home", "collection", "philosophy", "experience", "faq", "contact"];
+    const sections = ["home", "about", "collection", "philosophy", "experience", "faq", "contact"];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -67,7 +67,14 @@ export default function Navbar({
     }
     const target = document.getElementById(id);
     if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
+      const win = window as unknown as {
+        lenis?: { scrollTo: (t: HTMLElement, opts?: { offset?: number; duration?: number }) => void };
+      };
+      if (win.lenis) {
+        win.lenis.scrollTo(target, { offset: 0, duration: 1.2 });
+      } else {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -104,9 +111,9 @@ export default function Navbar({
             Collection
           </a>
           <a
-            href="#philosophy"
-            className={activeSection === "philosophy" ? "is-active" : ""}
-            onClick={(e) => handleLinkClick(e, "philosophy")}
+            href="#about"
+            className={activeSection === "about" ? "is-active" : ""}
+            onClick={(e) => handleLinkClick(e, "about")}
           >
             About Us
           </a>
@@ -168,8 +175,8 @@ export default function Navbar({
             <em>02</em>Collection
           </a>
           <a
-            href="#philosophy"
-            onClick={(e) => handleLinkClick(e, "philosophy")}
+            href="#about"
+            onClick={(e) => handleLinkClick(e, "about")}
           >
             <em>03</em>About Us
           </a>

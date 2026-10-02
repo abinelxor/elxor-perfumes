@@ -55,7 +55,7 @@ export default function StatementSection() {
   }, [words.length]);
 
   return (
-    <section className="statement" aria-label="Brand statement">
+    <section className="statement" id="about" aria-label="Brand statement">
       <span className="statement__quote" aria-hidden="true">
         &ldquo;
       </span>
