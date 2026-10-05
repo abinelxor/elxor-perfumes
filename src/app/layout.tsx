@@ -44,6 +44,76 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const organizationWebSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.elxorperfumes.com/#organization",
+      "name": "ELXOR Perfumes",
+      "url": "https://www.elxorperfumes.com/",
+      "description":
+        "ELXOR Perfumes is a UAE-based fragrance brand offering luxury unisex Eau de Parfum fragrances designed to leave a memorable presence.",
+      "slogan": "Unveil your Aura",
+      "brand": {
+        "@type": "Brand",
+        "name": "ELXOR Perfumes",
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "United Arab Emirates",
+      },
+      "sameAs": ["https://www.amazon.ae/"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.elxorperfumes.com/#website",
+      "url": "https://www.elxorperfumes.com/",
+      "name": "ELXOR Perfumes",
+      "description":
+        "Discover ELXOR Perfumes, a UAE perfume brand offering luxury unisex Eau de Parfum fragrances.",
+      "publisher": {
+        "@id": "https://www.elxorperfumes.com/#organization",
+      },
+      "inLanguage": "en-AE",
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://www.elxorperfumes.com/#webpage",
+      "url": "https://www.elxorperfumes.com/",
+      "name": "ELXOR Perfumes | Luxury Unisex Perfumes in UAE",
+      "description":
+        "Discover ELXOR Perfumes, a UAE fragrance brand offering luxury unisex Eau de Parfum fragrances including AMORIEL and SANCTIX.",
+      "isPartOf": {
+        "@id": "https://www.elxorperfumes.com/#website",
+      },
+      "about": {
+        "@id": "https://www.elxorperfumes.com/#organization",
+      },
+      "inLanguage": "en-AE",
+    },
+  ],
+};
+
+const productAmorielSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "@id": "https://www.elxorperfumes.com/amoriel/#product",
+  "name": "ELXOR AMORIEL",
+  "brand": {
+    "@type": "Brand",
+    "name": "ELXOR Perfumes",
+  },
+  "description":
+    "AMORIEL is a luxury unisex Eau de Parfum by ELXOR Perfumes, designed for a distinctive and long-lasting fragrance experience.",
+  "category": "Perfume",
+  "audience": {
+    "@type": "PeopleAudience",
+    "suggestedGender": "Unisex",
+  },
+  "url": "https://www.elxorperfumes.com/amoriel/",
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -85,6 +155,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <meta
           name="google-site-verification"
           content="Vc7M4v_S7LKq279AyB0PRcmwl-9HNn-hwiNpOgpG8iY"
+        />
+
+        {/* Schema.org Organization, WebSite & WebPage */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationWebSchema),
+          }}
+        />
+
+        {/* Schema.org Product: AMORIEL */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(productAmorielSchema),
+          }}
         />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
