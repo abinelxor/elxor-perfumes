@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://elxorperfumes.com"),
+  metadataBase: new URL("https://www.elxorperfumes.com"),
   alternates: {
-    canonical: "https://elxorperfumes.com",
+    canonical: "https://www.elxorperfumes.com",
   },
   title: "Luxury Unisex Perfume Dubai | ELXOR Long Lasting Fragrance",
   description:
@@ -14,6 +14,17 @@ export const metadata: Metadata = {
   verification: {
     google: "Vc7M4v_S7LKq279AyB0PRcmwl-9HNn-hwiNpOgpG8iY",
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: "/images/favicon.png",
   },
@@ -21,7 +32,7 @@ export const metadata: Metadata = {
     title: "Luxury Unisex Perfume Dubai | ELXOR Long Lasting Fragrance",
     description:
       "ELXOR is a Dubai perfume brand with two long lasting fragrance collections, Signature and Promise, for men and women. Order online via Amazon in the UAE.",
-    url: "https://elxorperfumes.com",
+    url: "https://www.elxorperfumes.com",
     type: "website",
     siteName: "ELXOR Perfumes",
   },

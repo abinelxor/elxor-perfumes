@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://elxorperfumes.com/sitemap.xml",
+    sitemap: "https://www.elxorperfumes.com/sitemap.xml",
   };
 }
