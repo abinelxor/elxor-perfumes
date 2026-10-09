@@ -260,11 +260,7 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
         /* ------------------ FAQ ITEM CARD ------------------ */
         .faq-item {
           position: relative;
-          background: linear-gradient(
-            145deg,
-            rgba(18, 14, 9, 0.72) 0%,
-            rgba(8, 6, 4, 0.88) 100%
-          );
+          background: var(--faq-bg);
           border: 1px solid var(--line-soft);
           border-radius: 8px;
           backdrop-filter: blur(12px);
@@ -293,20 +289,14 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
 
         .faq-item:hover {
           border-color: rgba(213, 174, 111, 0.38);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4),
-            0 0 20px rgba(213, 174, 111, 0.08);
+          box-shadow: var(--faq-shadow), 0 0 20px rgba(213, 174, 111, 0.08);
           transform: translateY(-2px);
         }
 
         .faq-item--open {
           border-color: rgba(213, 174, 111, 0.55);
-          background: linear-gradient(
-            145deg,
-            rgba(24, 18, 11, 0.86) 0%,
-            rgba(10, 8, 5, 0.96) 100%
-          );
-          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55),
-            0 0 28px rgba(213, 174, 111, 0.14);
+          background: var(--faq-bg-open);
+          box-shadow: var(--faq-shadow-open), 0 0 28px rgba(213, 174, 111, 0.14);
         }
 
         .faq-item--open::before {
@@ -350,8 +340,8 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
 
         .faq-item--open .faq-num {
           opacity: 1;
-          color: var(--gold-hi);
-          text-shadow: 0 0 12px rgba(213, 174, 111, 0.4);
+          color: var(--gold);
+          text-shadow: 0 0 12px rgba(213, 174, 111, 0.25);
         }
 
         .faq-title-wrap {
@@ -387,7 +377,7 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
 
         .faq-item:hover .faq-question,
         .faq-item--open .faq-question {
-          color: #fff;
+          color: var(--ink);
         }
 
         /* ------------------ CHEVRON ICON BUBBLE ------------------ */
@@ -443,7 +433,7 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
         }
 
         .faq-answer :global(.gold-highlight) {
-          color: var(--gold-hi);
+          color: var(--gold-text-strong);
           font-weight: 600;
         }
 
@@ -464,7 +454,7 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
           background: linear-gradient(135deg, rgba(213, 174, 111, 0.18), rgba(140, 102, 49, 0.1));
           border: 1px solid rgba(213, 174, 111, 0.4);
           border-radius: 4px;
-          color: var(--gold-hi);
+          color: var(--gold-text-strong);
           font-size: 12.5px;
           font-weight: 500;
           letter-spacing: 0.05em;
@@ -474,7 +464,7 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
 
         .faq-cta-btn:hover {
           background: linear-gradient(135deg, var(--gold), var(--gold-lo));
-          color: #050403;
+          color: var(--hover-ink);
           border-color: var(--gold);
           box-shadow: 0 4px 16px rgba(213, 174, 111, 0.35);
         }
@@ -494,12 +484,7 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
         .faq-footer-card {
           margin-top: 40px;
           padding: clamp(24px, 3.4vw, 32px);
-          background: radial-gradient(
-              ellipse at 0% 50%,
-              rgba(97, 53, 0, 0.25) 0%,
-              transparent 65%
-            ),
-            rgba(15, 12, 8, 0.6);
+          background: var(--faq-footer-bg);
           border: 1px dashed var(--line);
           border-radius: 8px;
           display: flex;

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { X } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
 interface NavbarProps {
   onOpenCart?: () => void;
@@ -49,6 +51,38 @@ export default function Navbar({
     return () => observer.disconnect();
   }, []);
 
+  const closeMenu = () => {
+    setMenuOpen(false);
+    document.body.classList.remove("menu-open");
+  };
+
+  // Escape closes the drawer; also reset the lock if the component unmounts
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+        document.body.classList.remove("menu-open");
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 1100) {
+        setMenuOpen(false);
+        document.body.classList.remove("menu-open");
+      }
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      document.body.classList.remove("menu-open");
+    };
+  }, []);
+
   const handleToggleMenu = () => {
     const nextState = !menuOpen;
     setMenuOpen(nextState);
@@ -88,10 +122,10 @@ export default function Navbar({
           onClick={(e) => handleLinkClick(e, "home")}
         >
           <img
-            src="/images/logo-preloader-crisp.png"
+            src="/images/elxor-logo.png"
             alt="ELXOR Perfumes"
-            width={58}
-            height={61}
+            width={55}
+            height={58}
           />
         </a>
 
@@ -134,6 +168,8 @@ export default function Navbar({
         </nav>
 
         <div className="nav__actions">
+          <ThemeToggle className="nav__theme" />
+
           <a
             href="#collection"
             className="btn btn--gold nav__shop-btn"
@@ -162,8 +198,13 @@ export default function Navbar({
         `}</style>
       </header>
 
-      {/* Fullscreen Luxury Mobile Menu */}
-      <div className="menu" id="menu" aria-hidden={!menuOpen}>
+      {/* Slide-in side menu (mobile / tablet) */}
+      <div className="menu-backdrop" onClick={closeMenu} aria-hidden="true" />
+      <div className="menu" id="menu" aria-hidden={!menuOpen} role="dialog" aria-label="Site menu">
+        <img className="menu__logo" src="/images/elxor-logo.png" alt="ELXOR Perfumes" width={49} height={52} />
+        <button type="button" className="menu__close" aria-label="Close menu" onClick={closeMenu} tabIndex={menuOpen ? 0 : -1}>
+          <X size={20} strokeWidth={1.5} />
+        </button>
         <nav className="menu__links" aria-label="Mobile">
           <a href="#home" onClick={(e) => handleLinkClick(e, "home")}>
             <em>01</em>Home
@@ -198,6 +239,7 @@ export default function Navbar({
             SHOP NOW
           </a>
         </nav>
+        <ThemeToggle className="menu__theme" showLabel />
         <p className="menu__script">The essence of elegance</p>
       </div>
     </>

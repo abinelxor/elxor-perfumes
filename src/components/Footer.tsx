@@ -30,7 +30,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
       <div className="footer__top">
         <div className="footer__brand">
           <img
-            src="/images/logo-preloader-crisp.png"
+            src="/images/elxor-logo.png"
             alt="ELXOR Perfumes"
             width={120}
             height={127}

@@ -159,11 +159,11 @@ export default function CollectionSection({
         // Finale positions: stacked vertically on mobile, side-by-side on desktop
         const rowX = mobile
           ? 0
-          : (i - 0.5) * Math.min(30 * vw, 380);
-        const rowY = mobile ? (i === 0 ? -3.5 : 26.5) : 10;
+          : (i - 0.5) * Math.min(33 * vw, 460);
+        const rowY = mobile ? (i === 0 ? -3.5 : 26.5) : 9;
         const rowS = mobile
-          ? Math.min(0.76, Math.max(0.66, vh / 1100))
-          : Math.min(0.62, Math.max(0.46, (vh * 0.44) / 640));
+          ? Math.min(0.82, Math.max(0.7, vh / 1000))
+          : Math.min(0.82, Math.max(0.56, (vh * 0.58) / 640));
 
         let tx, ty, rot, sc, op;
         if (q >= 0.64) {
@@ -286,6 +286,12 @@ export default function CollectionSection({
         if (seqFinalRef.current) {
           seqFinalRef.current.classList.toggle("is-in", on);
         }
+        // Finale bottles become hover / click targets for the product popup
+        bottleRefs.current.forEach((b) => {
+          if (!b) return;
+          b.classList.toggle("is-interactive", on);
+          b.tabIndex = on ? 0 : -1;
+        });
       }
 
       requestAnimationFrame(update);
@@ -319,6 +325,13 @@ export default function CollectionSection({
     "pure devotion",
     "sacred & luminous",
   ];
+
+  // Finale bottles grow in place on hover (pure CSS). Clicking (or Enter)
+  // opens the full details popup.
+  const handleBottleActivate = (e: React.SyntheticEvent<HTMLElement>, perfume: PerfumeItem) => {
+    if (!e.currentTarget.classList.contains("is-interactive")) return;
+    onSelectPerfume?.(perfume);
+  };
 
   const handleFinaleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -445,6 +458,16 @@ export default function CollectionSection({
                   bottleRefs.current[i] = el;
                 }}
                 data-i={i}
+                role="button"
+                tabIndex={-1}
+                aria-label={`View ${perfume.name} details`}
+                onClick={(e) => handleBottleActivate(e, perfume)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleBottleActivate(e, perfume);
+                  }
+                }}
               >
                 <img
                   src={perfume.image}

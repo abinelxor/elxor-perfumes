@@ -114,7 +114,7 @@ export default function ContactSection() {
           padding: clamp(80px, 11vw, 140px) var(--gutter);
           background: radial-gradient(
               ellipse 70% 60% at 50% 50%,
-              rgba(97, 53, 0, 0.28) 0%,
+              var(--contact-glow) 0%,
               transparent 72%
             ),
             var(--bg);
@@ -138,18 +138,11 @@ export default function ContactSection() {
           text-transform: uppercase;
           text-align: center;
           margin-bottom: clamp(36px, 5vw, 54px);
-          background: linear-gradient(
-            135deg,
-            #fff9ee 0%,
-            #f5d799 26%,
-            #d4af37 54%,
-            #b88636 82%,
-            #7a5317 100%
-          );
+          background: var(--gold-text-grad);
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
-          filter: drop-shadow(0 2px 16px rgba(212, 175, 55, 0.35));
+          filter: drop-shadow(0 2px 12px rgba(212, 175, 55, 0.22));
         }
 
         .contact-form {
@@ -182,8 +175,8 @@ export default function ContactSection() {
         .form-group input,
         .form-group textarea {
           width: 100%;
-          background: rgba(14, 11, 8, 0.85);
-          border: 1px solid rgba(213, 174, 111, 0.36);
+          background: var(--field-bg);
+          border: 1px solid var(--line);
           border-radius: 6px;
           padding: 15px 18px;
           color: var(--ink);
@@ -191,12 +184,12 @@ export default function ContactSection() {
           font-size: 15px;
           outline: none;
           transition: all 0.3s var(--ease);
-          box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+          box-shadow: var(--field-shadow);
         }
 
         .form-group input::placeholder,
         .form-group textarea::placeholder {
-          color: #7d7265;
+          color: var(--placeholder);
           opacity: 0.85;
           font-weight: 400;
         }
@@ -204,9 +197,8 @@ export default function ContactSection() {
         .form-group input:focus,
         .form-group textarea:focus {
           border-color: var(--gold-hi);
-          box-shadow: 0 0 16px rgba(212, 175, 55, 0.28),
-            inset 0 2px 6px rgba(0, 0, 0, 0.7);
-          background: rgba(18, 14, 10, 0.95);
+          box-shadow: 0 0 16px rgba(212, 175, 55, 0.28), var(--field-shadow);
+          background: var(--field-bg-focus);
         }
 
         .form-group textarea {
@@ -253,7 +245,7 @@ export default function ContactSection() {
         .contact-success {
           text-align: center;
           padding: 60px 20px;
-          background: rgba(18, 14, 10, 0.6);
+          background: var(--surface-2);
           border: 1px solid var(--line);
           border-radius: 8px;
         }
@@ -261,7 +253,7 @@ export default function ContactSection() {
         .contact-success h3 {
           font-family: var(--f-display);
           font-size: 24px;
-          color: var(--gold-hi);
+          color: var(--gold-text-strong);
           margin: 18px 0 10px;
           letter-spacing: 0.08em;
           text-transform: uppercase;

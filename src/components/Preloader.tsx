@@ -111,7 +111,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       <div className="loader__inner">
         <div className="loader__logo">
           <img
-            src="/images/logo-preloader-crisp.png"
+            src="/images/elxor-logo.png"
             alt="ELXOR"
             width={240}
             height={254}

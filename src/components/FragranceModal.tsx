@@ -41,7 +41,7 @@ export default function FragranceModal({
         alignItems: "center",
         justifyContent: "center",
         padding: "20px",
-        backgroundColor: "rgba(5, 5, 5, 0.85)",
+        backgroundColor: "var(--overlay)",
         backdropFilter: "blur(14px)",
       }}
       onClick={onClose}
@@ -52,12 +52,12 @@ export default function FragranceModal({
           position: "relative",
           width: "92vw",
           maxWidth: "980px",
-          background: "#0c0a08",
+          background: "var(--surface)",
           border: "1px solid rgba(216, 162, 83, 0.4)",
           borderRadius: "4px",
           overflow: "hidden",
           boxShadow:
-            "0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 35px rgba(216, 162, 83, 0.15)",
+            "0 25px 60px -15px var(--shadow-strong), 0 0 35px rgba(216, 162, 83, 0.15)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -69,7 +69,7 @@ export default function FragranceModal({
             position: "absolute",
             top: "16px",
             right: "16px",
-            background: "rgba(20, 18, 14, 0.7)",
+            background: "var(--surface-2)",
             border: "1px solid rgba(216, 162, 83, 0.3)",
             borderRadius: "50%",
             width: "34px",
@@ -77,13 +77,13 @@ export default function FragranceModal({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#ecc480",
+            color: "var(--gold-text-strong)",
             cursor: "pointer",
             zIndex: 10,
             transition: "all 0.2s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = "#f5d799";
+            e.currentTarget.style.borderColor = "var(--gold-text-strong)";
             e.currentTarget.style.transform = "scale(1.08)";
           }}
           onMouseLeave={(e) => {
@@ -107,7 +107,7 @@ export default function FragranceModal({
             style={{
               position: "relative",
               minHeight: "360px",
-              background: "#050403",
+              background: "var(--surface-2)",
               borderRight: "1px solid rgba(216, 162, 83, 0.2)",
               display: "flex",
               alignItems: "center",
@@ -128,7 +128,7 @@ export default function FragranceModal({
                 fill
                 style={{
                   objectFit: "contain",
-                  filter: "drop-shadow(0 15px 25px rgba(0,0,0,0.8))",
+                  filter: "drop-shadow(0 15px 25px var(--shadow-strong))",
                 }}
               />
             </div>
@@ -150,7 +150,7 @@ export default function FragranceModal({
                   fontFamily: "var(--font-sans)",
                   fontSize: "0.68rem",
                   letterSpacing: "2.5px",
-                  color: "#d8a253",
+                  color: "var(--gold)",
                   fontWeight: 600,
                   textTransform: "uppercase",
                   display: "block",
@@ -165,7 +165,7 @@ export default function FragranceModal({
                   fontFamily: "var(--font-serif)",
                   fontSize: "1.65rem",
                   letterSpacing: "1.2px",
-                  color: "#ecc480",
+                  color: "var(--gold-text-strong)",
                   marginBottom: "2px",
                   fontWeight: 500,
                 }}
@@ -178,7 +178,7 @@ export default function FragranceModal({
                   fontFamily: "var(--font-sans)",
                   fontSize: "0.85rem",
                   fontStyle: "italic",
-                  color: "#c2bab0",
+                  color: "var(--muted)",
                   marginBottom: "10px",
                 }}
               >
@@ -190,7 +190,7 @@ export default function FragranceModal({
                   fontFamily: "var(--font-sans)",
                   fontSize: "0.79rem",
                   lineHeight: 1.48,
-                  color: "#aba395",
+                  color: "var(--muted)",
                   fontWeight: 300,
                   marginBottom: "12px",
                   display: "flex",
@@ -208,14 +208,14 @@ export default function FragranceModal({
                   style={{
                     fontFamily: "var(--font-sans)",
                     fontSize: "0.78rem",
-                    color: "#ecc480",
+                    color: "var(--gold-text-strong)",
                     fontStyle: "italic",
                     letterSpacing: "0.3px",
                     fontWeight: 500,
                     marginBottom: "14px",
                     padding: "7px 12px",
                     background: "rgba(216, 162, 83, 0.08)",
-                    borderLeft: "2px solid #ecc480",
+                    borderLeft: "2px solid var(--gold-text-strong)",
                     borderRadius: "0 2px 2px 0",
                   }}
                 >
@@ -224,8 +224,8 @@ export default function FragranceModal({
               )}
 
               {/* Size */}
-              <div style={{ marginBottom: "14px", fontSize: "0.8rem", color: "#aba395", letterSpacing: "1px", fontFamily: "var(--font-sans)" }}>
-                SIZE: <span style={{ color: "#ecc480", fontWeight: 500 }}>50ml</span>
+              <div style={{ marginBottom: "14px", fontSize: "0.8rem", color: "var(--muted)", letterSpacing: "1px", fontFamily: "var(--font-sans)" }}>
+                SIZE: <span style={{ color: "var(--gold-text-strong)", fontWeight: 500 }}>50ml</span>
               </div>
             </div>
 
@@ -237,8 +237,8 @@ export default function FragranceModal({
                   flex: 1,
                   padding: "10px",
                   background: "rgba(216, 162, 83, 0.15)",
-                  border: "1px solid #ecc480",
-                  color: "#ecc480",
+                  border: "1px solid var(--gold-text-strong)",
+                  color: "var(--gold-text-strong)",
                   fontFamily: "var(--font-sans)",
                   fontSize: "0.82rem",
                   letterSpacing: "1.5px",
