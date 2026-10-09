@@ -223,6 +223,7 @@ export default function HeroSection({
     };
 
     const drawDust = () => {
+      if (window.innerWidth < 768) return; // dust layer is hidden on phones
       const y = window.scrollY;
       if (y > heroTop + hero.offsetHeight) return;
       const vel = y - lastScrollForDust;
@@ -296,7 +297,7 @@ export default function HeroSection({
 
       const raw = clamp((window.scrollY - heroTop) / heroRange);
       const isMobile = window.innerWidth < 768;
-      const lerpFactor = isMobile ? 0.068 : 0.14;
+      const lerpFactor = isMobile ? 0.22 : 0.14;
       smoothP += (raw - smoothP) * lerpFactor;
       if (Math.abs(raw - smoothP) < 0.0004) smoothP = raw;
       const p = smoothP;

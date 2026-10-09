@@ -6,9 +6,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.elxorperfumes.com",
   },
-  title: "Luxury Unisex Perfume Dubai | ELXOR Long Lasting Fragrance",
+  title: "Top Unisex Fragrances & Best Unisex Perfumes | ELXOR",
   description:
-    "ELXOR is a Dubai perfume brand with two long lasting fragrance collections, Signature and Promise, for men and women. Order online via Amazon in the UAE.",
+    "Discover ELXOR’s best unisex perfumes and fragrances. Explore good unisex perfumes crafted for a lasting, elegant presence. Shop ELXOR on Amazon UAE.",
   keywords:
     "luxury unisex perfume dubai, elxor long lasting fragrance, dubai perfume brand, amoriel, sanctix, eau de parfum, perfume for men, perfume for women, best perfume for men, best perfumes for women, buy best perfume online, amazon uae",
   verification: {
@@ -29,9 +29,9 @@ export const metadata: Metadata = {
     icon: "/images/favicon.png",
   },
   openGraph: {
-    title: "Luxury Unisex Perfume Dubai | ELXOR Long Lasting Fragrance",
+    title: "Top Unisex Fragrances & Best Unisex Perfumes | ELXOR",
     description:
-      "ELXOR is a Dubai perfume brand with two long lasting fragrance collections, Signature and Promise, for men and women. Order online via Amazon in the UAE.",
+      "Discover ELXOR’s best unisex perfumes and fragrances. Explore good unisex perfumes crafted for a lasting, elegant presence. Shop ELXOR on Amazon UAE.",
     url: "https://www.elxorperfumes.com",
     type: "website",
     siteName: "ELXOR Perfumes",

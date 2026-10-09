@@ -20,7 +20,8 @@ export default function ExperienceSection({
     if (!media || !img) return;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const handleScroll = () => {
+    const update = () => {
+      if (window.innerWidth <= 860) return; // stacked layout: no scroll-linked motion
       const vh = window.innerHeight;
       const r = media.getBoundingClientRect();
       if (r.bottom < 0 || r.top > vh) return;
@@ -38,8 +39,18 @@ export default function ExperienceSection({
       }
     };
 
+    let ticking = false;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        update();
+      });
+    };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    update();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 

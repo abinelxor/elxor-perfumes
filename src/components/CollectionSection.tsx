@@ -115,7 +115,7 @@ export default function CollectionSection({
 
       const raw = clamp((y - seqTop) / seqRange);
       const mobile = window.innerWidth <= 768;
-      const lerpFactor = mobile ? 0.068 : 0.14;
+      const lerpFactor = mobile ? 0.22 : 0.14;
       smoothQ = seqVisible ? smoothQ + (raw - smoothQ) * lerpFactor : raw;
       if (Math.abs(raw - smoothQ) < 0.0003) smoothQ = raw;
       seqVisible = true;
@@ -233,7 +233,7 @@ export default function CollectionSection({
           )}vw, calc(var(--tyb) + ${cy.toFixed(2)}vh)) rotate(${cr.toFixed(
             2
           )}deg)`;
-          c.style.filter = cb > 0.05 ? `blur(${cb.toFixed(2)}px)` : "none";
+          c.style.filter = !mobile && cb > 0.05 ? `blur(${cb.toFixed(2)}px)` : "none";
           c.style.pointerEvents = cin > 0.9 && cout < 0.1 ? "auto" : "none";
         }
 

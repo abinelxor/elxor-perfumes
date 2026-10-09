@@ -13,13 +13,16 @@ export default function ScrollObserver() {
     let lenis: Lenis | null = null;
     let rafId: number;
 
-    if (!prefersReducedMotion) {
-      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    // Phones/tablets scroll natively (already compositor-smooth). Layering a JS
+    // smooth-scroller on top makes touch scrolling feel stuck or jittery.
+    const isTouch =
+      window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
+
+    if (!prefersReducedMotion && !isTouch) {
       lenis = new Lenis({
-        lerp: isMobile ? 0.07 : 0.085,
+        lerp: 0.085,
         smoothWheel: true,
         wheelMultiplier: 0.95,
-        touchMultiplier: isMobile ? 0.85 : 1,
       });
       (window as unknown as { lenis?: Lenis | null }).lenis = lenis;
 

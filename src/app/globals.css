@@ -2842,3 +2842,61 @@ html.theme-anim footer {
     scale: 1.1;
   }
 }
+
+/* ==========================================================================
+   Mobile / touch performance
+   Blur filters, backdrop blur, blend modes and the animated grain are the
+   usual causes of janky, "stuck" scrolling on phones. Keep the look, drop the
+   per-frame GPU cost.
+   ========================================================================== */
+@media (max-width: 768px), (pointer: coarse) {
+  body::after,
+  .hero__dust,
+  .hero__flash {
+    display: none;
+  }
+
+  .nav.is-scrolled,
+  .menu-backdrop,
+  .seq__card {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .chapter,
+  .chapter [data-piece],
+  .chapter .w,
+  .seq__final [data-piece],
+  .seq__final .w,
+  .seq__card,
+  [data-reveal],
+  [data-split-reveal] .w,
+  .menu__links a:not(.btn),
+  .menu__links a.btn {
+    filter: none !important;
+  }
+
+  .seq__line--glow,
+  .loader__glow {
+    filter: none;
+  }
+
+  .gold-text,
+  .chapter.is-in .chapter__title .w,
+  .chapter.is-in .chapter__title .w.gold-text {
+    animation: none;
+  }
+
+  /* Fewer layers promoted to the GPU */
+  .chapter,
+  .seq__card,
+  .seq__note,
+  .seq__bottle,
+  .seq__ghost span {
+    will-change: auto;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
