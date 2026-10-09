@@ -11,11 +11,14 @@ export default function ExperienceSection({
 }: ExperienceSectionProps) {
   const mediaRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+  const cutoutRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const media = mediaRef.current;
     const img = imgRef.current;
+    const cutout = cutoutRef.current;
     if (!media || !img) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const handleScroll = () => {
       const vh = window.innerHeight;
@@ -23,6 +26,16 @@ export default function ExperienceSection({
       if (r.bottom < 0 || r.top > vh) return;
       const off = (r.top + r.height / 2 - vh / 2) * -0.06;
       img.style.transform = `translate3d(0, ${off.toFixed(1)}px, 0)`;
+
+      // Light-theme product cut-out: drift, tilt and breathe with scroll
+      if (cutout && !reduceMotion) {
+        const p = Math.max(-1, Math.min(1, (r.top + r.height / 2 - vh / 2) / vh));
+        const y = p * -70;
+        const rot = p * -7;
+        const scale = 1.04 - Math.abs(p) * 0.14;
+        cutout.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0) rotate(${rot.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+        cutout.style.opacity = String(Math.max(0.2, 1 - Math.abs(p) * 0.9).toFixed(2));
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -62,6 +75,17 @@ export default function ExperienceSection({
             loading="lazy"
           />
         </picture>
+        {/* Transparent product cut-out shown in the light theme (no photo backdrop) */}
+        <img
+          ref={cutoutRef}
+          className="split__cutout"
+          src="/images/perfume_sanctix.png"
+          alt=""
+          aria-hidden="true"
+          width={640}
+          height={640}
+          loading="lazy"
+        />
       </div>
 
       <div className="split__content">

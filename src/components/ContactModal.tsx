@@ -34,7 +34,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         position: "fixed",
         inset: 0,
         zIndex: 3500,
-        backgroundColor: "rgba(5, 4, 3, 0.88)",
+        backgroundColor: "var(--overlay)",
         backdropFilter: "blur(14px)",
         WebkitBackdropFilter: "blur(14px)",
         display: "flex",
@@ -48,11 +48,11 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         style={{
           width: "100%",
           maxWidth: "640px",
-          backgroundColor: "#0a0806",
+          backgroundColor: "var(--surface)",
           border: "1px solid rgba(213, 174, 111, 0.36)",
           borderRadius: "6px",
           boxShadow:
-            "0 30px 70px rgba(0, 0, 0, 0.98), 0 0 40px rgba(212, 175, 55, 0.12)",
+            "0 30px 70px var(--shadow-strong), 0 0 40px rgba(212, 175, 55, 0.12)",
           padding: "clamp(32px, 5vw, 44px) clamp(24px, 4vw, 36px)",
           position: "relative",
         }}
@@ -74,17 +74,17 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#d5ae6f",
+            color: "var(--gold)",
             cursor: "pointer",
             transition: "all 0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = "#f5dca8";
-            e.currentTarget.style.color = "#f5dca8";
+            e.currentTarget.style.borderColor = "var(--gold-text-strong)";
+            e.currentTarget.style.color = "var(--gold-text-strong)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = "rgba(213, 174, 111, 0.28)";
-            e.currentTarget.style.color = "#d5ae6f";
+            e.currentTarget.style.color = "var(--gold)";
           }}
         >
           <X size={18} />
@@ -94,14 +94,14 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           <div style={{ textAlign: "center", padding: "40px 10px" }}>
             <CheckCircle2
               size={52}
-              color="#d5ae6f"
+              color="var(--gold)"
               style={{ margin: "0 auto 20px" }}
             />
             <h3
               style={{
                 fontFamily: "var(--f-display)",
                 fontSize: "1.7rem",
-                color: "#f5dca8",
+                color: "var(--gold-text-strong)",
                 letterSpacing: "0.08em",
                 marginBottom: "12px",
                 textTransform: "uppercase",
@@ -109,7 +109,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             >
               INQUIRY RECEIVED
             </h3>
-            <p style={{ color: "#bcb2a3", fontSize: "0.95rem" }}>
+            <p style={{ color: "var(--muted)", fontSize: "0.95rem" }}>
               Our bespoke fragrance concierge will be in touch with you shortly.
             </p>
           </div>
@@ -125,11 +125,11 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 textAlign: "center",
                 marginBottom: "32px",
                 background:
-                  "linear-gradient(135deg, #fff9ee 0%, #f5d799 26%, #d4af37 54%, #b88636 82%, #7a5317 100%)",
+                  "var(--gold-text-grad)",
                 WebkitBackgroundClip: "text",
                 backgroundClip: "text",
                 color: "transparent",
-                filter: "drop-shadow(0 2px 14px rgba(212, 175, 55, 0.35))",
+                filter: "drop-shadow(0 2px 10px rgba(212, 175, 55, 0.22))",
               }}
             >
               GET IN TOUCH
@@ -163,7 +163,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   }
                   style={{
                     width: "100%",
-                    background: "rgba(14, 11, 8, 0.85)",
+                    background: "var(--field-bg)",
                     border: "1px solid rgba(213, 174, 111, 0.36)",
                     borderRadius: "6px",
                     padding: "14px 18px",
@@ -171,7 +171,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     fontFamily: "var(--f-body)",
                     fontSize: "15px",
                     outline: "none",
-                    boxShadow: "inset 0 2px 6px rgba(0, 0, 0, 0.6)",
+                    boxShadow: "var(--field-shadow)",
                   }}
                 />
               </div>
@@ -207,7 +207,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     }
                     style={{
                       width: "100%",
-                      background: "rgba(14, 11, 8, 0.85)",
+                      background: "var(--field-bg)",
                       border: "1px solid rgba(213, 174, 111, 0.36)",
                       borderRadius: "6px",
                       padding: "14px 18px",
@@ -215,7 +215,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       fontFamily: "var(--f-body)",
                       fontSize: "15px",
                       outline: "none",
-                      boxShadow: "inset 0 2px 6px rgba(0, 0, 0, 0.6)",
+                      boxShadow: "var(--field-shadow)",
                     }}
                   />
                 </div>
@@ -242,7 +242,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     }
                     style={{
                       width: "100%",
-                      background: "rgba(14, 11, 8, 0.85)",
+                      background: "var(--field-bg)",
                       border: "1px solid rgba(213, 174, 111, 0.36)",
                       borderRadius: "6px",
                       padding: "14px 18px",
@@ -250,7 +250,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       fontFamily: "var(--f-body)",
                       fontSize: "15px",
                       outline: "none",
-                      boxShadow: "inset 0 2px 6px rgba(0, 0, 0, 0.6)",
+                      boxShadow: "var(--field-shadow)",
                     }}
                   />
                 </div>
@@ -280,7 +280,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   }
                   style={{
                     width: "100%",
-                    background: "rgba(14, 11, 8, 0.85)",
+                    background: "var(--field-bg)",
                     border: "1px solid rgba(213, 174, 111, 0.36)",
                     borderRadius: "6px",
                     padding: "14px 18px",
@@ -290,7 +290,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     outline: "none",
                     resize: "none",
                     minHeight: "110px",
-                    boxShadow: "inset 0 2px 6px rgba(0, 0, 0, 0.6)",
+                    boxShadow: "var(--field-shadow)",
                   }}
                 />
               </div>

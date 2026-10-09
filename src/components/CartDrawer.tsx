@@ -39,7 +39,7 @@ export default function CartDrawer({
         position: "fixed",
         inset: 0,
         zIndex: 3000,
-        backgroundColor: "rgba(5, 5, 5, 0.75)",
+        backgroundColor: "var(--overlay)",
         backdropFilter: "blur(8px)",
         display: "flex",
         justifyContent: "flex-end",
@@ -51,11 +51,11 @@ export default function CartDrawer({
           width: "100%",
           maxWidth: "460px",
           height: "100%",
-          backgroundColor: "#0a0806",
+          backgroundColor: "var(--surface)",
           borderLeft: "1px solid rgba(216, 162, 83, 0.35)",
           display: "flex",
           flexDirection: "column",
-          boxShadow: "-15px 0 45px rgba(0, 0, 0, 0.9)",
+          boxShadow: "-15px 0 45px var(--shadow-strong)",
           padding: "30px 26px",
           position: "relative",
         }}
@@ -78,7 +78,7 @@ export default function CartDrawer({
                 position: "relative",
                 width: "42px",
                 height: "45px",
-                filter: "drop-shadow(0 1px 8px rgba(212, 175, 55, 0.35))",
+                filter: "drop-shadow(0 1px 6px rgba(154, 111, 43, 0.3))",
                 flexShrink: 0,
               }}
             >
@@ -95,7 +95,7 @@ export default function CartDrawer({
                   fontFamily: "var(--font-sans)",
                   fontSize: "0.75rem",
                   letterSpacing: "3px",
-                  color: "#d8a253",
+                  color: "var(--gold)",
                   textTransform: "uppercase",
                 }}
               >
@@ -105,7 +105,7 @@ export default function CartDrawer({
                 style={{
                   fontFamily: "var(--font-serif)",
                   fontSize: "1.4rem",
-                  color: "#ecc480",
+                  color: "var(--gold-text-strong)",
                   letterSpacing: "1.5px",
                   fontWeight: 500,
                 }}
@@ -127,7 +127,7 @@ export default function CartDrawer({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#ecc480",
+              color: "var(--gold-text-strong)",
               cursor: "pointer",
             }}
           >
@@ -151,14 +151,14 @@ export default function CartDrawer({
               style={{
                 textAlign: "center",
                 margin: "auto 0",
-                color: "#989082",
+                color: "var(--muted)",
                 fontFamily: "var(--font-sans)",
               }}
             >
               <p style={{ fontSize: "1rem", marginBottom: "12px" }}>
                 Your shopping bag is currently empty.
               </p>
-              <p style={{ fontSize: "0.85rem", color: "#686156" }}>
+              <p style={{ fontSize: "0.85rem", color: "var(--dim)" }}>
                 Explore our signature haute parfumerie collection to begin.
               </p>
             </div>
@@ -188,7 +188,7 @@ export default function CartDrawer({
                       height: "60px",
                       borderRadius: "3px",
                       overflow: "hidden",
-                      background: "#050403",
+                      background: "var(--surface-2)",
                       flexShrink: 0,
                     }}
                   >
@@ -206,7 +206,7 @@ export default function CartDrawer({
                         fontFamily: "var(--font-serif)",
                         fontSize: "0.95rem",
                         letterSpacing: "1.2px",
-                        color: "#ecc480",
+                        color: "var(--gold-text-strong)",
                       }}
                     >
                       {item.perfume.name}
@@ -214,7 +214,7 @@ export default function CartDrawer({
                     <span
                       style={{
                         fontSize: "0.78rem",
-                        color: "#b0a89a",
+                        color: "var(--muted)",
                         display: "block",
                         marginTop: "2px",
                       }}
@@ -224,7 +224,7 @@ export default function CartDrawer({
                     <span
                       style={{
                         fontSize: "0.88rem",
-                        color: "#f5d799",
+                        color: "var(--gold-text-strong)",
                         fontWeight: 600,
                         marginTop: "4px",
                         display: "block",
@@ -240,12 +240,12 @@ export default function CartDrawer({
                     style={{
                       background: "transparent",
                       border: "none",
-                      color: "#7e7669",
+                      color: "var(--dim)",
                       cursor: "pointer",
                       padding: "6px",
                     }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = "#d9534f")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "#7e7669")}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--dim)")}
                   >
                     <Trash2 size={16} />
                   </button>
@@ -271,15 +271,15 @@ export default function CartDrawer({
                 gap: "8px",
                 marginBottom: "20px",
                 fontSize: "0.8rem",
-                color: "#c2baa9",
+                color: "var(--muted)",
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <Gift size={15} color="#ecc480" />
+                <Gift size={15} color="var(--gold-text-strong)" />
                 <span>Complimentary luxury gift box & 2 sample vials</span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <ShieldCheck size={15} color="#ecc480" />
+                <ShieldCheck size={15} color="var(--gold-text-strong)" />
                 <span>Complimentary insured worldwide white-glove delivery</span>
               </div>
             </div>
@@ -298,7 +298,7 @@ export default function CartDrawer({
                   fontFamily: "var(--font-sans)",
                   fontSize: "0.9rem",
                   letterSpacing: "2px",
-                  color: "#d0c7bb",
+                  color: "var(--ink)",
                   textTransform: "uppercase",
                 }}
               >
@@ -308,7 +308,7 @@ export default function CartDrawer({
                 style={{
                   fontFamily: "var(--font-serif)",
                   fontSize: "1.4rem",
-                  color: "#ecc480",
+                  color: "var(--gold-text-strong)",
                   fontWeight: 600,
                 }}
               >
