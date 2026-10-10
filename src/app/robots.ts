@@ -5,6 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
+      // The editing studio and webhook are not for search engines
+      disallow: ["/studio", "/api/"],
     },
     sitemap: "https://www.elxorperfumes.com/sitemap.xml",
   };

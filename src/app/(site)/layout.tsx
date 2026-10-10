@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import "./globals.css";
-import { buildMetadata, getSiteSettings } from "@/lib/content";
+import "../globals.css";
+import CodeSlot from "@/components/CodeSlot";
+import { buildMetadata, getCodeSnippets, getSiteSettings } from "@/lib/content";
 import { SITE_URL } from "@/lib/defaults";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -95,14 +96,19 @@ const productAmorielSchema = {
   "url": "https://www.elxorperfumes.com/amoriel/",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Custom head/body code added in the Studio, grouped by where it should be placed
+  const snippets = await getCodeSnippets();
+  const at = (position: string) => snippets.filter((snippet) => snippet.position === position);
+
   return (
     <html lang="en" data-theme="light" suppressHydrationWarning>
       <head>
+        <CodeSlot snippets={at("headStart")} />
         {/* Apply the saved theme before first paint (light is the default) */}
         <script
           dangerouslySetInnerHTML={{
@@ -182,8 +188,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           href="/frames-m/frame_001.webp"
           media="(max-width: 767px)"
         />
+        <CodeSlot snippets={at("headEnd")} />
       </head>
       <body>
+        <CodeSlot snippets={at("bodyStart")} />
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
@@ -195,6 +203,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
         {/* End Google Tag Manager (noscript) */}
         {children}
+        <CodeSlot snippets={at("bodyEnd")} />
       </body>
     </html>
   );
