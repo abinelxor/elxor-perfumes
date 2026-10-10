@@ -4,7 +4,7 @@ import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 
 // Documents that exist exactly once
-const singletons = ['siteSettings']
+const singletons = ['siteSettings', 'homePage']
 
 export default defineConfig({
   name: 'default',
@@ -19,6 +19,10 @@ export default defineConfig({
         S.list()
           .title('Content')
           .items([
+            S.listItem()
+              .title('Home page')
+              .id('homePage')
+              .child(S.document().schemaType('homePage').documentId('homePage')),
             S.listItem()
               .title('Site settings')
               .id('siteSettings')

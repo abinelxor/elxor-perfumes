@@ -20,6 +20,7 @@ import FragranceModal from "@/components/FragranceModal";
 import CartDrawer, { CartItem } from "@/components/CartDrawer";
 import ContactModal from "@/components/ContactModal";
 import type { FaqEntry } from "@/lib/defaults";
+import type { HomeContent } from "@/lib/homeDefaults";
 
 export interface HomeContact {
   email: string;
@@ -29,12 +30,22 @@ export interface HomeContact {
 }
 
 interface HomeClientProps {
+  content: HomeContent;
+  facebookUrl?: string;
+  instagramUrl?: string;
   products: PerfumeItem[];
   faqs: FaqEntry[];
   contact: HomeContact;
 }
 
-export default function HomeClient({ products, faqs, contact }: HomeClientProps) {
+export default function HomeClient({
+  content,
+  facebookUrl,
+  instagramUrl,
+  products,
+  faqs,
+  contact,
+}: HomeClientProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -96,6 +107,7 @@ export default function HomeClient({ products, faqs, contact }: HomeClientProps)
       <main>
         {/* 4. HERO: 460vh pinned frame sequence with 4 heading chapters */}
         <HeroSection
+          chapters={content.heroChapters}
           isReady={isLoaded}
           onExploreClick={() => {
             const el = document.getElementById("collection");
@@ -104,21 +116,28 @@ export default function HomeClient({ products, faqs, contact }: HomeClientProps)
         />
 
         {/* 5. Statement Section with progressive word light-up */}
-        <StatementSection />
+        <StatementSection
+          text={content.statementText}
+          gold={content.statementGold}
+          narrative={content.statementNarrative}
+        />
 
         {/* 6. Collection: 640vh pinned product sequence with self-drawing lines,
                feathers, frosted cards, notes, finale row & 7 sparks */}
         <CollectionSection
           products={products}
+          header={content.collectionHeader}
+          finale={content.finale}
           onSelectPerfume={(perfume) => setSelectedPerfume(perfume)}
           onContactClick={() => setContactOpen(true)}
         />
 
         {/* 7. Marquee ticker */}
-        <Marquee />
+        <Marquee text={content.marqueeText} />
 
         {/* 8. Philosophy split section with parallax */}
         <PhilosophySection
+          content={content.philosophy}
           onShopClick={() => {
             const el = document.getElementById("collection");
             if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -126,10 +145,11 @@ export default function HomeClient({ products, faqs, contact }: HomeClientProps)
         />
 
         {/* 9. Values section with bespoke SVG emblems */}
-        <ValuesSection />
+        <ValuesSection header={content.valuesHeader} values={content.values} />
 
         {/* 10. Experience split section with parallax */}
         <ExperienceSection
+          content={content.experience}
           onDiscoverClick={() => {
             const el = document.getElementById("collection");
             if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -139,16 +159,21 @@ export default function HomeClient({ products, faqs, contact }: HomeClientProps)
         {/* 11. Luxury Animated FAQ Section */}
         <FaqSection
           faqs={faqs}
+          header={content.faqHeader}
           onOpenContact={() => setContactOpen(true)}
         />
 
         {/* 12. Luxury Get In Touch Contact Section */}
-        <ContactSection />
+        <ContactSection content={content.contact} />
       </main>
 
       {/* 11. Luxury 4-Column Footer */}
       <Footer
         onOpenContact={() => setContactOpen(true)}
+        heading={content.footerHeading}
+        text={content.footerText}
+        facebookUrl={facebookUrl}
+        instagramUrl={instagramUrl}
         email={contact.email}
         phone={contact.phone}
         whatsapp={contact.whatsapp}
