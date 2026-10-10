@@ -3106,3 +3106,29 @@ html.theme-anim footer {
   .product { grid-template-columns: 1fr; }
   .subpage-header__nav a:not(:last-child) { display: none; }
 }
+
+/* iPhone / touch: cheaper header and loader, no rubber-band shimmer on pinned scenes */
+@media (max-width: 768px), (pointer: coarse) {
+  html {
+    overscroll-behavior-y: none;
+  }
+
+  /* Animating the header's height re-flows the page on every scroll tick; keep it fixed */
+  .nav,
+  .nav.is-scrolled {
+    height: 72px;
+    transition: background .4s var(--ease), border-color .4s var(--ease);
+  }
+
+  .nav__logo img,
+  .nav.is-scrolled .nav__logo img {
+    height: 48px;
+    max-height: 48px;
+    transition: none;
+  }
+
+  /* The loader's glow pulse repaints large blurred shadows every frame */
+  .loader__logo {
+    animation: none;
+  }
+}
