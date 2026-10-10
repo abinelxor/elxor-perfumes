@@ -1,10 +1,16 @@
 "use client";
 
 import React from "react";
+import { withBrand } from "./brand";
+import { defaultHome } from "@/lib/homeDefaults";
 import { Phone, Mail, MapPin } from "lucide-react";
 
 interface FooterProps {
   onOpenContact?: () => void;
+  heading?: string;
+  text?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
   email?: string;
   phone?: string;
   whatsapp?: string;
@@ -13,6 +19,10 @@ interface FooterProps {
 
 export default function Footer({
   onOpenContact,
+  heading = defaultHome.footerHeading,
+  text = defaultHome.footerText,
+  facebookUrl = "https://www.facebook.com/share/19ZHzYdMmr/",
+  instagramUrl = "https://www.instagram.com/elxorperfumes?utm_source=qr&stkn=N3UyYXd3d3QwMW85",
   email = "info@elxorperfumes.com",
   phone = "+971 554696935",
   whatsapp = "+971 554696935",
@@ -54,18 +64,14 @@ export default function Footer({
               filter: "drop-shadow(0 2px 14px rgba(213, 174, 111, 0.3))",
             }}
           />
-          <h2>The Essence of Elegance</h2>
-          <p>
-            Crafting timeless fragrances for those who appreciate distinction.{" "}
-            <span className="brand">ELXOR</span> is more than a fragrance. It is
-            a signature.
-          </p>
+          <h2>{heading}</h2>
+          <p>{withBrand(text)}</p>
 
           {/* Luxury Social Media Icon Buttons */}
           <div className="footer__socials" aria-label="Social media channels">
             {/* Facebook */}
             <a
-              href="https://www.facebook.com/share/19ZHzYdMmr/"
+              href={facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="footer__social-btn"
@@ -79,7 +85,7 @@ export default function Footer({
 
             {/* Instagram */}
             <a
-              href="https://www.instagram.com/elxorperfumes?utm_source=qr&stkn=N3UyYXd3d3QwMW85"
+              href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="footer__social-btn"

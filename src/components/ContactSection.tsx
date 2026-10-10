@@ -2,8 +2,13 @@
 
 import React, { useState } from "react";
 import { Send, CheckCircle2 } from "lucide-react";
+import { defaultHome, type HomeContent } from "@/lib/homeDefaults";
 
-export default function ContactSection() {
+interface ContactSectionProps {
+  content?: HomeContent["contact"];
+}
+
+export default function ContactSection({ content = defaultHome.contact }: ContactSectionProps) {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -24,16 +29,13 @@ export default function ContactSection() {
   return (
     <section className="contact-section" id="contact">
       <div className="contact-container" data-reveal>
-        <h2 className="contact-title">GET IN TOUCH</h2>
+        <h2 className="contact-title">{content.title}</h2>
 
         {submitted ? (
           <div className="contact-success">
             <CheckCircle2 size={48} color="var(--gold)" />
-            <h3>Inquiry Received</h3>
-            <p>
-              Thank you for reaching out. Our bespoke fragrance concierge will
-              be in touch with you shortly.
-            </p>
+            <h3>{content.successTitle}</h3>
+            <p>{content.successText}</p>
           </div>
         ) : (
           <form className="contact-form" onSubmit={handleSubmit}>
@@ -101,7 +103,7 @@ export default function ContactSection() {
 
             {/* SEND INQUIRY BUTTON */}
             <button type="submit" className="contact-submit-btn">
-              <span>SEND INQUIRY</span>
+              <span>{content.submitLabel}</span>
               <Send size={16} strokeWidth={2} />
             </button>
           </form>

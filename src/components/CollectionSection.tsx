@@ -3,6 +3,9 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { perfumesData, type PerfumeItem } from "@/lib/products";
+import TitleWords, { titleWordCount } from "./TitleWords";
+import { withBrand } from "./brand";
+import { defaultHome, type HomeContent, type SectionHeaderContent } from "@/lib/homeDefaults";
 
 // Re-exported so existing imports from this module keep working
 export { perfumesData };
@@ -11,6 +14,8 @@ export type { PerfumeItem };
 interface CollectionSectionProps {
   /** Products to showcase (from Sanity). Defaults to the built-in two. */
   products?: PerfumeItem[];
+  header?: SectionHeaderContent;
+  finale?: HomeContent["finale"];
   onSelectPerfume?: (perfume: PerfumeItem) => void;
   onContactClick?: () => void;
 }
@@ -23,6 +28,8 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export default function CollectionSection({
   products,
+  header = defaultHome.collectionHeader,
+  finale = defaultHome.finale,
   onSelectPerfume,
   onContactClick,
 }: CollectionSectionProps) {
@@ -301,10 +308,7 @@ export default function CollectionSection({
     }
   };
 
-  const notesList = [
-    "pure devotion",
-    "sacred & luminous",
-  ];
+  const notesList = [finale.noteOne, finale.noteTwo];
 
   // Finale bottles grow in place on hover (pure CSS). Clicking (or Enter)
   // opens the full details popup.
@@ -350,21 +354,16 @@ export default function CollectionSection({
       {/* Section Header */}
       <header className="section-head collection__head">
         <p className="eyebrow" data-reveal>
-          Our Collection
+          {header.eyebrow}
         </p>
         <h2 className="section-title" data-split-reveal>
-          <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Crafted</span>
-          <span className="w" style={{ "--i": 1 } as React.CSSProperties}>for</span>
-          <span className="w gold-text" style={{ "--i": 2 } as React.CSSProperties}>distinction</span>
+          <TitleWords white={header.titleWhite} gold={header.titleGold} inline />
         </h2>
         <div className="divider" data-reveal>
           <i />
         </div>
         <p className="section-lead" data-reveal>
-          At <span className="brand">ELXOR</span>, we believe fragrance is more
-          than a scent. It is a statement of individuality, elegance and
-          timeless appeal. Our creations are crafted for those who seek the
-          extraordinary.
+          {withBrand(header.lead)}
         </p>
       </header>
 
@@ -562,21 +561,18 @@ export default function CollectionSection({
           {/* Finale Stage: Both Perfumes Showcased Side by Side */}
           <div className="seq__final" ref={seqFinalRef}>
             <h2 className="seq__title">
-              <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Two</span>
-              <span className="w" style={{ "--i": 1 } as React.CSSProperties}>signatures.</span>
-              <br />
-              <span className="w gold-text" style={{ "--i": 2 } as React.CSSProperties}>Which</span>
-              <span className="w gold-text" style={{ "--i": 3 } as React.CSSProperties}>one</span>
-              <span className="w gold-text" style={{ "--i": 4 } as React.CSSProperties}>is</span>
-              <span className="w gold-text" style={{ "--i": 5 } as React.CSSProperties}>yours?</span>
+              <TitleWords white={finale.titleWhite} gold={finale.titleGold} />
             </h2>
-            <div data-piece style={{ "--i": 6 } as React.CSSProperties}>
+            <div
+              data-piece
+              style={{ "--i": titleWordCount(finale.titleWhite, finale.titleGold) } as React.CSSProperties}
+            >
               <a
                 href="#contact"
                 className="btn btn--gold"
                 onClick={handleFinaleClick}
               >
-                Find your signature <i className="arrow" aria-hidden="true" />
+                {finale.buttonLabel} <i className="arrow" aria-hidden="true" />
               </a>
             </div>
 

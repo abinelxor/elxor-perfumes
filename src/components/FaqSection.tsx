@@ -2,6 +2,9 @@
 
 import React, { useState } from "react";
 import { ChevronDown, MessageCircle } from "lucide-react";
+import TitleWords from "./TitleWords";
+import { withBrand } from "./brand";
+import { defaultHome, type SectionHeaderContent } from "@/lib/homeDefaults";
 
 interface FaqItem {
   id: string;
@@ -12,12 +15,17 @@ interface FaqItem {
 }
 
 interface FaqSectionProps {
+  header?: SectionHeaderContent;
   /** Plain-text FAQs from the CMS. When empty, the built-in rich answers below are used. */
   faqs?: { question: string; answer: string }[];
   onOpenContact?: () => void;
 }
 
-export default function FaqSection({ faqs, onOpenContact }: FaqSectionProps) {
+export default function FaqSection({
+  faqs,
+  header = defaultHome.faqHeader,
+  onOpenContact,
+}: FaqSectionProps) {
   // Start with all items closed so only headings are shown by default; click to expand
   const [openIds, setOpenIds] = useState<Set<string>>(new Set());
 
@@ -100,26 +108,15 @@ export default function FaqSection({ faqs, onOpenContact }: FaqSectionProps) {
         {/* Section Header */}
         <header className="section-head faq-header">
           <p className="eyebrow" data-reveal>
-            <span className="brand">ELXOR</span> Inquiries
+            {withBrand(header.eyebrow)}
           </p>
           <h2 className="section-title" id="faq-title" data-split-reveal>
-            <span className="w" style={{ "--i": 0 } as React.CSSProperties}>
-              Frequently
-            </span>
-            <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
-              Asked
-            </span>
-            <span className="w gold-text" style={{ "--i": 2 } as React.CSSProperties}>
-              Questions
-            </span>
+            <TitleWords white={header.titleWhite} gold={header.titleGold} inline />
           </h2>
           <div className="divider" data-reveal>
             <i />
           </div>
-          <p className="faq-subtitle" data-reveal>
-            Clear insight into our Dubai heritage, bespoke unisex creations, and
-            official acquisition channels.
-          </p>
+          <p className="faq-subtitle" data-reveal>{header.lead}</p>
         </header>
 
         {/* FAQ Accordion List */}

@@ -2,15 +2,13 @@
 
 import React from "react";
 
-export default function Marquee() {
-  const items = [
-    "Make Every Moment Memorable with ELXOR Perfumes",
-    "Make Every Moment Memorable with ELXOR Perfumes",
-    "Make Every Moment Memorable with ELXOR Perfumes",
-    "Make Every Moment Memorable with ELXOR Perfumes",
-    "Make Every Moment Memorable with ELXOR Perfumes",
-    "Make Every Moment Memorable with ELXOR Perfumes",
-  ];
+interface MarqueeProps {
+  text?: string;
+}
+
+export default function Marquee({ text = "Make Every Moment Memorable with ELXOR Perfumes" }: MarqueeProps) {
+  // The phrase repeats to fill the moving banner
+  const items = Array.from({ length: 6 }, () => text);
 
   return (
     <div className="marquee" aria-hidden="true">

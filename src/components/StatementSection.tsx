@@ -1,23 +1,38 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
+import { PortableText, type PortableTextComponents } from "@portabletext/react";
+import { defaultHome, type NarrativeBlock } from "@/lib/homeDefaults";
 
-export default function StatementSection() {
+const narrativeComponents: PortableTextComponents = {
+  block: {
+    normal: ({ children }) => <p className="statement__lead">{children}</p>,
+  },
+  marks: {
+    strong: ({ children }) => <strong>{children}</strong>,
+    em: ({ children }) => <em>{children}</em>,
+    brand: ({ children }) => <span className="brand">{children}</span>,
+  },
+};
+
+interface StatementSectionProps {
+  text?: string;
+  gold?: string;
+  narrative?: NarrativeBlock[];
+}
+
+export default function StatementSection({
+  text = defaultHome.statementText,
+  gold = defaultHome.statementGold,
+  narrative = defaultHome.statementNarrative,
+}: StatementSectionProps) {
   const statementRef = useRef<HTMLParagraphElement>(null);
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   const words = [
-    { text: "ELXOR", isBrand: true },
-    { text: "is" },
-    { text: "more" },
-    { text: "than" },
-    { text: "a" },
-    { text: "fragrance." },
-    { text: "It" },
-    { text: "is" },
-    { text: "a" },
-    { text: "signature.", isGold: true },
-  ];
+    ...text.split(/\s+/).filter(Boolean).map((word) => ({ text: word, isBrand: word === "ELXOR" })),
+    ...gold.split(/\s+/).filter(Boolean).map((word) => ({ text: word, isGold: true })),
+  ] as { text: string; isBrand?: boolean; isGold?: boolean }[];
 
   useEffect(() => {
     let lastLit = -1;
@@ -75,9 +90,10 @@ export default function StatementSection() {
         ))}
       </p>
       <div className="statement__narrative" data-reveal>
-        <p className="statement__lead">
-          <strong className="brand">ELXOR Perfumes</strong> is a Dubai-based luxury fragrance brand created for those who believe a fragrance should be more than just a scent—it should become a signature of presence. Our collection combines refined fragrance artistry, sophisticated character, and long-lasting performance to create memorable scents for modern lifestyles. Our current collection features two distinctive unisex Eau de Parfum collections, <strong>AMORIEL</strong> and <strong>SANCTIX</strong>, each designed to transcend traditional boundaries and offer an elegant expression that can be enjoyed as a <em>perfume for men</em> or a <em>perfume for women</em>. Whether you are searching for the best perfume for men, the best perfumes for women, or a versatile unisex fragrance, ELXOR offers sophisticated aromas designed to leave a lasting impression.
-        </p>
+        <PortableText
+          value={narrative as Parameters<typeof PortableText>[0]["value"]}
+          components={narrativeComponents}
+        />
       </div>
       <p className="wordmark" data-reveal>
         <span className="brand">ELXOR</span>

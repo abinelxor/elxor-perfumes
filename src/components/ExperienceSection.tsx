@@ -1,13 +1,18 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import TitleWords from "./TitleWords";
+import { withBrand } from "./brand";
+import { defaultHome, type SplitContent } from "@/lib/homeDefaults";
 
 interface ExperienceSectionProps {
+  content?: SplitContent;
   onDiscoverClick?: () => void;
 }
 
 export default function ExperienceSection({
   onDiscoverClick,
+  content = defaultHome.experience,
 }: ExperienceSectionProps) {
   const mediaRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -56,8 +61,8 @@ export default function ExperienceSection({
       <div className="split__media" ref={mediaRef} data-parallax="-0.06">
         <img
           ref={imgRef}
-          src="/images/experience-sanctix.webp"
-          alt="ELXOR Sanctix Eau de Parfum on white silk and marble with a gold arch"
+          src={content.image}
+          alt={content.imageAlt}
           width={1024}
           height={1536}
           loading="lazy"
@@ -66,15 +71,11 @@ export default function ExperienceSection({
 
       <div className="split__content">
         <p className="eyebrow" data-reveal>
-          <span className="brand">ELXOR</span> Experience
+          {withBrand(content.eyebrow)}
         </p>
 
         <h2 className="section-title section-title--left" data-split-reveal>
-          <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Your</span>
-          <span className="w" style={{ "--i": 1 } as React.CSSProperties}>scent.</span>
-          <br />
-          <span className="w gold-text" style={{ "--i": 2 } as React.CSSProperties}>Your</span>
-          <span className="w gold-text" style={{ "--i": 3 } as React.CSSProperties}>signature.</span>
+          <TitleWords white={content.titleWhite} gold={content.titleGold} />
         </h2>
 
         <div className="divider divider--left" data-reveal>
@@ -82,14 +83,12 @@ export default function ExperienceSection({
         </div>
 
         <p className="split__text" data-reveal>
-          More than a fragrance, <span className="brand">ELXOR</span> is a
-          reflection of who you are. Each note is a journey, each creation a
-          memory, designed to leave a lasting impression.
+          {withBrand(content.text)}
         </p>
 
         <div data-reveal>
           <a href="#collection" className="btn btn--ghost" onClick={handleClick}>
-            Shop Now <i className="arrow" aria-hidden="true" />
+            {content.buttonLabel} <i className="arrow" aria-hidden="true" />
           </a>
         </div>
       </div>

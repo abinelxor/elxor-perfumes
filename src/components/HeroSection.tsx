@@ -7,8 +7,12 @@ import {
   getNearestLoaded,
   startFrameLoading,
 } from "@/lib/frameCache";
+import TitleWords, { titleWordCount } from "./TitleWords";
+import { defaultHome, type HeroChapterContent } from "@/lib/homeDefaults";
 
 interface HeroSectionProps {
+  /** The four scenes of the opening animation (from Sanity) */
+  chapters?: HeroChapterContent[];
   isReady?: boolean;
   onExploreClick?: () => void;
 }
@@ -40,6 +44,7 @@ const LABELS = ["Essence", "Unveiling", "Trail", "Signature"];
 const CUTS = [0.42, 0.66];
 
 export default function HeroSection({
+  chapters = defaultHome.heroChapters,
   isReady = true,
   onExploreClick,
 }: HeroSectionProps) {
@@ -448,214 +453,72 @@ export default function HeroSection({
         <canvas className="hero__dust" ref={dustCanvasRef} aria-hidden="true" />
 
         <div className="hero__chapters" ref={chaptersRef}>
-          {/* Chapter 1: Center */}
-          <article
-            className="chapter chapter--center"
-            ref={(el) => {
-              chapterElementsRef.current[0] = el;
-            }}
-          >
-            <p className="eyebrow" data-piece style={{ "--i": 0 } as React.CSSProperties}>
-              <span className="brand">ELXOR Perfumes</span>
-            </p>
-            <h1 className="chapter__title">
-              <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
-                The
-              </span>
-              <span className="w" style={{ "--i": 2 } as React.CSSProperties}>
-                Essence
-              </span>
-              <br />
-              <span
-                className="w gold-text"
-                style={{ "--i": 3 } as React.CSSProperties}
-              >
-                of
-              </span>
-              <span
-                className="w gold-text"
-                style={{ "--i": 4 } as React.CSSProperties}
-              >
-                Elegance
-              </span>
-            </h1>
-          </article>
-
-          {/* Chapter 2: Left */}
-          <article
-            className="chapter chapter--left"
-            ref={(el) => {
-              chapterElementsRef.current[1] = el;
-            }}
-          >
-            <p className="eyebrow" data-piece style={{ "--i": 0 } as React.CSSProperties}>
-              II · The Unveiling
-            </p>
-            <h2 className="chapter__title">
-              <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
-                Luxury
-              </span>
-              <span className="w" style={{ "--i": 2 } as React.CSSProperties}>
-                begins
-              </span>
-              <br />
-              <span
-                className="w gold-text"
-                style={{ "--i": 3 } as React.CSSProperties}
-              >
-                before
-              </span>
-              <span
-                className="w gold-text"
-                style={{ "--i": 4 } as React.CSSProperties}
-              >
-                the
-              </span>
-              <br />
-              <span
-                className="w gold-text"
-                style={{ "--i": 5 } as React.CSSProperties}
-              >
-                first
-              </span>
-              <span
-                className="w gold-text"
-                style={{ "--i": 6 } as React.CSSProperties}
-              >
-                note
-              </span>
-            </h2>
-            <p
-              className="chapter__body"
-              data-piece
-              style={{ "--i": 7 } as React.CSSProperties}
-            >
-              It begins the moment the box opens, and the light finds the bottle.
-            </p>
-          </article>
-
-          {/* Chapter 3: Right */}
-          <article
-            className="chapter chapter--right"
-            ref={(el) => {
-              chapterElementsRef.current[2] = el;
-            }}
-          >
-            <p className="eyebrow" data-piece style={{ "--i": 0 } as React.CSSProperties}>
-              III · The Trail
-            </p>
-            <h2 className="chapter__title">
-              <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
-                One
-              </span>
-              <span className="w" style={{ "--i": 2 } as React.CSSProperties}>
-                touch.
-              </span>
-              <br />
-              <span
-                className="w gold-text"
-                style={{ "--i": 3 } as React.CSSProperties}
-              >
-                The
-              </span>
-              <span
-                className="w gold-text"
-                style={{ "--i": 4 } as React.CSSProperties}
-              >
-                air
-              </span>
-              <span
-                className="w gold-text"
-                style={{ "--i": 5 } as React.CSSProperties}
-              >
-                remembers.
-              </span>
-            </h2>
-            <p
-              className="chapter__body"
-              data-piece
-              style={{ "--i": 6 } as React.CSSProperties}
-            >
-              A single spray, and every room you leave holds a quiet trace of you.
-            </p>
-          </article>
-
-          {/* Chapter 4: Center Final */}
-          <article
-            className="chapter chapter--center chapter--final"
-            ref={(el) => {
-              chapterElementsRef.current[3] = el;
-            }}
-          >
-            <p className="eyebrow" data-piece style={{ "--i": 0 } as React.CSSProperties}>
-              IV · The Signature
-            </p>
-            <h2 className="chapter__title">
-              <span className="w" style={{ "--i": 1 } as React.CSSProperties}>
-                Don’t
-              </span>
-              <span className="w" style={{ "--i": 2 } as React.CSSProperties}>
-                just
-              </span>
-              <span className="w" style={{ "--i": 3 } as React.CSSProperties}>
-                wear
-              </span>
-              <span className="w" style={{ "--i": 4 } as React.CSSProperties}>
-                a
-              </span>
-              <span className="w" style={{ "--i": 5 } as React.CSSProperties}>
-                fragrance,
-              </span>
-              <br />
-              <span
-                className="w gold-text"
-                style={{ "--i": 6 } as React.CSSProperties}
-              >
-                Leave
-              </span>
-              <span
-                className="w gold-text"
-                style={{ "--i": 7 } as React.CSSProperties}
-              >
-                a
-              </span>
-              <span
-                className="w gold-text"
-                style={{ "--i": 8 } as React.CSSProperties}
-              >
-                Presence
-              </span>
-            </h2>
-            <p
-              className="chapter__body"
-              data-piece
-              style={{ "--i": 9 } as React.CSSProperties}
-            >
-              Two signatures, each composed for a different kind of presence.
-            </p>
-            <div
-              data-piece
-              style={{ "--i": 10 } as React.CSSProperties}
-            >
-              <a
-                href="#collection"
-                className="btn btn--gold"
-                style={{ whiteSpace: "nowrap" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (onExploreClick) {
-                    onExploreClick();
-                  } else {
-                    document
-                      .getElementById("collection")
-                      ?.scrollIntoView({ behavior: "smooth" });
-                  }
+          {chapters.map((chapter, idx) => {
+            const isFirst = idx === 0;
+            const isLast = idx === chapters.length - 1;
+            const Heading = isFirst ? "h1" : "h2";
+            const words = titleWordCount(chapter.titleWhite, chapter.titleGold);
+            // the first scene's label is set in the brand font, like the original design
+            const eyebrow = chapter.eyebrow.startsWith("ELXOR") ? (
+              <span className="brand">{chapter.eyebrow}</span>
+            ) : (
+              chapter.eyebrow
+            );
+            return (
+              <article
+                key={idx}
+                className={`chapter ${
+                  isFirst
+                    ? "chapter--center"
+                    : idx === 1
+                    ? "chapter--left"
+                    : idx === 2
+                    ? "chapter--right"
+                    : "chapter--center chapter--final"
+                }`}
+                ref={(el) => {
+                  chapterElementsRef.current[idx] = el;
                 }}
               >
-                Explore the collection <i className="arrow" aria-hidden="true" />
-              </a>
-            </div>
-          </article>
+                <p className="eyebrow" data-piece style={{ "--i": 0 } as React.CSSProperties}>
+                  {eyebrow}
+                </p>
+                <Heading className="chapter__title">
+                  <TitleWords white={chapter.titleWhite} gold={chapter.titleGold} start={1} />
+                </Heading>
+                {chapter.body && (
+                  <p
+                    className="chapter__body"
+                    data-piece
+                    style={{ "--i": words + 1 } as React.CSSProperties}
+                  >
+                    {chapter.body}
+                  </p>
+                )}
+                {isLast && chapter.buttonLabel && (
+                  <div data-piece style={{ "--i": words + 2 } as React.CSSProperties}>
+                    <a
+                      href="#collection"
+                      className="btn btn--gold"
+                      style={{ whiteSpace: "nowrap" }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (onExploreClick) {
+                          onExploreClick();
+                        } else {
+                          document
+                            .getElementById("collection")
+                            ?.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }}
+                    >
+                      {chapter.buttonLabel} <i className="arrow" aria-hidden="true" />
+                    </a>
+                  </div>
+                )}
+              </article>
+            );
+          })}
         </div>
 
         {/* Right rail indicator */}

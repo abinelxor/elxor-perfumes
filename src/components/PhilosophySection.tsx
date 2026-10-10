@@ -1,12 +1,19 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import TitleWords from "./TitleWords";
+import { withBrand } from "./brand";
+import { defaultHome, type SplitContent } from "@/lib/homeDefaults";
 
 interface PhilosophySectionProps {
+  content?: SplitContent;
   onShopClick?: () => void;
 }
 
-export default function PhilosophySection({ onShopClick }: PhilosophySectionProps = {}) {
+export default function PhilosophySection({
+  onShopClick,
+  content = defaultHome.philosophy,
+}: PhilosophySectionProps = {}) {
   const mediaRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -54,8 +61,8 @@ export default function PhilosophySection({ onShopClick }: PhilosophySectionProp
       <div className="split__media" ref={mediaRef} data-parallax="-0.06">
         <img
           ref={imgRef}
-          src="/images/philosophy-amoriel.webp"
-          alt="ELXOR Amoriel Eau de Parfum on a marble plinth with white blooms and gold ribbon"
+          src={content.image}
+          alt={content.imageAlt}
           width={1145}
           height={1374}
           loading="lazy"
@@ -64,19 +71,11 @@ export default function PhilosophySection({ onShopClick }: PhilosophySectionProp
 
       <div className="split__content">
         <p className="eyebrow" data-reveal>
-          <span className="brand">ELXOR</span> Philosophy
+          {withBrand(content.eyebrow)}
         </p>
 
         <h2 className="section-title section-title--left" data-split-reveal>
-          <span className="w" style={{ "--i": 0 } as React.CSSProperties}>Elegance</span>
-          <span className="w" style={{ "--i": 1 } as React.CSSProperties}>is</span>
-          <span className="w" style={{ "--i": 2 } as React.CSSProperties}>not</span>
-          <span className="w" style={{ "--i": 3 } as React.CSSProperties}>simply</span>
-          <span className="w" style={{ "--i": 4 } as React.CSSProperties}>seen.</span>
-          <br />
-          <span className="w gold-text" style={{ "--i": 5 } as React.CSSProperties}>It</span>
-          <span className="w gold-text" style={{ "--i": 6 } as React.CSSProperties}>is</span>
-          <span className="w gold-text" style={{ "--i": 7 } as React.CSSProperties}>experienced.</span>
+          <TitleWords white={content.titleWhite} gold={content.titleGold} />
         </h2>
 
         <div className="divider divider--left" data-reveal>
@@ -84,15 +83,12 @@ export default function PhilosophySection({ onShopClick }: PhilosophySectionProp
         </div>
 
         <p className="split__text" data-reveal>
-          At <span className="brand">ELXOR</span>, we believe fragrance is more
-          than a scent. It is a form of self-expression. Our philosophy is
-          rooted in quality, craftsmanship and timeless elegance, creating
-          fragrances that become a part of your identity.
+          {withBrand(content.text)}
         </p>
 
         <div data-reveal>
           <a href="#collection" className="btn btn--ghost" onClick={handleShopClick}>
-            Shop Now <i className="arrow" aria-hidden="true" />
+            {content.buttonLabel} <i className="arrow" aria-hidden="true" />
           </a>
         </div>
       </div>
