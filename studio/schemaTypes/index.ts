@@ -1,17 +1,3 @@
-import {imageWithAlt} from './objects/imageWithAlt'
-import {seo} from './objects/seo'
-import {faqItem} from './objects/faqItem'
-import {product} from './documents/product'
-import {page} from './documents/page'
-import {siteSettings} from './documents/siteSettings'
-
-export const schemaTypes = [
-  // documents
-  siteSettings,
-  product,
-  page,
-  // reusable objects
-  seo,
-  imageWithAlt,
-  faqItem,
-]
+// Single source of truth: the schemas live in the website repo (src/sanity/schemaTypes)
+// so the standalone studio and the embedded /studio always stay in sync.
+export {schemaTypes} from '../../src/sanity/schemaTypes'

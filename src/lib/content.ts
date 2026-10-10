@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { sanityFetch } from "./sanity/client";
 import { sizedImage } from "./sanity/image";
+import type { CodeSnippetData } from "@/components/CodeSlot";
 import { perfumesData, type PerfumeItem } from "./products";
 import { SITE_URL, defaultContact, defaultFaqs, defaultSeo, type FaqEntry } from "./defaults";
 
@@ -111,6 +112,11 @@ const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
 
 const PRODUCT_QUERY = `*[_type == "product" && slug.current == $slug][0]{ _type, ${PRODUCT_FIELDS} }`;
 
+const CODE_QUERY = `*[_type == "codeSnippet" && enabled != false && defined(code)] | order(order asc, _createdAt asc){
+  _id, position, scope, code, includeHome, extraPaths,
+  "paths": pages[]->slug.current
+}`;
+
 const SLUGS_QUERY = `*[_type in ["page", "product"] && defined(slug.current)]{ _type, "slug": slug.current, _updatedAt }`;
 
 /* ---------- Fetchers ---------- */
@@ -168,6 +174,11 @@ export async function getAllSlugs(): Promise<
   { _type: "page" | "product"; slug: string; _updatedAt: string }[]
 > {
   return (await sanityFetch(SLUGS_QUERY)) ?? [];
+}
+
+/** Custom head/body code snippets added in the Studio ("Custom code" documents). */
+export async function getCodeSnippets(): Promise<CodeSnippetData[]> {
+  return (await sanityFetch<CodeSnippetData[]>(CODE_QUERY)) ?? [];
 }
 
 export function resolveContact(settings: SiteSettings) {
