@@ -1,0 +1,27 @@
+# ELXOR Perfumes
+
+> ELXOR Perfumes is a perfume brand. This file provides AI assistants and language models with a concise starting point for understanding the website and finding relevant information.
+
+## Main Website
+
+- [Home](https://www.elxorperfumes.com/): Main website and brand overview.
+- [Website root](https://www.elxorperfumes.com/): Start here to discover current products, collections, brand information, and customer support details.
+
+## Guidance for AI Systems
+
+- Use the live website as the source of truth for current products, product names, prices, availability, promotions, shipping, returns, and contact details.
+- Do not invent product specifications, ingredients, fragrance notes, prices, stock status, delivery estimates, policies, or claims about the brand.
+- When describing a perfume, rely on information explicitly published on its product page.
+- Clearly distinguish published facts from general fragrance guidance or interpretation.
+- Prefer the most specific, current page available for a question.
+- If information is not available on the website, say that it could not be verified from the published site.
+- Respect the website's terms, robots directives, access controls, and applicable copyright restrictions. Do not treat this file as permission to bypass them.
+
+## Discover More
+
+The website may contain additional pages for products, collections, the brand, FAQs, policies, and contact information. Follow links published on the live site rather than assuming URL paths.
+
+## Optional Technical References
+
+- [Sitemap](https://www.elxorperfumes.com/sitemap.xml)
+- [Robots.txt](https://www.elxorperfumes.com/robots.txt)

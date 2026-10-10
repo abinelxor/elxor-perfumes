@@ -1,0 +1,168 @@
+import {defineArrayMember, defineField, defineType} from 'sanity'
+
+export const product = defineType({
+  name: 'product',
+  title: 'Product',
+  type: 'document',
+  groups: [
+    {name: 'content', title: 'Content', default: true},
+    {name: 'media', title: 'Images'},
+    {name: 'pricing', title: 'Price & stock'},
+    {name: 'seo', title: 'SEO'},
+  ],
+  fields: [
+    defineField({
+      name: 'name',
+      title: 'Name',
+      type: 'string',
+      group: 'content',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug (URL)',
+      type: 'slug',
+      group: 'content',
+      options: {source: 'name', maxLength: 96},
+      description: 'The page address, e.g. "amoriel" becomes /amoriel',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({name: 'tagline', title: 'Tagline', type: 'string', group: 'content'}),
+    defineField({
+      name: 'description',
+      title: 'Short description',
+      type: 'text',
+      rows: 3,
+      group: 'content',
+    }),
+    defineField({
+      name: 'story',
+      title: 'Story / long description',
+      type: 'text',
+      rows: 6,
+      group: 'content',
+    }),
+    defineField({
+      name: 'signatureQuote',
+      title: 'Signature quote',
+      type: 'string',
+      group: 'content',
+    }),
+    defineField({
+      name: 'size',
+      title: 'Size',
+      type: 'string',
+      group: 'content',
+      initialValue: '50ml',
+    }),
+    defineField({
+      name: 'topNotes',
+      title: 'Top notes',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {layout: 'tags'},
+      group: 'content',
+    }),
+    defineField({
+      name: 'heartNotes',
+      title: 'Heart notes',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {layout: 'tags'},
+      group: 'content',
+    }),
+    defineField({
+      name: 'baseNotes',
+      title: 'Base notes',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {layout: 'tags'},
+      group: 'content',
+    }),
+
+    defineField({
+      name: 'mainImage',
+      title: 'Main product image',
+      type: 'imageWithAlt',
+      group: 'media',
+      description:
+        'Transparent cut-out bottle image (PNG/WebP) used on the collection and in popups.',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'gallery',
+      title: 'Gallery',
+      type: 'array',
+      of: [defineArrayMember({type: 'imageWithAlt'})],
+      group: 'media',
+      description: 'Additional product photos. Drag to reorder.',
+    }),
+
+    defineField({
+      name: 'price',
+      title: 'Price',
+      type: 'number',
+      group: 'pricing',
+      validation: (rule) => rule.required().min(0),
+    }),
+    defineField({
+      name: 'compareAtPrice',
+      title: 'Compare-at price (optional)',
+      type: 'number',
+      group: 'pricing',
+      description: 'Original price, shown struck through when the product is on offer.',
+      validation: (rule) => rule.min(0),
+    }),
+    defineField({
+      name: 'currency',
+      title: 'Currency',
+      type: 'string',
+      group: 'pricing',
+      options: {
+        list: [
+          {title: 'AED', value: 'AED'},
+          {title: 'USD', value: 'USD'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'AED',
+    }),
+    defineField({
+      name: 'inStock',
+      title: 'In stock',
+      type: 'boolean',
+      group: 'pricing',
+      initialValue: true,
+      description: 'Switch off to mark the product as out of stock.',
+    }),
+    defineField({
+      name: 'stockQuantity',
+      title: 'Stock quantity (optional)',
+      type: 'number',
+      group: 'pricing',
+      validation: (rule) => rule.integer().min(0),
+    }),
+    defineField({name: 'sku', title: 'SKU', type: 'string', group: 'pricing'}),
+    defineField({
+      name: 'buyUrl',
+      title: 'Buy link (Amazon storefront)',
+      type: 'url',
+      group: 'pricing',
+      validation: (rule) => rule.uri({scheme: ['https']}),
+    }),
+    defineField({name: 'order', title: 'Display order', type: 'number', group: 'pricing'}),
+
+    defineField({name: 'seo', title: 'SEO & Social', type: 'seo', group: 'seo'}),
+  ],
+  orderings: [
+    {title: 'Display order', name: 'orderAsc', by: [{field: 'order', direction: 'asc'}]},
+  ],
+  preview: {
+    select: {title: 'name', subtitle: 'tagline', media: 'mainImage', inStock: 'inStock'},
+    prepare: ({title, subtitle, media, inStock}) => ({
+      title,
+      subtitle: `${inStock === false ? 'Out of stock · ' : ''}${subtitle ?? ''}`,
+      media,
+    }),
+  },
+})

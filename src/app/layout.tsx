@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description:
     "Discover ELXOR’s best unisex perfumes and fragrances. Explore good unisex perfumes crafted for a lasting, elegant presence. Shop ELXOR on Amazon UAE.",
   keywords:
-    "luxury unisex perfume dubai, elxor long lasting fragrance, dubai perfume brand, amoriel, sanctix, eau de parfum, perfume for men, perfume for women, best perfume for men, best perfumes for women, buy best perfume online, amazon uae",
+    "best unisex perfumes in UAE, Luxury perfumes in Dubai, Buy Unisex perfumes, Shop unisex perfumes in online, perfume for men, perfume for women, Top Perfume brand in UAE, Best Perfumes in online, top Lasting perfume fragrances, Lasting perfumes for men, Lasting perfumes for women, which is the best unisex lasting perfume, perfume gifts buy online, best perfume gift for men and women",
   verification: {
     google: "Vc7M4v_S7LKq279AyB0PRcmwl-9HNn-hwiNpOgpG8iY",
   },
@@ -114,6 +114,51 @@ const productAmorielSchema = {
   "url": "https://www.elxorperfumes.com/amoriel/",
 };
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://www.elxorperfumes.com/#faq",
+  "url": "https://www.elxorperfumes.com/",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is ELXOR?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text":
+          "ELXOR is a Dubai-based perfume brand producing two fragrance collections, AMORIEL and SANCTIX, for men, women, and unisex wear. The brand sells exclusively through Amazon.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Are ELXOR perfumes unisex?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text":
+          "Explore the product descriptions for AMORIEL and SANCTIX to find the intended audience for each fragrance. Check the individual fragrance listing for the most accurate details.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I buy ELXOR perfume online?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text":
+          "ELXOR is sold only through its official Amazon storefront. ELXOR does not sell through this website or supply third-party resellers. The official Amazon storefront is the only channel where authenticity is guaranteed.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Does ELXOR offer perfume gift sets for women and men?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text":
+          "ELXOR fragrances make an elegant gift choice for both men and women, offering sophisticated scents suitable for different occasions and personal styles. Check the official Amazon storefront for currently available products and gift sets.",
+      },
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -176,6 +221,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(productAmorielSchema),
+          }}
+        />
+
+        {/* Schema.org FAQPage */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqSchema),
           }}
         />
 
