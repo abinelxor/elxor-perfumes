@@ -7,7 +7,8 @@
     "dev": "sanity dev",
     "start": "sanity start",
     "build": "sanity build",
-    "deploy": "sanity deploy"
+    "deploy": "sanity deploy",
+    "seed": "node seed/build-seed.cjs && sanity dataset import seed/data.ndjson production --replace"
   },
   "dependencies": {
     "@sanity/vision": "^6.18.0",
