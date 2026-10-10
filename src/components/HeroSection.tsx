@@ -163,17 +163,20 @@ export default function HeroSection({
       // Mobile portrait view: fit the presentation box fully with breathing margins
       const progress = clamp(targetIndex / (FRAME_COUNT - 1));
 
+      // Frames on phones are smaller than the 1920px originals; scale the constants below
+      const k = img.naturalWidth / 1920;
+
       // In early frames, center precisely on the perfume box (horizontal center = 977)
       // As the bottle emerges, center smoothly on the bottle (center = 960)
-      const boxCenterX = 977;
-      const bottleCenterX = 960;
+      const boxCenterX = 977 * k;
+      const bottleCenterX = 960 * k;
       const targetCenterX = lerp(boxCenterX, bottleCenterX, clamp((progress - 0.22) / 0.38));
 
       // Scale:
       // Fit the complete 1158px box into ~90% of screen width (cw / 1280) with equal breathing margins on left and right
       // As bottle emerges, scale smoothly so the bottle is grand and majestic
-      const startScale = cw / 1280;
-      const endScale = Math.min(cw / 1060, (ch / img.naturalHeight) * 0.94);
+      const startScale = cw / (1280 * k);
+      const endScale = Math.min(cw / (1060 * k), (ch / img.naturalHeight) * 0.94);
       const s = lerp(startScale, endScale, clamp((progress - 0.28) / 0.5));
 
       const w = img.naturalWidth * s;
@@ -184,8 +187,8 @@ export default function HeroSection({
       // Vertical position:
       // In early frames, center on the box vertical center (y = 420)
       // Place it right in the visual middle (0.46 of screen height) between top navbar and bottom text
-      const boxCenterY = 420;
-      const bottleCenterY = 540;
+      const boxCenterY = 420 * k;
+      const bottleCenterY = 540 * k;
       const targetCenterY = lerp(boxCenterY, bottleCenterY, clamp((progress - 0.22) / 0.38));
       const desiredScreenY = lerp(ch * 0.46, ch * 0.48, progress);
       const sy = desiredScreenY - targetCenterY * s;
@@ -292,11 +295,20 @@ export default function HeroSection({
     const shadeState = { l: -1, r: -1, b: -1 };
 
     let running = true;
+    let lastRaw = -1;
     const update = () => {
       if (!running) return;
 
       const raw = clamp((window.scrollY - heroTop) / heroRange);
       const isMobile = window.innerWidth < 768;
+
+      // Phones: nothing to do while the scroll position is unchanged (saves battery and
+      // avoids needless style writes that can hitch iOS momentum scrolling)
+      if (isMobile && raw === lastRaw) {
+        requestAnimationFrame(update);
+        return;
+      }
+      lastRaw = raw;
       // Phones: no easing (see CollectionSection) so the hero never chases the scroll
       const lerpFactor = isMobile ? 1 : 0.14;
       smoothP += (raw - smoothP) * lerpFactor;
@@ -402,11 +414,18 @@ export default function HeroSection({
 
     const rafId = requestAnimationFrame(update);
 
+    // New frames arriving may improve what should be on screen right now
+    const onFrames = () => {
+      lastRaw = -1;
+    };
+    frameStore.subscribers.add(onFrames);
+
     let lastWidth = window.innerWidth;
     const handleResize = () => {
       // Ignore the address-bar height jitter on phones; only re-measure on width change
       if (window.innerWidth === lastWidth) return;
       lastWidth = window.innerWidth;
+      lastRaw = -1;
       measure();
     };
     window.addEventListener("resize", handleResize);
@@ -416,6 +435,7 @@ export default function HeroSection({
       cancelAnimationFrame(rafId);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
+      frameStore.subscribers.delete(onFrames);
     };
   }, [isReady]);
 

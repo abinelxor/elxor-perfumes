@@ -73,6 +73,17 @@ export function getNearestLoaded(targetIndex: number): number {
   return -1;
 }
 
+/**
+ * Phones get a lighter set: every second frame at 960px wide (2.3MB instead of
+ * 20MB). 120 full-size frames decode to roughly 1GB, far beyond what iPhone
+ * Safari keeps in memory, so frames were being evicted and re-decoded mid-scroll.
+ * Odd frames reuse the previous frame's image (no extra memory).
+ */
+export function shouldUseLightFrames(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.innerWidth < 768 || window.matchMedia("(pointer: coarse)").matches;
+}
+
 export function startFrameLoading(
   onProgress?: (ratio: number, index: number) => void
 ) {
@@ -88,30 +99,43 @@ export function startFrameLoading(
 
   if (typeof window === "undefined") return;
 
+  const light = shouldUseLightFrames();
+  const dir = light ? "/frames-m" : "/frames";
+  const order = light ? loadingOrder.filter((i) => i % 2 === 0) : loadingOrder;
+
   let cursor = 0;
-  const PARALLEL = 8;
+  const PARALLEL = light ? 4 : 8;
+
+  // Book-keeping for one frame index
+  const markLoaded = (i: number, img: HTMLImageElement | null) => {
+    if (img) {
+      frameStore.frames[i] = img;
+      frameStore.loaded[i] = 1;
+    }
+    frameStore.loadedCount++;
+    if (sparseSet.has(i)) {
+      frameStore.sparseLoaded++;
+      if (frameStore.sparseLoaded >= sparseSet.size) {
+        frameStore.isSparseReady = true;
+      }
+    }
+    if (frameStore.loadedCount >= FRAME_COUNT) {
+      frameStore.isFullyLoaded = true;
+    }
+  };
 
   const loadNext = () => {
-    if (cursor >= loadingOrder.length) return;
-    const i = loadingOrder[cursor++];
+    if (cursor >= order.length) return;
+    const i = order[cursor++];
     const img = new Image();
     img.decoding = "async";
 
     const handleLoaded = () => {
-      if (img.naturalWidth) {
-        frameStore.frames[i] = img;
-        frameStore.loaded[i] = 1;
-      }
-      frameStore.loadedCount++;
-      if (sparseSet.has(i)) {
-        frameStore.sparseLoaded++;
-        if (frameStore.sparseLoaded >= sparseSet.size) {
-          frameStore.isSparseReady = true;
-        }
-      }
-      if (frameStore.loadedCount >= FRAME_COUNT) {
-        frameStore.isFullyLoaded = true;
-      }
+      const ok = img.naturalWidth ? img : null;
+      markLoaded(i, ok);
+      // Light set: the odd frame right after reuses this image
+      if (light && i + 1 < FRAME_COUNT) markLoaded(i + 1, ok);
+
       const ratio = frameStore.loadedCount / FRAME_COUNT;
       frameStore.subscribers.forEach((cb) => cb(ratio, i));
       loadNext();
@@ -119,7 +143,7 @@ export function startFrameLoading(
 
     img.onload = handleLoaded;
     img.onerror = handleLoaded;
-    img.src = framePath(i);
+    img.src = `${dir}/frame_${String(i + 1).padStart(3, "0")}.webp`;
   };
 
   for (let k = 0; k < PARALLEL; k++) {

@@ -170,7 +170,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..700&family=Inria+Serif:wght@400&family=Inter:wght@300;400;500;600&family=Pinyon+Script&display=swap"
           rel="stylesheet"
         />
-        <link rel="preload" as="image" href="/frames/frame_001.webp" />
+        <link
+          rel="preload"
+          as="image"
+          href="/frames/frame_001.webp"
+          media="(min-width: 768px)"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="/frames-m/frame_001.webp"
+          media="(max-width: 767px)"
+        />
       </head>
       <body>
         {/* Google Tag Manager (noscript) */}

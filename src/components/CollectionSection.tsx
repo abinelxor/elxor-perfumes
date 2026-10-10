@@ -63,6 +63,7 @@ export default function CollectionSection({
     measureSeq();
 
     let running = true;
+    let lastY = -1;
     const update = () => {
       if (!running) return;
 
@@ -78,6 +79,13 @@ export default function CollectionSection({
 
       const raw = clamp((y - seqTop) / seqRange);
       const mobile = window.innerWidth <= 768;
+
+      // Phones: skip all per-frame style writes while the scroll position is unchanged
+      if (mobile && y === lastY) {
+        requestAnimationFrame(update);
+        return;
+      }
+      lastY = y;
       // Phones: map the scene straight to the scroll position. Any easing here makes the
       // scene chase the finger and shimmer; native scrolling is already smooth.
       const lerpFactor = mobile ? 1 : 0.14;
@@ -271,6 +279,7 @@ export default function CollectionSection({
       // makes the pinned scene jump. Only react to real width changes (rotation/resize).
       if (window.innerWidth === lastWidth) return;
       lastWidth = window.innerWidth;
+      lastY = -1;
       measureSeq();
     };
     window.addEventListener("resize", handleResize);
