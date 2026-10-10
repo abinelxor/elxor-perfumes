@@ -11,35 +11,34 @@ export default function ExperienceSection({
 }: ExperienceSectionProps) {
   const mediaRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
-  const cutoutRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const media = mediaRef.current;
     const img = imgRef.current;
-    const cutout = cutoutRef.current;
     if (!media || !img) return;
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const handleScroll = () => {
+    const update = () => {
+      if (window.innerWidth <= 860) return; // stacked layout: no scroll-linked motion
       const vh = window.innerHeight;
       const r = media.getBoundingClientRect();
       if (r.bottom < 0 || r.top > vh) return;
       const off = (r.top + r.height / 2 - vh / 2) * -0.06;
       img.style.transform = `translate3d(0, ${off.toFixed(1)}px, 0)`;
 
-      // Light-theme product cut-out: drift, tilt and breathe with scroll
-      if (cutout && !reduceMotion) {
-        const p = Math.max(-1, Math.min(1, (r.top + r.height / 2 - vh / 2) / vh));
-        const y = p * -70;
-        const rot = p * -7;
-        const scale = 1.04 - Math.abs(p) * 0.14;
-        cutout.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0) rotate(${rot.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
-        cutout.style.opacity = String(Math.max(0.2, 1 - Math.abs(p) * 0.9).toFixed(2));
-      }
+    };
+
+    let ticking = false;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        update();
+      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    update();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -55,35 +54,12 @@ export default function ExperienceSection({
   return (
     <section className="split split--image-right" id="experience">
       <div className="split__media" ref={mediaRef} data-parallax="-0.06">
-        <picture>
-          <source
-            media="(max-width: 900px)"
-            srcSet="/images/ELXOR_SANCTIX_mobile.webp"
-            type="image/webp"
-          />
-          <source
-            media="(max-width: 900px)"
-            srcSet="/images/ELXOR_SANCTIX_mobile.png"
-            type="image/png"
-          />
-          <img
-            ref={imgRef}
-            src="/images/ELXOR_SANCTIX_right.png?v=3"
-            alt="ELXOR Sanctix perfume bottle on golden stone with amber essence"
-            width={1440}
-            height={1240}
-            loading="lazy"
-          />
-        </picture>
-        {/* Transparent product cut-out shown in the light theme (no photo backdrop) */}
         <img
-          ref={cutoutRef}
-          className="split__cutout"
-          src="/images/perfume_sanctix.png"
-          alt=""
-          aria-hidden="true"
-          width={640}
-          height={640}
+          ref={imgRef}
+          src="/images/experience-sanctix.webp"
+          alt="ELXOR Sanctix Eau de Parfum on white silk and marble with a gold arch"
+          width={1024}
+          height={1536}
           loading="lazy"
         />
       </div>

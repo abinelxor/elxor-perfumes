@@ -163,9 +163,9 @@ export default function Footer({ onOpenContact }: FooterProps) {
             </svg>
             <span>+971 554696935 (WhatsApp)</span>
           </a>
-          <a href="mailto:sales@elxorperfumes.com" className="footer__contact-line" title="Email us">
+          <a href="mailto:info@elxorperfumes.com" className="footer__contact-line" title="Email us">
             <Mail size={14} className="footer__contact-icon" />
-            <span>sales@elxorperfumes.com</span>
+            <span>info@elxorperfumes.com</span>
           </a>
           <span className="footer__contact-line">
             <MapPin size={14} className="footer__contact-icon" />

@@ -60,6 +60,7 @@
   --loader-title-grad: linear-gradient(135deg, #8a5f1e 0%, #c49a4a 35%, #9a6f2b 65%, #6f4b17 100%);
   --loader-logo-shadow: drop-shadow(0 10px 24px rgba(90, 60, 15, 0.25));
   --scheme: light;
+  --split-shade: rgba(255, 255, 255, 0.55);
   --footer-shade: linear-gradient(180deg, #ffffff 0%, rgba(255, 251, 242, 0.95) 30%, rgba(250, 238, 214, 0.9) 68%, rgba(244, 226, 192, 0.82) 100%);
   --menu-shade: linear-gradient(180deg, rgba(255, 252, 245, 0.95) 0%, rgba(255, 248, 234, 0.9) 50%, rgba(246, 232, 205, 0.78) 100%);
   --contact-glow: rgba(213, 174, 111, 0.22);
@@ -138,6 +139,7 @@
   --loader-title-grad: linear-gradient(135deg, #fff9ee 0%, #f5d799 26%, #d4af37 54%, #b88636 82%, #7a5317 100%);
   --loader-logo-shadow: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.95));
   --scheme: dark;
+  --split-shade: rgba(5, 4, 3, 0.55);
   --footer-shade: linear-gradient(180deg, #050403 0%, rgba(8, 5, 3, 0.9) 30%, rgba(14, 8, 4, 0.82) 70%, rgba(5, 4, 3, 0.78) 100%);
   --menu-shade: linear-gradient(180deg, rgba(5, 4, 3, 0.9) 0%, rgba(20, 11, 4, 0.8) 55%, rgba(5, 4, 3, 0.9) 100%);
   --contact-glow: rgba(97, 53, 0, 0.28);
@@ -2698,53 +2700,53 @@ html.theme-anim footer {
 }
 
 /* ---------- Light theme: media treatments ---------- */
-/* The product cut-out is only used in the light theme */
-.split__cutout { display: none; }
+/* Split sections: bright studio photography on one side that dissolves into the
+   page toward the copy, so the text reads on the soft shade (base mask rules above).
+   Desktop only; phones stack the image above the text. */
+@media (min-width: 769px) {
+  /* Photo stays solid across the bottle, then dissolves under the copy */
+  .split--image-left .split__media {
+    -webkit-mask-image: linear-gradient(90deg, #000 56%, transparent 97%);
+    mask-image: linear-gradient(90deg, #000 56%, transparent 97%);
+  }
 
-/* Split photography has baked black margins. In light mode present it as a
-   framed photograph in its own column so copy never sits on top of the image. */
-:root:not([data-theme="dark"]) .split {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  column-gap: clamp(32px, 6vw, 96px);
-  align-items: center;
-  min-height: 0;
+  .split--image-right .split__media {
+    -webkit-mask-image: linear-gradient(270deg, #000 56%, transparent 97%);
+    mask-image: linear-gradient(270deg, #000 56%, transparent 97%);
+  }
+
+  /* Bottle sits on the outer side, clear of the fade */
+  .split--image-left .split__media img {
+    margin-left: -14%;
+    object-position: center 38%;
+  }
+
+  .split--image-right .split__media img {
+    margin-left: 14%;
+    object-position: center 42%;
+  }
 }
 
-:root:not([data-theme="dark"]) .split__media {
-  position: relative;
-  top: auto;
-  bottom: auto;
-  left: auto;
-  right: auto;
-  width: 100%;
-  height: clamp(380px, 44vw, 620px);
-  -webkit-mask-image: none;
-  mask-image: none;
-  overflow: visible;
-  background: radial-gradient(ellipse 52% 46% at 50% 54%, rgba(213, 174, 111, 0.2), transparent 70%);
+/* Extra side shade so copy never fights the photo */
+.split__media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
 }
 
-/* Light theme shows the transparent product cut-out, never the black-backdrop photo */
-:root:not([data-theme="dark"]) .split__media picture {
-  display: none;
+.split--image-left .split__media::before {
+  background: linear-gradient(90deg, transparent 38%, var(--split-shade) 92%);
 }
 
-:root:not([data-theme="dark"]) .split__cutout {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: var(--bottle-shadow);
+.split--image-right .split__media::before {
+  background: linear-gradient(270deg, transparent 38%, var(--split-shade) 92%);
 }
 
-:root:not([data-theme="dark"]) .split--image-left .split__media { grid-column: 1; grid-row: 1; }
-:root:not([data-theme="dark"]) .split--image-left .split__content { grid-column: 2; grid-row: 1; margin-left: 0; }
-:root:not([data-theme="dark"]) .split--image-right .split__media { grid-column: 2; grid-row: 1; }
-:root:not([data-theme="dark"]) .split--image-right .split__content { grid-column: 1; grid-row: 1; }
-
-:root:not([data-theme="dark"]) .split__media::after {
-  background: none;
+/* Dark theme: tone the bright photography down so it sits in the dark page */
+:root[data-theme="dark"] .split__media img {
+  filter: brightness(0.7) saturate(0.95);
 }
 
 :root:not([data-theme="dark"]) .footer__social-btn:hover {
@@ -2755,23 +2757,6 @@ html.theme-anim footer {
 :root:not([data-theme="dark"]) .nav.is-scrolled .nav__logo img,
 :root:not([data-theme="dark"]) .footer__brand img {
   filter: drop-shadow(0 2px 8px rgba(90, 60, 15, 0.3));
-}
-
-@media (max-width: 860px) {
-  :root:not([data-theme="dark"]) .split {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    padding-top: clamp(48px, 10vw, 80px);
-  }
-  :root:not([data-theme="dark"]) .split__media {
-    width: 100%;
-    margin: 0 0 28px;
-    height: clamp(300px, 84vw, 440px);
-  }
-  :root:not([data-theme="dark"]) .split__content {
-    max-width: none;
-  }
 }
 
 /* Finale bottles: hover / click opens the single-bottle popup */
@@ -2840,5 +2825,63 @@ html.theme-anim footer {
   .seq__bottle.is-interactive:hover img,
   .seq__bottle.is-interactive:focus-visible img {
     scale: 1.1;
+  }
+}
+
+/* ==========================================================================
+   Mobile / touch performance
+   Blur filters, backdrop blur, blend modes and the animated grain are the
+   usual causes of janky, "stuck" scrolling on phones. Keep the look, drop the
+   per-frame GPU cost.
+   ========================================================================== */
+@media (max-width: 768px), (pointer: coarse) {
+  body::after,
+  .hero__dust,
+  .hero__flash {
+    display: none;
+  }
+
+  .nav.is-scrolled,
+  .menu-backdrop,
+  .seq__card {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .chapter,
+  .chapter [data-piece],
+  .chapter .w,
+  .seq__final [data-piece],
+  .seq__final .w,
+  .seq__card,
+  [data-reveal],
+  [data-split-reveal] .w,
+  .menu__links a:not(.btn),
+  .menu__links a.btn {
+    filter: none !important;
+  }
+
+  .seq__line--glow,
+  .loader__glow {
+    filter: none;
+  }
+
+  .gold-text,
+  .chapter.is-in .chapter__title .w,
+  .chapter.is-in .chapter__title .w.gold-text {
+    animation: none;
+  }
+
+  /* Fewer layers promoted to the GPU */
+  .chapter,
+  .seq__card,
+  .seq__note,
+  .seq__bottle,
+  .seq__ghost span {
+    will-change: auto;
+  }
+
+  html {
+    scroll-behavior: auto;
   }
 }
