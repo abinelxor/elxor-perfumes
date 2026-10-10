@@ -5,7 +5,6 @@ export default defineCliConfig({
     projectId: 'wox0hir2',
     dataset: 'production',
   },
-  app: {
-    organizationId: 'o5j9sg04q',
-  },
+  // Note: do not add an `app: {...}` block here. That key marks the project as a
+  // custom Sanity App (not a Studio) and makes `sanity dev` look for src/App.
 })
