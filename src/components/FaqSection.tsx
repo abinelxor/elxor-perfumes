@@ -12,10 +12,12 @@ interface FaqItem {
 }
 
 interface FaqSectionProps {
+  /** Plain-text FAQs from the CMS. When empty, the built-in rich answers below are used. */
+  faqs?: { question: string; answer: string }[];
   onOpenContact?: () => void;
 }
 
-export default function FaqSection({ onOpenContact }: FaqSectionProps) {
+export default function FaqSection({ faqs, onOpenContact }: FaqSectionProps) {
   // Start with all items closed so only headings are shown by default; click to expand
   const [openIds, setOpenIds] = useState<Set<string>>(new Set());
 
@@ -31,7 +33,7 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
     });
   };
 
-  const faqData: FaqItem[] = [
+  const defaultFaqData: FaqItem[] = [
     {
       id: "faq-1",
       num: "01",
@@ -77,6 +79,17 @@ export default function FaqSection({ onOpenContact }: FaqSectionProps) {
       ),
     },
   ];
+
+  // Editable FAQs from Sanity replace the built-in copy (same text feeds the FAQPage schema)
+  const faqData: FaqItem[] =
+    faqs && faqs.length > 0
+      ? faqs.map((f, i) => ({
+          id: `faq-${i + 1}`,
+          num: String(i + 1).padStart(2, "0"),
+          question: f.question,
+          answer: <p>{f.answer}</p>,
+        }))
+      : defaultFaqData;
 
   return (
     <section className="faq-section section" id="faq" aria-labelledby="faq-title">

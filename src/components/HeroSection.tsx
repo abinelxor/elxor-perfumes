@@ -297,7 +297,8 @@ export default function HeroSection({
 
       const raw = clamp((window.scrollY - heroTop) / heroRange);
       const isMobile = window.innerWidth < 768;
-      const lerpFactor = isMobile ? 0.22 : 0.14;
+      // Phones: no easing (see CollectionSection) so the hero never chases the scroll
+      const lerpFactor = isMobile ? 1 : 0.14;
       smoothP += (raw - smoothP) * lerpFactor;
       if (Math.abs(raw - smoothP) < 0.0004) smoothP = raw;
       const p = smoothP;
@@ -401,7 +402,11 @@ export default function HeroSection({
 
     const rafId = requestAnimationFrame(update);
 
+    let lastWidth = window.innerWidth;
     const handleResize = () => {
+      // Ignore the address-bar height jitter on phones; only re-measure on width change
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
       measure();
     };
     window.addEventListener("resize", handleResize);

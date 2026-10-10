@@ -1,59 +1,16 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
+import { perfumesData, type PerfumeItem } from "@/lib/products";
 
-export interface PerfumeItem {
-  id: string;
-  name: string;
-  tagline: string;
-  description?: string;
-  image: string;
-  price: string;
-  size: string;
-  topNotes: string[];
-  heartNotes: string[];
-  baseNotes: string[];
-  story: string;
-  signatureQuote?: string;
-}
-
-export const perfumesData: PerfumeItem[] = [
-  {
-    id: "amoriel",
-    name: "AMORIEL",
-    tagline: "A Fragrance That Speaks of Elegance",
-    description:
-      "A luxurious unisex Eau de Parfum crafted for those who appreciate sophistication, confidence, and timeless elegance.",
-    image: "/images/perfume_amoriel.png",
-    price: "$360",
-    size: "50ml",
-    topNotes: ["White Peach", "Sweet Mandarin", "Dewy Neroli"],
-    heartNotes: ["Celestial Jasmine", "Imperial White Rose", "Soft Iris"],
-    baseNotes: ["Cashmere Silk", "Warm Sandalwood", "Golden Amber Accord"],
-    story:
-      "Discover AMORIEL, a luxurious unisex Eau de Parfum crafted for those who appreciate sophistication, confidence, and timeless elegance. Designed for both men and women, AMORIEL creates a captivating presence that complements your personality and leaves a memorable impression wherever you go.",
-    signatureQuote: "AMORIEL by ELXOR — Wear the feeling. Leave the memory.",
-  },
-  {
-    id: "sanctix",
-    name: "SANCTIX",
-    tagline: "The Essence of Power and Mystery",
-    description:
-      "An exclusive unisex Eau de Parfum created for individuals who embrace confidence, sophistication, and distinctive style.",
-    image: "/images/perfume_sanctix.png",
-    price: "$380",
-    size: "50ml",
-    topNotes: ["Solar Bergamot", "Golden Saffron", "Pink Pepper"],
-    heartNotes: ["Liquid Amber", "Smoked Incense", "Honeyed Labdanum"],
-    baseNotes: ["Sacred Oud", "Bourbon Vanilla", "Precious Woods"],
-    story:
-      "Step into a world of refined luxury with SANCTIX, an exclusive unisex Eau de Parfum created for individuals who embrace confidence, sophistication, and distinctive style. Designed for both men and women, SANCTIX adds an aura of intrigue to your presence, making every moment feel exceptional.",
-    signatureQuote: "SANCTIX by ELXOR — Your presence. Your power. Your signature.",
-  },
-];
+// Re-exported so existing imports from this module keep working
+export { perfumesData };
+export type { PerfumeItem };
 
 interface CollectionSectionProps {
+  /** Products to showcase (from Sanity). Defaults to the built-in two. */
+  products?: PerfumeItem[];
   onSelectPerfume?: (perfume: PerfumeItem) => void;
   onContactClick?: () => void;
 }
@@ -65,9 +22,15 @@ const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export default function CollectionSection({
+  products,
   onSelectPerfume,
   onContactClick,
 }: CollectionSectionProps) {
+  // The scroll scene is choreographed for exactly two bottles
+  const items = useMemo(
+    () => (products && products.length >= 2 ? products.slice(0, 2) : perfumesData),
+    [products],
+  );
   const seqRef = useRef<HTMLDivElement>(null);
   const bottleRefs = useRef<(HTMLElement | null)[]>([]);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
@@ -115,7 +78,9 @@ export default function CollectionSection({
 
       const raw = clamp((y - seqTop) / seqRange);
       const mobile = window.innerWidth <= 768;
-      const lerpFactor = mobile ? 0.22 : 0.14;
+      // Phones: map the scene straight to the scroll position. Any easing here makes the
+      // scene chase the finger and shimmer; native scrolling is already smooth.
+      const lerpFactor = mobile ? 1 : 0.14;
       smoothQ = seqVisible ? smoothQ + (raw - smoothQ) * lerpFactor : raw;
       if (Math.abs(raw - smoothQ) < 0.0003) smoothQ = raw;
       seqVisible = true;
@@ -136,7 +101,7 @@ export default function CollectionSection({
       const active = q < 0.32 ? 0 : 1;
       const finaleProgress = ease(clamp((q - (mobile ? 0.62 : 0.64)) / (mobile ? 0.12 : 0.08)));
 
-      perfumesData.forEach((_, i) => {
+      items.forEach((_, i) => {
         const dir = i % 2 ? 1 : -1;
         const isFirst = i === 0;
 
@@ -290,6 +255,7 @@ export default function CollectionSection({
         bottleRefs.current.forEach((b) => {
           if (!b) return;
           b.classList.toggle("is-interactive", on);
+          if (!on) b.classList.remove("is-zoomed");
           b.tabIndex = on ? 0 : -1;
         });
       }
@@ -299,7 +265,12 @@ export default function CollectionSection({
 
     const rafId = requestAnimationFrame(update);
 
+    let lastWidth = window.innerWidth;
     const handleResize = () => {
+      // The mobile address bar changes innerHeight while scrolling; re-measuring then
+      // makes the pinned scene jump. Only react to real width changes (rotation/resize).
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
       measureSeq();
     };
     window.addEventListener("resize", handleResize);
@@ -309,7 +280,7 @@ export default function CollectionSection({
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [items]);
 
   const handleCardDiscover = (
     e: React.MouseEvent,
@@ -328,10 +299,23 @@ export default function CollectionSection({
 
   // Finale bottles grow in place on hover (pure CSS). Clicking (or Enter)
   // opens the full details popup.
-  const handleBottleActivate = (e: React.SyntheticEvent<HTMLElement>, perfume: PerfumeItem) => {
-    if (!e.currentTarget.classList.contains("is-interactive")) return;
-    onSelectPerfume?.(perfume);
+  const handleBottleActivate = (e: React.SyntheticEvent<HTMLElement>) => {
+    const el = e.currentTarget;
+    if (!el.classList.contains("is-interactive")) return;
+    const willZoom = !el.classList.contains("is-zoomed");
+    bottleRefs.current.forEach((b) => b?.classList.remove("is-zoomed"));
+    if (willZoom) el.classList.add("is-zoomed");
   };
+
+  // Tapping anywhere else brings a zoomed bottle back
+  useEffect(() => {
+    const onDocClick = (e: MouseEvent) => {
+      if ((e.target as HTMLElement | null)?.closest(".seq__bottle")) return;
+      bottleRefs.current.forEach((b) => b?.classList.remove("is-zoomed"));
+    };
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
+  }, []);
 
   const handleFinaleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -429,7 +413,7 @@ export default function CollectionSection({
 
           {/* Ghost outline numbers behind bottles */}
           <div className="seq__ghost" aria-hidden="true">
-            {perfumesData.map((_, i) => (
+            {items.map((_, i) => (
               <span
                 key={i}
                 ref={(el) => {
@@ -450,7 +434,7 @@ export default function CollectionSection({
                 100% { transform: translateY(-14px); }
               }
             `}</style>
-            {perfumesData.map((perfume, i) => (
+            {items.map((perfume, i) => (
               <figure
                 key={perfume.id}
                 className="seq__bottle"
@@ -461,11 +445,11 @@ export default function CollectionSection({
                 role="button"
                 tabIndex={-1}
                 aria-label={`View ${perfume.name} details`}
-                onClick={(e) => handleBottleActivate(e, perfume)}
+                onClick={(e) => handleBottleActivate(e)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    handleBottleActivate(e, perfume);
+                    handleBottleActivate(e);
                   }
                 }}
               >
@@ -483,7 +467,7 @@ export default function CollectionSection({
           </div>
 
           {/* Statement Cards */}
-          {perfumesData.map((perfume, i) => {
+          {items.map((perfume, i) => {
             const isRight = i % 2 === 0;
             return (
               <article
@@ -610,7 +594,7 @@ export default function CollectionSection({
 
           {/* Step Progress Indicators */}
           <ol className="seq__steps" ref={stepsWrapRef} aria-hidden="true">
-            {perfumesData.map((perfume, i) => (
+            {items.map((perfume, i) => (
               <li
                 key={perfume.id}
                 ref={(el) => {
