@@ -4,13 +4,21 @@ import { NextResponse, type NextRequest } from "next/server";
 import { SANITY_TAG } from "@/lib/sanity/client";
 
 /**
- * Sanity webhook target: publishing content in the Studio calls this so the
- * site refreshes immediately instead of waiting for the 60s revalidate window.
+ * "Push to live" target. Content published in the Studio is only saved to Sanity; the
+ * website keeps serving its cached copy until this route is called. The Studio's
+ * "Push to live" button writes a small `liveRelease` record, and a Sanity webhook that
+ * watches ONLY that record calls this route.
  *
- * Setup (sanity.io/manage > API > Webhooks):
- *   URL:     https://<your-domain>/api/revalidate
- *   Method:  POST, trigger on create / update / delete
- *   Header:  x-revalidate-secret: <same value as SANITY_REVALIDATE_SECRET>
+ * Setup (sanity.io/manage > API > Webhooks > Create webhook):
+ *   URL:        https://<your-domain>/api/revalidate
+ *   Dataset:    production        Trigger on: Create, Update
+ *   Filter:     _type == "liveRelease"
+ *   Projection: {_type}
+ *   Method:     POST
+ *   HTTP header: x-revalidate-secret = <same value as SANITY_REVALIDATE_SECRET>
+ *
+ * Any request whose body says it is about a different document type is ignored, so a
+ * webhook that is accidentally set up to watch everything cannot publish edits early.
  */
 function safeEqual(a: string, b: string) {
   const left = Buffer.from(a);
@@ -27,6 +35,12 @@ export async function POST(request: NextRequest) {
   const provided = request.headers.get("x-revalidate-secret") ?? "";
   if (!safeEqual(provided, secret)) {
     return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
+  }
+
+  // Webhook body, e.g. {"_type":"liveRelease"}. A manual call without a body is allowed.
+  const body = (await request.json().catch(() => null)) as { _type?: unknown } | null;
+  if (body && typeof body._type === "string" && body._type !== "liveRelease") {
+    return NextResponse.json({ ignored: true, reason: "Only Push to live refreshes the site" });
   }
 
   revalidateTag(SANITY_TAG, "max");

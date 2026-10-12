@@ -12,7 +12,7 @@ import {
 } from "@/lib/content";
 
 // Pages and products created in the Studio are served at /<slug>.
-export const revalidate = 60;
+export const revalidate = false;
 
 type Params = { slug: string };
 

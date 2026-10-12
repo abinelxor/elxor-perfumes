@@ -8,9 +8,13 @@ import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
+import {PushToLiveNavbar} from './PushToLiveNavbar'
 
 // Documents that exist exactly once
 const singletons = ['siteSettings', 'homePage']
+
+// Technical records that editors never open directly
+const hiddenTypes = ['liveRelease']
 
 export default defineConfig({
   name: 'default',
@@ -36,7 +40,7 @@ export default defineConfig({
               .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
             S.divider(),
             ...S.documentTypeListItems().filter(
-              (item) => !singletons.includes(item.getId() ?? ''),
+              (item) => !singletons.includes(item.getId() ?? '') && !hiddenTypes.includes(item.getId() ?? ''),
             ),
           ]),
     }),
@@ -46,7 +50,15 @@ export default defineConfig({
   schema: {
     types: schemaTypes,
     // Don't offer "create new Site settings": there is only one
-    templates: (templates) => templates.filter(({schemaType}) => !singletons.includes(schemaType)),
+    templates: (templates) =>
+      templates.filter(({schemaType}) => !singletons.includes(schemaType) && !hiddenTypes.includes(schemaType)),
+  },
+
+  // "Push to live" bar above the Studio navbar
+  studio: {
+    components: {
+      navbar: PushToLiveNavbar,
+    },
   },
 
   document: {

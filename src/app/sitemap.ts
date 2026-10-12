@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllSlugs } from "@/lib/content";
 import { SITE_URL } from "@/lib/defaults";
 
-export const revalidate = 3600;
+export const revalidate = false;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const docs = await getAllSlugs();

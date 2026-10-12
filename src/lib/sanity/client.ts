@@ -13,11 +13,14 @@ export const sanityClient = createClient({
   perspective: "published",
 });
 
-/** Cache tag shared by every Sanity request; the webhook revalidates it. */
+/**
+ * Cache tag shared by every Sanity request. Content is cached until the "Push to live"
+ * button in the Studio fires the webhook, which revalidates this tag.
+ */
 export const SANITY_TAG = "sanity";
 
 /**
- * Fetch from Sanity with ISR-style caching. Returns null instead of throwing so
+ * Fetch from Sanity, cached until the next push to live. Returns null instead of throwing so
  * the site can fall back to its built-in content if the CMS is unavailable.
  */
 export async function sanityFetch<T>(
@@ -26,7 +29,9 @@ export async function sanityFetch<T>(
 ): Promise<T | null> {
   try {
     return await sanityClient.fetch<T>(query, params, {
-      next: { revalidate: 60, tags: [SANITY_TAG] },
+      // Cached until "Push to live" (no time-based refresh), so publishing in the Studio
+      // saves content without changing the live site
+      next: { revalidate: false, tags: [SANITY_TAG] },
     });
   } catch (error) {
     console.error("[sanity] fetch failed, using fallback content:", error);
