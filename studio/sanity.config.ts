@@ -6,6 +6,9 @@ import {schemaTypes} from './schemaTypes'
 // Documents that exist exactly once
 const singletons = ['siteSettings', 'homePage']
 
+// Technical records that editors never open directly
+const hiddenTypes = ['liveRelease']
+
 export default defineConfig({
   name: 'default',
   title: 'ELXOR Perfumes',
@@ -29,7 +32,7 @@ export default defineConfig({
               .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
             S.divider(),
             ...S.documentTypeListItems().filter(
-              (item) => !singletons.includes(item.getId() ?? ''),
+              (item) => !singletons.includes(item.getId() ?? '') && !hiddenTypes.includes(item.getId() ?? ''),
             ),
           ]),
     }),

@@ -5,6 +5,7 @@ import {product} from './documents/product'
 import {page} from './documents/page'
 import {siteSettings} from './documents/siteSettings'
 import {codeSnippet} from './documents/codeSnippet'
+import {liveRelease} from './documents/liveRelease'
 import {homePage} from './documents/homePage'
 import {heroChapter, sectionHeader, splitSection, valueItem} from './objects/homeBlocks'
 
@@ -15,6 +16,7 @@ export const schemaTypes = [
   product,
   page,
   codeSnippet,
+  liveRelease,
   // reusable objects
   seo,
   imageWithAlt,

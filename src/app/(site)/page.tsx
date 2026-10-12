@@ -2,8 +2,8 @@ import { getProducts, getSiteSettings, jsonLd, faqPageSchema, resolveContact, re
 import { getHomeContent } from "@/lib/homeContent";
 import HomeClient from "@/components/HomeClient";
 
-// Re-generate at most once a minute; the Sanity webhook can refresh it instantly.
-export const revalidate = 60;
+// Served from cache until "Push to live" is pressed in the Studio.
+export const revalidate = false;
 
 export default async function Home() {
   const [products, settings, content] = await Promise.all([
