@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "../globals.css";
 import CodeSlot from "@/components/CodeSlot";
-import { buildMetadata, getCodeSnippets, getSiteSettings } from "@/lib/content";
+import { buildMetadata, customJsonLd, getCodeSnippets, getSiteSettings } from "@/lib/content";
 import { SITE_URL } from "@/lib/defaults";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -102,7 +102,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   // Custom head/body code added in the Studio, grouped by where it should be placed
-  const snippets = await getCodeSnippets();
+  const [snippets, settings] = await Promise.all([getCodeSnippets(), getSiteSettings()]);
+
+  // Schema markup pasted in Site settings > Default SEO replaces the built-in
+  // Organization / WebSite / WebPage graph (ignored if it is not valid JSON)
+  const customSchema = customJsonLd(settings.defaultSeo?.structuredData);
   const at = (position: string) => snippets.filter((snippet) => snippet.position === position);
 
   return (
@@ -150,11 +154,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           content="Vc7M4v_S7LKq279AyB0PRcmwl-9HNn-hwiNpOgpG8iY"
         />
 
-        {/* Schema.org Organization, WebSite & WebPage */}
+        {/* Schema.org Organization, WebSite & WebPage (editable in Site settings) */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationWebSchema),
+            __html: customSchema ?? JSON.stringify(organizationWebSchema),
           }}
         />
 

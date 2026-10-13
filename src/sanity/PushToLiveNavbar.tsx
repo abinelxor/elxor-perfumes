@@ -63,10 +63,16 @@ function PushToLiveBar() {
         requestedAt: new Date().toISOString(),
         requestedBy: user?.email || user?.name || 'unknown',
       })
+      // The website checks with Sanity that this push really happened, then refreshes itself
+      const res = await fetch('/api/push-live', {method: 'POST'})
+      if (!res.ok) {
+        const detail = await res.json().catch(() => null)
+        throw new Error(detail?.message || `The website did not refresh (HTTP ${res.status}).`)
+      }
       toast.push({
         status: 'success',
         title: 'Pushed to live',
-        description: 'The website will show your published changes in a few seconds.',
+        description: 'The website now shows your published changes.',
       })
       await refresh()
     } catch (error) {
