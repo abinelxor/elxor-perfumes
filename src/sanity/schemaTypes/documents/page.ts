@@ -5,6 +5,9 @@ export const page = defineType({
   name: 'page',
   title: 'Page',
   type: 'document',
+  // No Draft / Publish step: edits save straight away. They reach the website when
+  // someone presses "Push to live".
+  liveEdit: true,
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'seo', title: 'SEO'},

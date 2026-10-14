@@ -4,6 +4,9 @@ export const product = defineType({
   name: 'product',
   title: 'Product',
   type: 'document',
+  // No Draft / Publish step: edits save straight away. They reach the website when
+  // someone presses "Push to live".
+  liveEdit: true,
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'media', title: 'Images'},

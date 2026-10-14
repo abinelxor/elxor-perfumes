@@ -9,6 +9,9 @@ export const liveRelease = defineType({
   name: 'liveRelease',
   title: 'Live release',
   type: 'document',
+  // No Draft / Publish step: edits save straight away. They reach the website when
+  // someone presses "Push to live".
+  liveEdit: true,
   readOnly: true,
   fields: [
     defineField({name: 'requestedAt', title: 'Last pushed to live', type: 'datetime'}),
