@@ -12,6 +12,9 @@ export const codeSnippet = defineType({
   name: 'codeSnippet',
   title: 'Custom code (head / body)',
   type: 'document',
+  // No Draft / Publish step: edits save straight away. They reach the website when
+  // someone presses "Push to live".
+  liveEdit: true,
   fields: [
     defineField({
       name: 'title',

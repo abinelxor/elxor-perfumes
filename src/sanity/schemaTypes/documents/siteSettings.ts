@@ -5,6 +5,9 @@ export const siteSettings = defineType({
   name: 'siteSettings',
   title: 'Site settings',
   type: 'document',
+  // No Draft / Publish step: edits save straight away. They reach the website when
+  // someone presses "Push to live".
+  liveEdit: true,
   groups: [
     {name: 'general', title: 'General', default: true},
     {name: 'contact', title: 'Contact'},

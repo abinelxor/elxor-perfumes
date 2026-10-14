@@ -8,6 +8,9 @@ export const homePage = defineType({
   name: 'homePage',
   title: 'Home page',
   type: 'document',
+  // No Draft / Publish step: edits save straight away. They reach the website when
+  // someone presses "Push to live".
+  liveEdit: true,
   groups: [
     {name: 'hero', title: 'Hero', default: true},
     {name: 'intro', title: 'Brand statement'},

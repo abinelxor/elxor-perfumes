@@ -46,6 +46,11 @@ export default defineConfig({
       templates.filter(({schemaType}) => !singletons.includes(schemaType)),
   },
 
+  // Keep the workflow to two steps: edit (saves automatically), then Push to live.
+  // No releases or scheduled drafts to confuse things.
+  releases: {enabled: false},
+  scheduledDrafts: {enabled: false},
+
   document: {
     actions: (prev, {schemaType}) =>
       singletons.includes(schemaType)

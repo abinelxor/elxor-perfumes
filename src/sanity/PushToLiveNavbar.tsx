@@ -5,12 +5,14 @@ import {Box, Button, Flex, Text} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {RocketIcon} from '@sanity/icons/Rocket'
 import {useClient, useCurrentUser, type NavbarProps} from 'sanity'
+import {foldDrafts} from './foldDrafts'
 
 // Content that appears on the website. Editing any of these creates something to push.
 const CONTENT_TYPES = ['homePage', 'siteSettings', 'product', 'page', 'codeSnippet']
 
 const STATUS_QUERY = `{
   "last": *[_id == "liveRelease"][0].requestedAt,
+  "drafts": count(*[_type in $types && _id in path("drafts.**")]),
   "pending": count(*[
     _type in $types &&
     !(_id in path("drafts.**")) &&
@@ -24,25 +26,28 @@ function formatWhen(iso: string | null): string {
 }
 
 /**
- * Slim bar above the Studio navbar. "Publish" in the Studio saves content to Sanity;
- * this button is what makes it go live on the website.
+ * Slim bar above the Studio navbar. Edits save automatically (no Draft / Publish step);
+ * this button is what makes them go live on the website.
  */
 function PushToLiveBar() {
-  const client = useClient({apiVersion: '2025-01-01'})
+  // "raw" so leftover drafts (invisible to the default view) are counted and can be folded in
+  const client = useClient({apiVersion: '2025-01-01'}).withConfig({perspective: 'raw'})
   const user = useCurrentUser()
   const toast = useToast()
 
   const [last, setLast] = useState<string | null>(null)
   const [pending, setPending] = useState<number | null>(null)
+  const [drafts, setDrafts] = useState(0)
   const [busy, setBusy] = useState(false)
 
   const refresh = useCallback(async () => {
     try {
-      const status = await client.fetch<{last: string | null; pending: number}>(STATUS_QUERY, {
+      const status = await client.fetch<{last: string | null; pending: number; drafts: number}>(STATUS_QUERY, {
         types: CONTENT_TYPES,
       })
       setLast(status.last)
       setPending(status.pending)
+      setDrafts(status.drafts)
     } catch {
       // Status is a convenience; the button still works without it
     }
@@ -57,6 +62,8 @@ function PushToLiveBar() {
   const pushLive = async () => {
     setBusy(true)
     try {
+      // Fold any older drafts into the saved content first, so everything goes live together
+      const folded = await foldDrafts(client, CONTENT_TYPES)
       await client.createOrReplace({
         _id: 'liveRelease',
         _type: 'liveRelease',
@@ -72,7 +79,9 @@ function PushToLiveBar() {
       toast.push({
         status: 'success',
         title: 'Pushed to live',
-        description: 'The website now shows your published changes.',
+        description: folded
+          ? `The website now shows your changes (${folded} older draft${folded === 1 ? '' : 's'} included).`
+          : 'The website now shows your changes.',
       })
       await refresh()
     } catch (error) {
@@ -86,14 +95,15 @@ function PushToLiveBar() {
     }
   }
 
-  const hasPending = (pending ?? 0) > 0
+  const hasPending = (pending ?? 0) > 0 || drafts > 0
+  const count = (pending ?? 0) + drafts
 
   return (
     <Box paddingX={3} paddingY={2} style={{borderBottom: '1px solid var(--card-border-color)'}}>
       <Flex align="center" justify="space-between" gap={3} wrap="wrap">
         <Text size={1} muted>
           {hasPending
-            ? `${pending} published change${pending === 1 ? '' : 's'} not live yet · last pushed ${formatWhen(last)}`
+            ? `${count} saved change${count === 1 ? '' : 's'} not live yet · last pushed ${formatWhen(last)}`
             : `Website is up to date · last pushed ${formatWhen(last)}`}
         </Text>
         <Button
