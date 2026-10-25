@@ -4,6 +4,7 @@ import { sizedImage } from "./sanity/image";
 import type { CodeSnippetData } from "@/components/CodeSlot";
 import { perfumesData, type PerfumeItem } from "./products";
 import { SITE_URL, defaultContact, defaultFaqs, defaultSeo, type FaqEntry } from "./defaults";
+import { jsonLdTypes, parseJsonLdBlocks, serializeJsonLd } from "./jsonld";
 
 /* ---------- Types (shape of the GROQ projections below) ---------- */
 
@@ -238,18 +239,16 @@ export function buildMetadata(
 }
 
 /** Serialise JSON-LD safely for a <script> tag (escapes "<" so "</script>" can't break out). */
-export function jsonLd(data: unknown): string {
-  return JSON.stringify(data).replace(/</g, "\\u003c");
-}
+export const jsonLd = serializeJsonLd;
 
-/** Validate and re-serialise editor-supplied JSON-LD; returns null if it isn't valid JSON. */
-export function customJsonLd(raw: string | undefined): string | null {
-  if (!raw || !raw.trim()) return null;
-  try {
-    return jsonLd(JSON.parse(raw));
-  } catch {
-    return null;
-  }
+/**
+ * Schema markup pasted by an editor (one or several blocks, with or without <script>
+ * tags). Invalid blocks are skipped. `types` lists every @type found, so built-in
+ * markup of the same type can be left out instead of duplicated.
+ */
+export function customJsonLdBlocks(raw: string | undefined): { json: string[]; types: Set<string> } {
+  const { blocks } = parseJsonLdBlocks(raw);
+  return { json: blocks.map(serializeJsonLd), types: jsonLdTypes(blocks) };
 }
 
 export function faqPageSchema(faqs: FaqEntry[], url = SITE_URL + "/") {

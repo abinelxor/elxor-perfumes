@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {validateJsonLdField} from '../../../lib/jsonld'
 
 /** Reusable SEO block: meta tags, Open Graph, indexing and JSON-LD schema. */
 export const seo = defineType({
@@ -71,17 +72,9 @@ export const seo = defineType({
       type: 'text',
       rows: 10,
       description:
-        'Optional. Paste JSON-LD without the <script> tags, e.g. FAQPage, Product or Organization. Must be valid JSON.',
-      validation: (rule) =>
-        rule.custom((value) => {
-          if (!value || typeof value !== 'string' || !value.trim()) return true
-          try {
-            JSON.parse(value)
-            return true
-          } catch {
-            return 'This is not valid JSON.'
-          }
-        }),
+        'Optional. Paste one or more schema.org JSON-LD blocks, with or without the <script type="application/ld+json"> tags. ' +
+        'Types you add here (Organization, WebSite, Product, FAQPage...) replace the built-in markup of the same type, so nothing is duplicated.',
+      validation: (rule) => rule.custom((value) => validateJsonLdField(typeof value === 'string' ? value : undefined)),
     }),
   ],
 })

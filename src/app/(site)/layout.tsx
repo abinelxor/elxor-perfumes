@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "../globals.css";
 import CodeSlot from "@/components/CodeSlot";
-import { buildMetadata, customJsonLd, getCodeSnippets, getSiteSettings } from "@/lib/content";
+import { buildMetadata, customJsonLdBlocks, getCodeSnippets, getSiteSettings, jsonLd } from "@/lib/content";
+import { builtInSchema } from "@/lib/builtInSchema";
 import { SITE_URL } from "@/lib/defaults";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -26,76 +27,6 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-const organizationWebSchema = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": "https://www.elxorperfumes.com/#organization",
-      "name": "ELXOR Perfumes",
-      "url": "https://www.elxorperfumes.com/",
-      "description":
-        "ELXOR Perfumes is a UAE-based fragrance brand offering luxury unisex Eau de Parfum fragrances designed to leave a memorable presence.",
-      "slogan": "Unveil your Aura",
-      "brand": {
-        "@type": "Brand",
-        "name": "ELXOR Perfumes",
-      },
-      "areaServed": {
-        "@type": "Country",
-        "name": "United Arab Emirates",
-      },
-      "sameAs": ["https://www.amazon.ae/"],
-    },
-    {
-      "@type": "WebSite",
-      "@id": "https://www.elxorperfumes.com/#website",
-      "url": "https://www.elxorperfumes.com/",
-      "name": "ELXOR Perfumes",
-      "description":
-        "Discover ELXOR Perfumes, a UAE perfume brand offering luxury unisex Eau de Parfum fragrances.",
-      "publisher": {
-        "@id": "https://www.elxorperfumes.com/#organization",
-      },
-      "inLanguage": "en-AE",
-    },
-    {
-      "@type": "WebPage",
-      "@id": "https://www.elxorperfumes.com/#webpage",
-      "url": "https://www.elxorperfumes.com/",
-      "name": "ELXOR Perfumes | Luxury Unisex Perfumes in UAE",
-      "description":
-        "Discover ELXOR Perfumes, a UAE fragrance brand offering luxury unisex Eau de Parfum fragrances including AMORIEL and SANCTIX.",
-      "isPartOf": {
-        "@id": "https://www.elxorperfumes.com/#website",
-      },
-      "about": {
-        "@id": "https://www.elxorperfumes.com/#organization",
-      },
-      "inLanguage": "en-AE",
-    },
-  ],
-};
-
-const productAmorielSchema = {
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "@id": "https://www.elxorperfumes.com/amoriel/#product",
-  "name": "ELXOR AMORIEL",
-  "brand": {
-    "@type": "Brand",
-    "name": "ELXOR Perfumes",
-  },
-  "description":
-    "AMORIEL is a luxury unisex Eau de Parfum by ELXOR Perfumes, designed for a distinctive and long-lasting fragrance experience.",
-  "category": "Perfume",
-  "audience": {
-    "@type": "PeopleAudience",
-    "suggestedGender": "Unisex",
-  },
-  "url": "https://www.elxorperfumes.com/amoriel/",
-};
-
 export default async function RootLayout({
   children,
 }: {
@@ -104,9 +35,15 @@ export default async function RootLayout({
   // Custom head/body code added in the Studio, grouped by where it should be placed
   const [snippets, settings] = await Promise.all([getCodeSnippets(), getSiteSettings()]);
 
-  // Schema markup pasted in Site settings > Default SEO replaces the built-in
-  // Organization / WebSite / WebPage graph (ignored if it is not valid JSON)
-  const customSchema = customJsonLd(settings.defaultSeo?.structuredData);
+  // Schema markup pasted in Site settings > Default SEO (any number of blocks). Built-in
+  // markup is only added for types the editor did not supply, so nothing is duplicated.
+  const custom = customJsonLdBlocks(settings.defaultSeo?.structuredData);
+  const schemaBlocks = [
+    ...custom.json,
+    ...builtInSchema
+      .filter((block) => !block.types.some((type) => custom.types.has(type)))
+      .map((block) => jsonLd(block.data)),
+  ];
   const at = (position: string) => snippets.filter((snippet) => snippet.position === position);
 
   return (
@@ -154,21 +91,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           content="Vc7M4v_S7LKq279AyB0PRcmwl-9HNn-hwiNpOgpG8iY"
         />
 
-        {/* Schema.org Organization, WebSite & WebPage (editable in Site settings) */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: customSchema ?? JSON.stringify(organizationWebSchema),
-          }}
-        />
-
-        {/* Schema.org Product: AMORIEL */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(productAmorielSchema),
-          }}
-        />
+        {/* Schema.org markup: Organization, WebSite, WebPage, Products, Breadcrumbs (editable in Site settings) */}
+        {schemaBlocks.map((json, index) => (
+          <script
+            key={index}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: json }}
+          />
+        ))}
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
