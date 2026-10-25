@@ -1,4 +1,5 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {findInvalidHeadTags} from '../../../lib/headSafety'
 
 // Show the page-targeting fields only when "Specific pages only" is chosen
 const isPagesScope = ({document}: {document?: unknown}) =>
@@ -54,7 +55,17 @@ export const codeSnippet = defineType({
       description:
         'Paste the full snippet including its <script>, <style>, <meta>, <link> or <noscript> tags. ' +
         'This code runs on every visitor’s browser: only paste code from sources you trust.',
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule.required().custom((code, context) => {
+          const position = (context.document as {position?: string} | undefined)?.position
+          if (typeof code !== 'string' || !position?.startsWith('head')) return true
+          const bad = findInvalidHeadTags(code)
+          return bad.length === 0
+            ? true
+            : `Code for the <head> can only contain <script>, <style>, <link>, <meta>, <noscript>, <base> or <title>. Remove: ${bad
+                .map((tag) => `<${tag}>`)
+                .join(', ')}. (Use "<body> start" or "<body> end" for other HTML.)`
+        }),
     }),
     defineField({
       name: 'scope',

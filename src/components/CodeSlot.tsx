@@ -7,6 +7,7 @@ import parse, {
   Element,
   type HTMLReactParserOptions,
 } from "html-react-parser";
+import { HEAD_TAGS } from "@/lib/headSafety";
 
 export type CodePosition = "headStart" | "headEnd" | "bodyStart" | "bodyEnd";
 
@@ -38,6 +39,20 @@ const options: HTMLReactParserOptions = {
     }
   },
 };
+
+/**
+ * Parse a snippet. For the <head> positions only real head elements are kept: a stray tag
+ * (e.g. <div> or <test>) would make the browser end the head early and move everything
+ * after it into <body>, which breaks hydration and duplicates scripts.
+ */
+function renderSnippet(snippet: CodeSnippetData): React.ReactNode {
+  const parsed = parse(snippet.code, options);
+  if (!snippet.position.startsWith("head")) return parsed;
+  const nodes = Array.isArray(parsed) ? parsed : [parsed];
+  return nodes.filter(
+    (node) => React.isValidElement(node) && typeof node.type === "string" && HEAD_TAGS.has(node.type),
+  );
+}
 
 function normalize(path: string): string {
   const clean = path.split(/[?#]/)[0] || "/";
@@ -77,7 +92,7 @@ export default function CodeSlot({ snippets }: { snippets: CodeSnippetData[] }) 
   return (
     <>
       {active.map((snippet) => (
-        <React.Fragment key={snippet._id}>{parse(snippet.code, options)}</React.Fragment>
+        <React.Fragment key={snippet._id}>{renderSnippet(snippet)}</React.Fragment>
       ))}
     </>
   );
