@@ -1,4 +1,12 @@
-import { getProducts, getSiteSettings, jsonLd, faqPageSchema, resolveContact, resolveFaqs } from "@/lib/content";
+import {
+  customJsonLdBlocks,
+  faqPageSchema,
+  getProducts,
+  getSiteSettings,
+  jsonLd,
+  resolveContact,
+  resolveFaqs,
+} from "@/lib/content";
 import { getHomeContent } from "@/lib/homeContent";
 import HomeClient from "@/components/HomeClient";
 
@@ -12,6 +20,8 @@ export default async function Home() {
     getHomeContent(),
   ]);
   const faqs = resolveFaqs(settings);
+  // If the editor pasted their own FAQPage schema, don't add a second one
+  const hasCustomFaqSchema = customJsonLdBlocks(settings.defaultSeo?.structuredData).types.has("FAQPage");
 
   // Social links are stored by platform name in Site settings
   const social = (name: string) =>
@@ -20,10 +30,12 @@ export default async function Home() {
   return (
     <>
       {/* Schema.org FAQPage, generated from the same FAQ list shown on the page */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLd(faqPageSchema(faqs)) }}
-      />
+      {!hasCustomFaqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLd(faqPageSchema(faqs)) }}
+        />
+      )}
       <HomeClient
         content={content}
         facebookUrl={social("facebook")}

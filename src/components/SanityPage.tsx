@@ -1,5 +1,5 @@
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
-import { customJsonLd, faqPageSchema, jsonLd, type PageDoc, type ProductDoc } from "@/lib/content";
+import { customJsonLdBlocks, faqPageSchema, jsonLd, type PageDoc, type ProductDoc } from "@/lib/content";
 import { SITE_URL } from "@/lib/defaults";
 import { sizedImage } from "@/lib/sanity/image";
 
@@ -62,7 +62,9 @@ export function PageView({ page }: { page: PageDoc }) {
       {faqs.length > 0 && <FaqList faqs={faqs} />}
 
       <JsonLd json={faqs.length > 0 ? jsonLd(faqPageSchema(faqs, `${SITE_URL}/${page.slug}`)) : null} />
-      <JsonLd json={customJsonLd(page.seo?.structuredData)} />
+      {customJsonLdBlocks(page.seo?.structuredData).json.map((json, i) => (
+        <JsonLd key={i} json={json} />
+      ))}
     </article>
   );
 }
@@ -173,7 +175,9 @@ export function ProductView({ product }: { product: ProductDoc }) {
       </div>
 
       <JsonLd json={jsonLd(schema)} />
-      <JsonLd json={customJsonLd(product.seo?.structuredData)} />
+      {customJsonLdBlocks(product.seo?.structuredData).json.map((json, i) => (
+        <JsonLd key={i} json={json} />
+      ))}
     </article>
   );
 }
