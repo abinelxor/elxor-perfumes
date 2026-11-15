@@ -265,12 +265,12 @@ export default function FragranceModal({
                 {added ? (
                   <>
                     <Check size={16} />
-                    <span>SHOP NOW</span>
+                    <span>SHOP ON AMAZON</span>
                   </>
                 ) : (
                   <>
                     <Sparkles size={16} />
-                    <span>SHOP NOW</span>
+                    <span>SHOP ON AMAZON</span>
                   </>
                 )}
               </button>

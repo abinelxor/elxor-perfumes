@@ -509,7 +509,7 @@ export default function CollectionSection({
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Shop Now <i className="arrow" aria-hidden="true" />
+                    Shop on Amazon <i className="arrow" aria-hidden="true" />
                   </a>
                 ) : (
                   <button
@@ -517,7 +517,7 @@ export default function CollectionSection({
                     className="link"
                     onClick={(e) => handleCardDiscover(e, perfume)}
                   >
-                    Shop Now <i className="arrow" aria-hidden="true" />
+                    Shop on Amazon <i className="arrow" aria-hidden="true" />
                   </button>
                 )}
               </article>
