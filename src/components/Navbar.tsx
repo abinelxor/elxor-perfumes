@@ -8,12 +8,15 @@ interface NavbarProps {
   onOpenCart?: () => void;
   cartCount?: number;
   onOpenContact?: () => void;
+  /** Amazon page opened by the Shop on Amazon buttons */
+  shopUrl?: string;
 }
 
 export default function Navbar({
   onOpenCart,
   cartCount = 0,
   onOpenContact,
+  shopUrl,
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -171,10 +174,11 @@ export default function Navbar({
           <ThemeToggle className="nav__theme" />
 
           <a
-            href="#collection"
+            href={shopUrl ?? "#collection"}
             className="btn btn--gold nav__shop-btn"
             style={{ padding: "8px 24px", fontSize: "0.75rem", minWidth: "auto", minHeight: "auto", height: "auto" }}
-            onClick={(e) => handleLinkClick(e, "collection")}
+            onClick={shopUrl ? undefined : (e) => handleLinkClick(e, "collection")}
+            {...(shopUrl ? { target: "_blank", rel: "noopener noreferrer" } : {})}
           >
             SHOP ON AMAZON
           </a>
@@ -230,11 +234,12 @@ export default function Navbar({
           <a href="#contact" onClick={(e) => handleLinkClick(e, "contact")}>
             <em>05</em>Contact Us
           </a>
-          <a 
-            href="#collection" 
-            className="btn btn--gold" 
-            style={{ marginTop: "2rem", alignSelf: "flex-start", padding: "12px 32px" }} 
-            onClick={(e) => handleLinkClick(e, "collection")}
+          <a
+            href={shopUrl ?? "#collection"}
+            className="btn btn--gold"
+            style={{ marginTop: "2rem", alignSelf: "flex-start", padding: "12px 32px" }}
+            onClick={shopUrl ? () => setMenuOpen(false) : (e) => handleLinkClick(e, "collection")}
+            {...(shopUrl ? { target: "_blank", rel: "noopener noreferrer" } : {})}
           >
             SHOP ON AMAZON
           </a>

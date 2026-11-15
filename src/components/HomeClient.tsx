@@ -102,6 +102,7 @@ export default function HomeClient({
         onOpenCart={() => setCartOpen(true)}
         cartCount={totalCartCount}
         onOpenContact={() => setContactOpen(true)}
+        shopUrl={(products.find((p) => p.id === "amoriel") ?? products[0])?.buyUrl}
       />
 
       <main>
