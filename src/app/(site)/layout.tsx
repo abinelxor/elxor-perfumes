@@ -15,9 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
     verification: {
       google: "Vc7M4v_S7LKq279AyB0PRcmwl-9HNn-hwiNpOgpG8iY",
     },
-    icons: {
-      icon: "/images/favicon.png",
-    },
+    // Icons come from the files in src/app: favicon.ico, icon.png and apple-icon.png
   };
 }
 

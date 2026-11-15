@@ -194,7 +194,7 @@ export default function CartDrawer({
                   >
                     <Image
                       src={item.perfume.image}
-                      alt={item.perfume.name}
+                      alt={item.perfume.imageAlt ?? item.perfume.name}
                       fill
                       style={{ objectFit: "contain" }}
                     />

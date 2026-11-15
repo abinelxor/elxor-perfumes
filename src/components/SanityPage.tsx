@@ -1,5 +1,5 @@
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
-import { customJsonLdBlocks, faqPageSchema, jsonLd, type PageDoc, type ProductDoc } from "@/lib/content";
+import { customJsonLdBlocks, faqPageSchema, jsonLd, productImageAlt, type PageDoc, type ProductDoc } from "@/lib/content";
 import { SITE_URL } from "@/lib/defaults";
 import { sizedImage } from "@/lib/sanity/image";
 
@@ -77,7 +77,7 @@ function money(price: number, currency?: string) {
 /** A product created in the Studio, with price, stock and Product schema. */
 export function ProductView({ product }: { product: ProductDoc }) {
   const images = [
-    product.image ? { url: product.image, alt: product.imageAlt ?? product.name } : null,
+    product.image ? { url: product.image, alt: productImageAlt(product.slug, product.name, product.imageAlt) } : null,
     ...(product.gallery ?? []).map((g) => (g.url ? { url: g.url, alt: g.alt ?? product.name } : null)),
   ].filter(Boolean) as { url: string; alt: string }[];
 

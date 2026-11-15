@@ -4,6 +4,8 @@ export interface PerfumeItem {
   tagline: string;
   description?: string;
   image: string;
+  /** alt text for the bottle image (SEO + accessibility) */
+  imageAlt?: string;
   price: string;
   size: string;
   topNotes: string[];
@@ -28,6 +30,8 @@ export const perfumesData: PerfumeItem[] = [
     description:
       "A luxurious unisex Eau de Parfum crafted for those who appreciate sophistication, confidence, and timeless elegance.",
     image: "/images/perfume_amoriel.png",
+    imageAlt: "Amoriel - best unisex perfumes in dubai",
+    buyUrl: "https://www.amazon.ae/dp/B0HR93RYX1",
     price: "$360",
     size: "50ml",
     topNotes: ["White Peach", "Sweet Mandarin", "Dewy Neroli"],
@@ -44,6 +48,8 @@ export const perfumesData: PerfumeItem[] = [
     description:
       "An exclusive unisex Eau de Parfum created for individuals who embrace confidence, sophistication, and distinctive style.",
     image: "/images/perfume_sanctix.png",
+    imageAlt: "Sanctix - Best unisex perfumes",
+    buyUrl: "https://www.amazon.ae/dp/B0HR8X9TYW",
     price: "$380",
     size: "50ml",
     topNotes: ["Solar Bergamot", "Golden Saffron", "Pink Pepper"],

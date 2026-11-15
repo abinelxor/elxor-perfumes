@@ -138,6 +138,7 @@ export default function HomeClient({
         {/* 8. Philosophy split section with parallax */}
         <PhilosophySection
           content={content.philosophy}
+          shopUrl={(products.find((p) => p.id === "amoriel") ?? products[0])?.buyUrl}
           onShopClick={() => {
             const el = document.getElementById("collection");
             if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -150,6 +151,7 @@ export default function HomeClient({
         {/* 10. Experience split section with parallax */}
         <ExperienceSection
           content={content.experience}
+          shopUrl={(products.find((p) => p.id === "sanctix") ?? products[1])?.buyUrl}
           onDiscoverClick={() => {
             const el = document.getElementById("collection");
             if (el) el.scrollIntoView({ behavior: "smooth" });

@@ -23,6 +23,11 @@ export default function FragranceModal({
   if (!perfume) return null;
 
   const handleAdd = () => {
+    // Sold only on Amazon: send shoppers to this product's listing
+    if (perfume.buyUrl) {
+      window.open(perfume.buyUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
     onAddToCart(perfume, selectedSize, quantity);
     setAdded(true);
     setTimeout(() => {
@@ -124,7 +129,7 @@ export default function FragranceModal({
             >
               <Image
                 src={perfume.image}
-                alt={perfume.name}
+                alt={perfume.imageAlt ?? perfume.name}
                 fill
                 style={{
                   objectFit: "contain",

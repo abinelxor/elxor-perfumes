@@ -132,6 +132,18 @@ function formatPrice(price: number | undefined, currency: string | undefined): s
   return currency === "USD" ? `$${amount}` : `${currency ?? "AED"} ${amount}`;
 }
 
+/**
+ * Alt text for a product's main bottle image: what an editor typed in the Studio, else the
+ * built-in alt for that product (AMORIEL / SANCTIX), else a generic description.
+ */
+export function productImageAlt(slug: string, name: string, studioAlt?: string): string {
+  return (
+    studioAlt?.trim() ||
+    perfumesData.find((item) => item.id === slug)?.imageAlt ||
+    `ELXOR ${name} perfume bottle`
+  );
+}
+
 function toPerfume(p: SanityProduct): PerfumeItem {
   return {
     id: p.slug,
@@ -140,6 +152,7 @@ function toPerfume(p: SanityProduct): PerfumeItem {
     tagline: p.tagline ?? "",
     description: p.description,
     image: sizedImage(p.image, 1200) ?? "",
+    imageAlt: productImageAlt(p.slug, p.name, p.imageAlt),
     price: formatPrice(p.price, p.currency),
     size: p.size ?? "50ml",
     topNotes: p.topNotes ?? [],
@@ -148,7 +161,7 @@ function toPerfume(p: SanityProduct): PerfumeItem {
     story: p.story ?? p.description ?? "",
     signatureQuote: p.signatureQuote,
     inStock: p.inStock,
-    buyUrl: p.buyUrl,
+    buyUrl: p.buyUrl || perfumesData.find((item) => item.id === p.slug)?.buyUrl,
   };
 }
 
