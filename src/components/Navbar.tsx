@@ -176,7 +176,7 @@ export default function Navbar({
             style={{ padding: "8px 24px", fontSize: "0.75rem", minWidth: "auto", minHeight: "auto", height: "auto" }}
             onClick={(e) => handleLinkClick(e, "collection")}
           >
-            SHOP NOW
+            SHOP ON AMAZON
           </a>
 
           <button
@@ -236,7 +236,7 @@ export default function Navbar({
             style={{ marginTop: "2rem", alignSelf: "flex-start", padding: "12px 32px" }} 
             onClick={(e) => handleLinkClick(e, "collection")}
           >
-            SHOP NOW
+            SHOP ON AMAZON
           </a>
         </nav>
         <ThemeToggle className="menu__theme" showLabel />
