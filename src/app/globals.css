@@ -2487,6 +2487,10 @@ body::after {
     bottom: 4vh;
     gap: 14px;
   }
+  /* phones: keep the two progress bars, drop the "01 / 02" numbers */
+  .seq__steps b {
+    display: none;
+  }
 
   .split {
     flex-direction: column;
