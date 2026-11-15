@@ -8,10 +8,13 @@ import { defaultHome, type SplitContent } from "@/lib/homeDefaults";
 interface PhilosophySectionProps {
   content?: SplitContent;
   onShopClick?: () => void;
+  /** product page to open from the button (e.g. its Amazon listing) */
+  shopUrl?: string;
 }
 
 export default function PhilosophySection({
   onShopClick,
+  shopUrl,
   content = defaultHome.philosophy,
 }: PhilosophySectionProps = {}) {
   const mediaRef = useRef<HTMLDivElement>(null);
@@ -87,7 +90,12 @@ export default function PhilosophySection({
         </p>
 
         <div data-reveal>
-          <a href="#collection" className="btn btn--ghost" onClick={handleShopClick}>
+          <a
+            href={shopUrl ?? "#collection"}
+            className="btn btn--ghost"
+            onClick={shopUrl ? undefined : handleShopClick}
+            {...(shopUrl ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          >
             {content.buttonLabel} <i className="arrow" aria-hidden="true" />
           </a>
         </div>

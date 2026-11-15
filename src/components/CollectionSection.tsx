@@ -463,7 +463,7 @@ export default function CollectionSection({
               >
                 <img
                   src={perfume.image}
-                  alt={`ELXOR ${perfume.name} perfume bottle`}
+                  alt={perfume.imageAlt ?? `ELXOR ${perfume.name} perfume bottle`}
                   width={640}
                   height={640}
                   style={{
@@ -502,13 +502,24 @@ export default function CollectionSection({
                 {perfume.description && (
                   <p className="seq__card-text">{perfume.description}</p>
                 )}
-                <button
-                  type="button"
-                  className="link"
-                  onClick={(e) => handleCardDiscover(e, perfume)}
-                >
-                  Shop Now <i className="arrow" aria-hidden="true" />
-                </button>
+                {perfume.buyUrl ? (
+                  <a
+                    className="link"
+                    href={perfume.buyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Shop Now <i className="arrow" aria-hidden="true" />
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    className="link"
+                    onClick={(e) => handleCardDiscover(e, perfume)}
+                  >
+                    Shop Now <i className="arrow" aria-hidden="true" />
+                  </button>
+                )}
               </article>
             );
           })}

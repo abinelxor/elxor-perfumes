@@ -8,10 +8,13 @@ import { defaultHome, type SplitContent } from "@/lib/homeDefaults";
 interface ExperienceSectionProps {
   content?: SplitContent;
   onDiscoverClick?: () => void;
+  /** product page to open from the button (e.g. its Amazon listing) */
+  shopUrl?: string;
 }
 
 export default function ExperienceSection({
   onDiscoverClick,
+  shopUrl,
   content = defaultHome.experience,
 }: ExperienceSectionProps) {
   const mediaRef = useRef<HTMLDivElement>(null);
@@ -87,7 +90,12 @@ export default function ExperienceSection({
         </p>
 
         <div data-reveal>
-          <a href="#collection" className="btn btn--ghost" onClick={handleClick}>
+          <a
+            href={shopUrl ?? "#collection"}
+            className="btn btn--ghost"
+            onClick={shopUrl ? undefined : handleClick}
+            {...(shopUrl ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          >
             {content.buttonLabel} <i className="arrow" aria-hidden="true" />
           </a>
         </div>
